@@ -1,0 +1,53 @@
+# THWIP — scan, heal, publish.
+#
+# The schedule is NOT defined here. GitLab has no `on: schedule:` — cron lives in
+# Settings -> CI/CD -> Pipeline schedules and is created once by a human at */30 * * * *.
+# This file only reacts to it.
+#
+# Required CI/CD variables (Settings -> CI/CD -> Variables, both masked):
+#   BRIGHTDATA_API_KEY  - Bright Data CLI auth
+#   DATA_TOKEN          - Project Access Token, scope write_repository.
+#                         CI_JOB_TOKEN cannot push, which is why this exists.
+
+stages: [watch, deploy]
+
+watch:
+  stage: watch
+  image: node:20
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'          # manual run, for rehearsals
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'      # T-38 heal endpoint
+  resource_group: watch                            # serialize runs, or the JSON corrupts
+  variables:
+    GIT_STRATEGY: clone
+  script:
+    - npm i -g @brightdata/cli
+    - node scripts/health-check.js
+    # a failed heal is data, not a broken pipeline
+    - node scripts/repair.js || true
+    - |
+      git config user.email "ci@thwip.local"
+      git config user.name  "thwip watch"
+      git add data/
+      if git diff --staged --quiet; then
+        echo "no change this scan"
+      else
+        git commit -m "data: scan $(date -u +%FT%TZ)"
+        git push "https://oauth2:${DATA_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" HEAD:main
+      fi
+
+# GitLab publishes only from a job named exactly `pages`, serving `public/`.
+# data/ must be copied in too, or the console fetches 404s.
+pages:
+  stage: deploy
+  image: alpine:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+  script:
+    - mkdir -p public
+    - cp -r web/* public/ 2>/dev/null || true
+    - cp -r data public/
+    - cp -r demo-target public/
+  artifacts:
+    paths: [public]
