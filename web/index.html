@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="THWIP — a watch console for web scrapers that repairs itself. Field fill rate as a live health signal, with automatic re-weave through Bright Data Scraper Studio.">
+<title>THWIP Watch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="symbiote-turbulence">
+    <feTurbulence type="fractalNoise" baseFrequency="0.012 0.022" numOctaves="3" seed="7" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <h1 class="wordmark">THWIP</h1>
+      <p class="tagline">Scrapers don't crash. They decay — quietly, alone, and nobody is watching. This is the watch.</p>
+    </div>
+    <div class="readouts">
+      <div class="readout">
+        <span class="label">Fleet integrity</span>
+        <span class="readout__value" id="fleet">—</span>
+      </div>
+      <div class="readout">
+        <span class="label">Last scan</span>
+        <span class="readout__value mono" id="lastscan">—</span>
+      </div>
+      <div class="readout">
+        <span class="label">Watch</span>
+        <span class="readout__value" style="font-size:1.05rem"><span class="pulse"></span>LIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="sechead"><h2>The Watch</h2><span class="rule"></span></div>
+  <div class="grid" id="grid"></div>
+
+  <div class="sechead"><h2>Incident Feed</h2><span class="rule"></span></div>
+  <div class="feed" id="feed"></div>
+
+</div>
+
+<div class="modal" id="modal" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <button class="sheet__close" id="sheet-close" aria-label="Close">✕</button>
+    <div id="sheet-body"></div>
+  </div>
+</div>
+
+<script src="fixtures.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
