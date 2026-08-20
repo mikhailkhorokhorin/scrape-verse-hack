@@ -26,6 +26,7 @@ const GLYPH = { live: "✓", infected: "⚠", dead: "✗" };
 let SPIDERS = [];
 let INCIDENTS = [];
 let FIELDS = [];
+const ERRORS = { history: null, incidents: null };
 
 /* ---------- helpers ---------- */
 
@@ -70,9 +71,23 @@ function statusOf(sp) {
 
 /* ---------- sparkline: area fill, faint baseline, emphasized endpoint ---------- */
 
+/* Under-length history is labelled, never stretched. A six-point series drawn
+   edge to edge silently claims to be 48 hours; the count says what it really is.
+   Nothing between the real points is invented. */
+const FULL_SERIES = 6;
+
+function seriesNote(values) {
+  const n = values ? values.length : 0;
+  if (n === 0) return '<p class="spark__note spark__note--none">No history yet — first scan pending</p>';
+  if (n >= FULL_SERIES) return "";
+  return '<p class="spark__note">' + n + " run" + (n === 1 ? "" : "s") + " on record — real points only, nothing interpolated</p>";
+}
+
 function sparkline(values, color) {
   const W = 240, H = 44, P = 3;
-  if (!values || values.length === 0) return '<div class="spark"></div>';
+  if (!values || values.length === 0) {
+    return '<div class="spark spark--empty" aria-hidden="true"></div>';
+  }
   const points = values.length === 1 ? [values[0], values[0]] : values;
 
   const min = Math.min(...points) - 2;
@@ -89,8 +104,32 @@ function sparkline(values, color) {
     '<polygon points="' + area + '" fill="' + color + '" opacity="0.16"/>' +
     '<polyline points="' + line + '" fill="none" stroke="' + color + '" stroke-width="2" ' +
       'stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"/>' +
+    (values.length < FULL_SERIES
+      ? pts.map((pp) => '<circle cx="' + pp[0].toFixed(1) + '" cy="' + pp[1].toFixed(1) + '" r="2.5" fill="' + color + '"/>').join("")
+      : "") +
     '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3" fill="' + color + '"/>' +
     "</svg>"
+  );
+}
+
+/* ---------- empty and failed plates ---------- */
+
+function plateHTML(word, body, kind) {
+  return (
+    '<div class="plate' + (kind ? " plate--" + kind : "") + '">' +
+      '<span class="plate__word">' + word + "</span>" +
+      "<p>" + body + "</p>" +
+    "</div>"
+  );
+}
+
+function failPlate(err) {
+  return plateHTML(
+    "SIGNAL LOST",
+    "Could not read <span class=\"mono\">" + esc(err.file) + "</span> — " + esc(err.why) +
+      ". This is a fault in the console's own feed, not a reading of the fleet. " +
+      "Nothing below is current until it clears.",
+    "fail"
   );
 }
 
@@ -109,29 +148,50 @@ function panelHTML(sp, idx) {
 
   const showSym = !sp.unwatched && Number(spread) > 0.03;
   const scanText = sp.unwatched ? agoOf(sp.ts) : clockOf(sp.ts);
+  const compact = st === "healthy" || st === "unwatched";
+  const big = st === "critical" || st === "reweaving";
+  const readout = sp.unwatched ? "--" : integ + "%";
 
-  return (
-    '<div class="cell">' +
-    '<button class="panel is-' + st + '" data-idx="' + idx + '" style="--spread:' + (sp.unwatched ? 0 : spread) + '">' +
-      (showSym ? '<div class="symbiote"><div class="symbiote__body"></div></div>' : "") +
-      '<div class="phead">' +
-        "<div>" +
-          '<h3 class="codename">' + esc(sp.code) + "</h3>" +
-          '<p class="universe">' + esc(sp.universe) + "</p>" +
-        "</div>" +
-        '<span class="badge badge--' + st + '">' + st + "</span>" +
+  const head =
+    '<div class="phead">' +
+      "<div>" +
+        '<h3 class="codename">' + esc(sp.code) + "</h3>" +
+        '<p class="universe">' + esc(sp.universe) + "</p>" +
       "</div>" +
-      '<div class="integrity">' +
-        '<span class="integrity__value">' + (sp.unwatched ? "--" : integ + "%") + "</span>" +
+      '<span class="badge badge--' + st + '">' + st + "</span>" +
+    "</div>";
+
+  const bar = '<div class="bar"><div class="bar__fill" style="width:' + (sp.unwatched ? 0 : integ) + '%"></div></div>';
+
+  const note = seriesNote(sp.series);
+
+  const body = compact
+    ? sparkline(sp.series, color) +
+      note +
+      '<div class="compact-foot">' +
+        bar +
+        '<span class="integrity__value">' + readout + "</span>" +
+      "</div>"
+    : '<div class="integrity">' +
+        '<span class="integrity__value">' + readout + "</span>" +
         '<span class="label">Integrity</span>' +
       "</div>" +
       sparkline(sp.series, color) +
-      '<div class="bar"><div class="bar__fill" style="width:' + (sp.unwatched ? 0 : integ) + '%"></div></div>' +
+      note +
+      bar +
       '<div class="chips">' + chips + "</div>" +
       '<div class="lastscan">' +
         '<span class="label">Last scan</span>' +
         '<span class="mono" style="font-size:.8125rem">' + scanText + "</span>" +
-      "</div>" +
+      "</div>";
+
+  return (
+    '<div class="cell cell--' + st + '">' +
+    '<button class="panel' + (compact ? " panel--compact" : big ? " panel--big" : "") + ' is-' + st + '" data-idx="' + idx +
+      '" style="--spread:' + (sp.unwatched ? 0 : spread) + '">' +
+      (showSym ? '<div class="symbiote"><div class="symbiote__body"></div></div>' : "") +
+      head +
+      body +
     "</button>" +
     "</div>"
   );
@@ -141,37 +201,71 @@ function renderGrid() {
   const grid = document.getElementById("grid");
 
   if (SPIDERS.length === 0) {
-    grid.innerHTML =
-      '<div class="empty">' +
-        '<span class="empty__word">NO SIGNAL</span>' +
-        "<p>No scans on record yet. The watch begins once the cron commits its first run to " +
-        '<span class="mono">data/history.json</span>.</p>' +
-      "</div>";
-    document.getElementById("fleet").textContent = "--";
-    document.getElementById("lastscan").textContent = "--";
+    /* Neutral waiting state. Fleet integrity is unknown, not zero — a fleet of no
+       Spiders has no health, and printing 0% would read as total failure. */
+    grid.innerHTML = ERRORS.history
+      ? failPlate(ERRORS.history)
+      : plateHTML(
+          "NO SCANS YET",
+          "No runs on record. The watch begins the moment the cron commits its first scan to " +
+            '<span class="mono">' + esc(DATA.history) + "</span>. " +
+            "Every panel below stays dark until a Spider reports.",
+          "wait"
+        );
+    setReadout("fleet", "--", null);
+    setReadout("lastscan", "--", null);
+    setReadout("mttr", "--", null);
     return;
   }
 
-  grid.innerHTML = SPIDERS.map(panelHTML).join("");
-
   const avg = Math.round(SPIDERS.reduce((a, s) => a + integrityOf(s), 0) / SPIDERS.length);
-  const fleet = document.getElementById("fleet");
-  fleet.textContent = avg + "%";
-  fleet.style.color = avg >= 90 ? COLOR.healthy : avg >= 60 ? COLOR.degraded : COLOR.critical;
+
+  grid.innerHTML =
+    (ERRORS.history ? failPlate(ERRORS.history) : "") + SPIDERS.map(panelHTML).join("");
+
+  setReadout("fleet", avg + "%", avg >= 90 ? COLOR.healthy : avg >= 60 ? COLOR.degraded : COLOR.critical);
 
   const newest = SPIDERS.reduce((max, s) => Math.max(max, Date.parse(s.ts) || 0), 0);
-  document.getElementById("lastscan").textContent = newest ? clockOf(new Date(newest).toISOString()) : "--";
+  setReadout("lastscan", newest ? clockOf(new Date(newest).toISOString()) : "--", null);
+  renderMttr();
+}
+
+/* Mean time to re-weave. With no closed incident there is no mean — "--", never
+   "0m 0s", which would claim an instant recovery that never happened. */
+function renderMttr() {
+  const spans = INCIDENTS.map((inc) => inc.mttrMs).filter((ms) => typeof ms === "number" && ms > 0);
+  if (spans.length === 0) {
+    setReadout("mttr", "--", null);
+    return;
+  }
+  const mean = spans.reduce((a, b) => a + b, 0) / spans.length;
+  const mins = Math.floor(mean / 60000);
+  const secs = Math.round((mean % 60000) / 1000);
+  setReadout("mttr", mins + "m " + secs + "s", COLOR.reweaving);
+}
+
+function setReadout(id, text, color) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  el.style.color = color || "";
 }
 
 function renderFeed() {
   const feed = document.getElementById("feed");
 
   if (INCIDENTS.length === 0) {
-    feed.innerHTML =
-      '<div class="empty">' +
-        '<span class="empty__word">ALL QUIET</span>' +
-        "<p>No incidents recorded. Every Spider has held above the critical threshold so far.</p>" +
-      "</div>";
+    /* Zero incidents is good news and the copy should say so plainly, rather than
+       reading as a feed that failed to load. */
+    feed.innerHTML = ERRORS.incidents
+      ? failPlate(ERRORS.incidents)
+      : plateHTML(
+          "ALL QUIET",
+          "No incidents recorded — nothing has dropped below the critical threshold. " +
+            "This is the good outcome: every Spider has held.",
+          "quiet"
+        );
+    renderMttr();
     return;
   }
 
@@ -190,6 +284,7 @@ function renderFeed() {
       "</div>" +
     "</article>"
   ).join("");
+  renderMttr();
 }
 
 /* ---------- detail sheet ---------- */
@@ -333,6 +428,14 @@ function adaptIncidents(incidents) {
           ? "The re-weave brought back " + recovered.join(" and ") + "."
           : "The re-weave did not restore the affected fields.");
 
+      /* Only a closed incident contributes to MTTR. One still open has no
+         time-to-repair yet, and counting it as zero would flatter the number. */
+      const opened = Date.parse(inc.opened_at);
+      const closed = inc.closed_at ? Date.parse(inc.closed_at) : NaN;
+      const mttrMs = Number.isFinite(opened) && Number.isFinite(closed) && closed > opened
+        ? closed - opened
+        : null;
+
       return {
         id: inc.id,
         who: inc.spider,
@@ -340,6 +443,7 @@ function adaptIncidents(incidents) {
         before: inc.integrity_before,
         after: inc.integrity_after,
         what: inc.summary || what,
+        mttrMs: mttrMs,
         stages: (inc.stages || []).map((s) => [s.stage, clockOf(s.ts)]),
       };
     });
@@ -380,21 +484,34 @@ function loadMock() {
 
 /* ---------- live route ---------- */
 
+/* A fetch that fails and a file that is legitimately empty are different facts and
+   the console must not conflate them. Returning [] for both is how a missing file
+   turns into a confident "no scans yet" — a lie on a project about data integrity.
+   So every load reports which of the two happened, and the renderer says so. */
+
 async function fetchJson(path) {
   try {
     const response = await fetch(path + "?t=" + Date.now(), { cache: "no-store" });
-    if (!response.ok) return [];
+    if (!response.ok) {
+      return { ok: false, rows: [], error: "HTTP " + response.status + " " + response.statusText };
+    }
     const parsed = await response.json();
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return { ok: false, rows: [], error: "expected a JSON array" };
+    return { ok: true, rows: parsed, error: null };
   } catch (error) {
-    return [];
+    const cause = error instanceof SyntaxError ? "the file is not valid JSON" : "the file could not be reached";
+    return { ok: false, rows: [], error: cause };
   }
 }
 
 async function loadLive() {
   const [history, incidents] = await Promise.all([fetchJson(DATA.history), fetchJson(DATA.incidents)]);
-  SPIDERS = adaptHistory(history);
-  INCIDENTS = adaptIncidents(incidents);
+
+  ERRORS.history = history.ok ? null : { file: DATA.history, why: history.error };
+  ERRORS.incidents = incidents.ok ? null : { file: DATA.incidents, why: incidents.error };
+
+  SPIDERS = adaptHistory(history.rows);
+  INCIDENTS = adaptIncidents(incidents.rows);
   FIELDS = SPIDERS.length ? SPIDERS[0].fieldOrder : [];
   renderGrid();
   renderFeed();
