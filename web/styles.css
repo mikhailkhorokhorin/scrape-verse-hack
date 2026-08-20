@@ -83,10 +83,28 @@ body::before{
 }
 .sechead .rule{flex:1;height:3px;background:var(--ink);}
 
-/* ---------- grid ---------- */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
-@media(max-width:1199px){.grid{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:767px){.grid{grid-template-columns:1fr;}}
+/* ---------- grid ----------
+   T-16: cell size is the reading. A comic page does not use equal frames —
+   the sick Spider takes the page and the healthy ones shrink to strips, so
+   fleet health is legible from the layout before a single number is read. */
+.grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:168px;grid-auto-flow:dense;
+  column-gap:26px;row-gap:22px;
+}
+.cell--critical,.cell--reweaving{grid-column:span 2;grid-row:span 2;}
+.cell--degraded{grid-column:span 1;grid-row:span 2;}
+.cell--healthy,.cell--unwatched{grid-column:span 1;grid-row:span 1;}
+
+@media(max-width:1199px){
+  .grid{grid-template-columns:repeat(2,1fr);}
+  .cell--critical,.cell--reweaving{grid-column:span 2;}
+}
+@media(max-width:767px){
+  .grid{grid-template-columns:1fr;grid-auto-rows:auto;}
+  .cell,.cell--critical,.cell--degraded,
+  .cell--reweaving,.cell--healthy,.cell--unwatched{grid-column:span 1;grid-row:span 1;}
+}
 
 /* ---------- panel ---------- */
 .panel{
@@ -94,7 +112,7 @@ body::before{
   background:var(--void-2);
   border:3px solid var(--ink);border-radius:2px;
   box-shadow:6px 6px 0 var(--ink);
-  min-height:352px;padding:var(--s3);
+  height:100%;padding:var(--s3);
   display:flex;flex-direction:column;gap:var(--s2);
   cursor:pointer;text-align:left;width:100%;color:inherit;font:inherit;
   animation:panel-in 400ms cubic-bezier(.22,1,.36,1) both;
@@ -177,6 +195,48 @@ body::before{
 
 /* ---------- sparkline ---------- */
 .spark{display:block;width:100%;height:44px;}
+
+/* ---------- size variants ----------
+   Both sizes render the same anatomy in the same order; what changes is how
+   much of it there is. A compact panel drops the diagnosis — no diagnosis is
+   needed when nothing is wrong — and a big one gives the readout the room a
+   splash frame is supposed to have. Sizes are laid out by grid spans, so the
+   panel is re-placed rather than transitioned: grid-column/grid-row do not
+   animate, and pretending otherwise only produces a stutter. */
+.cell{min-width:0;}
+
+/* Full panels absorb slack in the sparkline, never in the gaps, so the
+   last-scan row cannot be pushed out through the bottom border. */
+.panel:not(.panel--compact) .spark{flex:1 1 auto;min-height:38px;height:auto;}
+.panel:not(.panel--compact) > *:not(.spark):not(.symbiote){flex-shrink:0;}
+
+.panel--compact{
+  padding:var(--s2) var(--s3);gap:10px;justify-content:space-between;
+}
+.panel--compact .universe{font-size:.75rem;}
+.panel--compact .codename{font-size:1.375rem;}
+.panel--compact .spark{height:30px;}
+.compact-foot{display:flex;align-items:center;gap:var(--s2);}
+.compact-foot .bar{flex:1;}
+.compact-foot .integrity__value{
+  font-size:1.5rem;display:inline-block;line-height:1;flex-shrink:0;
+}
+
+/* The big panel has twice the height and twice the width, so it gets the
+   readout a splash frame deserves. The sparkline takes the slack instead of
+   the gaps: fixed gaps here overflow the cell and push the last-scan row out
+   through the bottom border. */
+.panel--big{padding:var(--s3) var(--s4);gap:10px;}
+.panel--big .codename{font-size:clamp(2rem,3.4vw,2.9rem);}
+.panel--big .universe{font-size:1rem;}
+.panel--big .badge{font-size:.8125rem;padding:7px 13px;}
+.panel--big .phead{align-items:center;}
+.panel--big .integrity{margin-top:0;line-height:1.05;}
+.panel--big .integrity__value{font-size:clamp(2.75rem,4.4vw,3.75rem);}
+.panel--big .integrity .label{font-size:.875rem;letter-spacing:.14em;}
+.panel--big .spark{min-height:56px;}
+.panel--big .bar{height:18px;}
+.panel--big .chip{font-size:.875rem;padding:5px 11px;}
 
 /* ---------- bar ---------- */
 .bar{height:14px;border:2px solid var(--ink);background:var(--void);overflow:hidden;}
@@ -343,3 +403,74 @@ body::before{
   margin-bottom:8px;
 }
 .empty p{margin:0;font-size:.9375rem}
+
+/* ============================================================
+   T-27 — empty and degraded states
+   The console has to survive a cron that has not run yet, a file
+   that will not load, and a Spider with two data points. Every one
+   of those is a stated fact on screen, never a silent zero.
+   ============================================================ */
+
+.plate{
+  /* T-16 sets grid-auto-rows:168px on .grid. A fixed row height would clamp this
+     plate and let its copy spill past the border, so the plate leaves the fixed
+     track flow entirely and sizes to its own content. */
+  grid-column:1/-1;
+  grid-row:span 2;
+  min-height:168px;
+  max-height:none;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  padding:var(--s4) var(--s3);
+  text-align:center;
+  background:var(--void-2);
+  border:3px dashed var(--purple);
+  box-shadow:6px 6px 0 var(--ink);
+  color:#C6B9D6;
+}
+.plate::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(var(--void-dot) 1px,transparent 1.4px);
+  background-size:4px 4px;opacity:.6;
+}
+.plate > *{position:relative;z-index:1;}
+.plate p{margin:0 auto;max-width:56ch;font-size:var(--t-body);}
+.plate__word{
+  display:block;
+  font-family:Bangers,Impact,cursive;
+  font-size:clamp(1.75rem,4vw,2.75rem);
+  letter-spacing:.04em;
+  color:var(--purple);
+  -webkit-text-stroke:2px var(--ink);
+  paint-order:stroke fill;
+  margin-bottom:var(--s1);
+}
+/* Waiting is not failure — violet, dashed, patient. */
+.plate--wait__word,.plate--wait .plate__word{color:var(--infected);}
+/* All quiet is good news and reads in the healthy colour. */
+.plate--quiet{border-color:var(--healthy);border-style:solid;}
+.plate--quiet .plate__word{color:var(--healthy);}
+/* A broken feed is loud, solid-bordered, and names the file it could not read. */
+.plate--fail{border-color:var(--critical);border-style:solid;margin-bottom:var(--s3);}
+.plate--fail .plate__word{color:var(--critical);}
+.plate--fail .mono{color:var(--paper);background:var(--ink);padding:1px 6px;}
+
+/* Thin history is labelled under the sparkline rather than stretched across it. */
+.spark__note{
+  margin:0;
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.6875rem;
+  line-height:1.35;
+  color:#9C8FB5;
+}
+.spark__note--none{color:#7E7296;font-style:italic;}
+.panel--compact .spark__note{font-size:.625rem;}
+.spark--empty{
+  display:block;width:100%;height:44px;
+  border:2px dashed var(--unwatched);
+  background:var(--void);
+}
+.panel--compact .spark--empty{height:30px;}
