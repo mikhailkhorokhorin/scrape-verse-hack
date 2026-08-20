@@ -46,6 +46,57 @@
   </header>
 
   <div class="sechead"><h2>The Watch</h2><span class="rule"></span></div>
+
+  <!-- T-28 — the legend. Static markup on purpose: always visible, no hover,
+       no tooltip, no JS. The symbiote is the strongest idea on the page and it
+       is unreadable to anyone seeing it for the first time. -->
+  <aside class="legend" aria-label="How to read this page">
+    <h3 class="legend__title">How to read a Spider</h3>
+
+    <p class="legend__lede">
+      <span class="legend__black" aria-hidden="true"></span>
+      A scraper that breaks does not crash — it keeps running and the rows go quietly
+      wrong. <b>The black is what the scraper lost.</b> It climbs each panel from the
+      base, covering exactly as much of the Spider as its Integrity is missing.
+    </p>
+
+    <div class="legend__cols">
+
+      <section class="legend__group">
+        <h4 class="legend__head">State</h4>
+        <ul class="legend__list">
+          <li><span class="swatch swatch--healthy"></span><b>Healthy</b><span class="legend__note">Integrity 90+, every field returning</span></li>
+          <li><span class="swatch swatch--degraded"></span><b>Degraded</b><span class="legend__note">60&ndash;89, fields starting to fail</span></li>
+          <li><span class="swatch swatch--critical"></span><b>Critical</b><span class="legend__note">Under 60, the panel glitches</span></li>
+          <li><span class="swatch swatch--reweaving"></span><b>Re-weaving</b><span class="legend__note">A repair is running now</span></li>
+          <li><span class="swatch swatch--unwatched"></span><b>Unwatched</b><span class="legend__note">No scan in 3 hours &mdash; it sinks into the page</span></li>
+        </ul>
+      </section>
+
+      <section class="legend__group">
+        <h4 class="legend__head">Field</h4>
+        <ul class="legend__list">
+          <li><span class="chip chip--live">&#10003; title</span><span class="legend__note">Value arrived and is valid</span></li>
+          <li><span class="chip chip--infected">&#9888; price</span><span class="legend__note"><b>Value arrived and is wrong</b> &mdash; passes every null check, poisons the pipeline</span></li>
+          <li><span class="chip chip--dead">&#10007; rating</span><span class="legend__note">Value is null or empty</span></li>
+        </ul>
+      </section>
+
+      <section class="legend__group">
+        <h4 class="legend__head">Size</h4>
+        <ul class="legend__list legend__list--size">
+          <li><span class="sizekey sizekey--big"></span><b>Critical &amp; re-weaving</b><span class="legend__note">Take the page &mdash; the splash frame</span></li>
+          <li><span class="sizekey sizekey--tall"></span><b>Degraded</b><span class="legend__note">Full diagnosis, half the width</span></li>
+          <li><span class="sizekey sizekey--small"></span><b>Healthy</b><span class="legend__note">Shrinks to a strip &mdash; nothing to diagnose</span></li>
+        </ul>
+        <p class="legend__note legend__note--foot">
+          Size is data. You never scan for the problem; the problem takes the page.
+        </p>
+      </section>
+
+    </div>
+  </aside>
+
   <div class="grid" id="grid"></div>
 
   <div class="sechead"><h2>Incident Feed</h2><span class="rule"></span></div>
