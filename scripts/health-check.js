@@ -32,7 +32,7 @@ function scan(c) {
     return { transportError: true };
   }
 
-  const list = Array.isArray(rows) ? rows : [rows];
+  const list = L.rowsOf(rows);
   if (!list.length) {
     console.error(`${c.codename}: run returned no rows`);
     return { transportError: true };

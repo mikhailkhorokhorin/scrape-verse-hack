@@ -96,12 +96,27 @@ const statusOf = (i) => (i >= 90 ? 'HEALTHY' : i >= 60 ? 'DEGRADED' : 'CRITICAL'
 
 /** Run the CLI. Long by nature — create is 5-25 min, heal up to 15. Never retry here. */
 function bdata(args, { timeout = 20 * 60 * 1000 } = {}) {
-  return execFileSync('npx', ['-p', '@brightdata/cli', 'bdata', ...args], {
+  return execFileSync('npx', ['-y', '-p', '@brightdata/cli', 'bdata', ...args], {
     encoding: 'utf8',
     timeout,
     maxBuffer: 32 * 1024 * 1024,
     env: process.env
   });
+}
+
+/** Rows may arrive bare or wrapped in a container. Unwrap to the actual list,
+ *  or scoring runs against the envelope and every field reads dead. */
+function rowsOf(payload) {
+  if (Array.isArray(payload)) return payload;
+  if (payload && typeof payload === 'object') {
+    for (const key of ['data', 'records', 'results', 'items', 'rows', 'output']) {
+      if (Array.isArray(payload[key])) return payload[key];
+    }
+    const nested = Object.values(payload)
+      .find((v) => Array.isArray(v) && v.every((e) => e && typeof e === 'object'));
+    if (nested) return nested;
+  }
+  return [payload];
 }
 
 /** The CLI prints progress around the JSON; take the outermost array or object. */
@@ -119,5 +134,5 @@ module.exports = {
   ROOT, HISTORY, INCIDENTS, CONFIG,
   readJSON, writeJSON, collectors, history, incidents,
   appendHistory, appendIncident,
-  classify, integrityOf, statusOf, bdata, parsePayload
+  classify, integrityOf, statusOf, bdata, parsePayload, rowsOf
 };
