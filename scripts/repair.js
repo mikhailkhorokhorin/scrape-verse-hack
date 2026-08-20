@@ -46,8 +46,10 @@ function heal(c, run, stages) {
 
   stages.push({ stage: 'REWEAVING', ts: new Date().toISOString() });
   try {
+    // --timeout is explicit: the CLI defaults to 600s and a heal runs up to 15
+    // minutes, so the default aborts a working heal and burns the credit anyway.
     L.bdata(['scraper', 'heal', c.collector_id, prompt, '--url', c.url,
-             '--auto-approve', '--auto-save']);
+             '--auto-approve', '--auto-save', '--timeout', '900']);
   } catch (err) {
     console.error(`${c.codename}: heal failed — ${err.message.split('\n')[0]}`);
     return null;
@@ -56,13 +58,38 @@ function heal(c, run, stages) {
   // Verify rather than trust. A heal that reports success and still returns
   // nulls is exactly the silent failure this product is about.
   try {
-    const rows = L.parsePayload(
-      L.bdata(['scraper', 'run', c.collector_id, c.url, '--pretty']));
-    const list = Array.isArray(rows) ? rows : [rows];
-    const states = Object.fromEntries(
-      Object.keys(c.fields).map((f) => [f, L.classify(list[0]?.[f], c.fields[f])]));
+    const list = L.rowsOf(L.parsePayload(
+      L.bdata(['scraper', 'run', c.collector_id, c.url, '--pretty'])));
+    // Vote across every row, exactly as the scan does. Judging the heal on row
+    // zero lets one unlucky row report a working heal as a failed one.
+    const states = {};
+    for (const f of Object.keys(c.fields)) {
+      const tally = { live: 0, infected: 0, dead: 0 };
+      for (const row of list) tally[L.classify(row?.[f], c.fields[f])]++;
+      states[f] = Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
+    }
     stages.push({ stage: 'VERIFIED', ts: new Date().toISOString() });
-    return L.integrityOf(states);
+    const integrity = L.integrityOf(states);
+    const pick = (st) => Object.keys(states).filter((f) => states[f] === st);
+    // The console reads history, not incidents. Without this the recovery is
+    // invisible on the sparkline until the next scheduled scan.
+    L.appendHistory({
+      collector_id: c.collector_id,
+      spider: c.codename,
+      universe: c.universe,
+      ts: new Date().toISOString(),
+      fields_expected: Object.keys(c.fields),
+      fields_live: pick('live'),
+      fields_infected: pick('infected'),
+      fields_dead: pick('dead'),
+      integrity,
+      status: L.statusOf(integrity),
+      rows: list.length,
+      after_heal: true,
+      sample: Object.fromEntries(
+        Object.keys(c.fields).map((f) => [f, list[0]?.[f] ?? null]))
+    });
+    return integrity;
   } catch (err) {
     console.error(`${c.codename}: verification run failed — ${err.message.split('\n')[0]}`);
     return null;
