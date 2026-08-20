@@ -37,6 +37,10 @@ const appendIncident = (record) => {
   writeJSON(INCIDENTS, all);
 };
 
+// books.toscrape spells its rating in the CSS class: "star-rating Three".
+// The field is populated and correct; only its notation is not a numeral.
+const WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5 };
+
 /**
  * Classify one field value against its declared validator.
  * Three states, because two is not enough: a field that returns a wrong value
@@ -51,7 +55,9 @@ function classify(value, rule) {
 
   switch (rule.type) {
     case 'number': {
-      const n = Number(s.replace(/[^0-9.\-]/g, ''));
+      const n = rule.words && WORDS[s.split(/\s+/).pop().toLowerCase()] !== undefined
+        ? WORDS[s.split(/\s+/).pop().toLowerCase()]
+        : Number(s.replace(/[^0-9.\-]/g, ''));
       if (!Number.isFinite(n)) return 'infected';
       if (rule.min !== undefined && n < rule.min) return 'infected';
       if (rule.max !== undefined && n > rule.max) return 'infected';
