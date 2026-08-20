@@ -40,7 +40,13 @@ CI needs two masked variables under **Settings → CI/CD → Variables**:
 | Variable | What it is |
 |---|---|
 | `BRIGHTDATA_API_KEY` | Bright Data CLI auth |
-| `DATA_TOKEN` | Project Access Token, `write_repository`. `CI_JOB_TOKEN` cannot push |
+| `DATA_TOKEN` | Project Access Token, scope `write_repository`, **role Maintainer** |
+
+`main` is a protected branch with push restricted to Maintainers. A Project Access Token
+created with the Developer role will be rejected on push and every scan will fail at the
+commit step — the pipeline goes green up to that point, so it fails quietly. Create the
+token with **Maintainer**. `CI_JOB_TOKEN` cannot push at all, which is why this token
+exists.
 
 And a pipeline schedule at `*/30 * * * *` under **Settings → CI/CD → Pipeline schedules**.
 GitLab has no in-file cron — this step is manual and the project does nothing without it.
