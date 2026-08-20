@@ -474,3 +474,144 @@ body::before{
   background:var(--void);
 }
 .panel--compact .spark--empty{height:30px;}
+
+/* ============================================================
+   T-28 — the legend
+   A character sheet, not a key bolted to the side of a chart.
+   Always on screen: the symbiote is the strongest idea here and
+   a judge seeing it cold reads it as a dark gradient without this.
+   ============================================================ */
+
+.legend{
+  position:relative;
+  margin:0 0 var(--s4);
+  padding:var(--s3);
+  background:var(--paper);
+  color:var(--ink);
+  border:3px solid var(--ink);
+  box-shadow:6px 6px 0 var(--pink);
+  transform:rotate(-.35deg);
+}
+@media(max-width:767px){.legend{transform:none;}}
+
+/* Halftone on paper — the light plate of the page. */
+.legend::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(var(--paper-dot) 1px,transparent 1.4px);
+  background-size:5px 5px;opacity:.55;
+}
+.legend > *{position:relative;z-index:1;}
+
+.legend__title{
+  font-family:Anton,Impact,sans-serif;
+  font-size:1.25rem;letter-spacing:.06em;text-transform:uppercase;
+  margin:0 0 var(--s1);
+  color:var(--ink);
+}
+
+.legend__lede{
+  margin:0 0 var(--s3);
+  max-width:78ch;
+  font-size:.875rem;line-height:1.5;
+  color:#2A2438;
+}
+.legend__lede b{color:var(--ink);}
+
+/* The substance itself, shown rather than only described. Same flat fill and
+   same rising mask the panels use, so the sample and the real thing read as
+   one material — not a gradient standing in for it. */
+.legend__black{
+  position:relative;
+  float:left;
+  width:64px;height:44px;
+  margin:2px var(--s2) 4px 0;
+  /* A miniature panel: the void a healthy Spider sits on, half-taken. */
+  background:var(--void-2);
+  border:2px solid var(--ink);
+  box-shadow:3px 3px 0 var(--ink);
+  overflow:hidden;
+}
+.legend__black::after{
+  content:"";position:absolute;inset:-4px;
+  background:var(--symbiote);
+  filter:url(#symbiote-turbulence);
+  -webkit-mask-image:radial-gradient(125% 96% at 50% 108%,#000 62%,transparent 82%);
+  mask-image:radial-gradient(125% 96% at 50% 108%,#000 62%,transparent 82%);
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+}
+
+.legend__cols{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:var(--s3);
+}
+@media(max-width:900px){.legend__cols{grid-template-columns:1fr;gap:var(--s2);}}
+
+.legend__group{min-width:0;}
+.legend__head{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:.6875rem;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  margin:0 0 var(--s1);padding-bottom:5px;
+  color:var(--ink);
+  border-bottom:2px solid var(--ink);
+}
+
+.legend__list{list-style:none;margin:0;padding:0;}
+.legend__list > li{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  align-items:baseline;
+  gap:2px 8px;
+  padding:4px 0;
+  font-size:.8125rem;
+  line-height:1.35;
+}
+.legend__list > li > b{font-weight:700;color:var(--ink);white-space:nowrap;}
+.legend__note{
+  grid-column:2;
+  font-size:.75rem;
+  color:#4A4160;
+}
+.legend__note b{color:var(--ink);}
+.legend__note--foot{
+  grid-column:1/-1;
+  margin:var(--s1) 0 0;
+  padding-top:8px;
+  border-top:2px solid var(--ink);
+  font-style:italic;
+}
+
+/* State swatches carry the same fills the panels do. */
+.swatch{
+  width:16px;height:16px;flex-shrink:0;
+  border:2px solid var(--ink);
+  align-self:center;
+}
+.swatch--healthy{background:var(--healthy);}
+.swatch--degraded{background:var(--degraded);}
+.swatch--critical{background:var(--critical);}
+.swatch--reweaving{background:var(--reweaving);}
+.swatch--unwatched{background:var(--unwatched);}
+
+/* Chips inside the legend sit on paper, so they need the ink treatment
+   rather than the void background they carry inside a panel. */
+.legend .chip{
+  background:var(--void);
+  align-self:center;
+  white-space:nowrap;
+}
+.legend .chip--live{color:var(--healthy);}
+.legend .chip--infected{color:var(--infected);border-color:var(--infected);}
+.legend .chip--dead{color:#9E93B5;}
+
+/* Size keys are scale drawings of the cells they describe. */
+.sizekey{
+  align-self:center;
+  border:2px solid var(--ink);
+  background:var(--void-2);
+  flex-shrink:0;
+}
+.sizekey--big{width:26px;height:18px;}
+.sizekey--tall{width:13px;height:18px;}
+.sizekey--small{width:13px;height:9px;}
