@@ -2,6 +2,8 @@
 
 > The symbiote does not stay inside the panels — it pools on the page itself, and the ground should darken and coarsen as fleet integrity drops.
 
+**SHIPPED** — `web/js/ground.js`, `web/css/ground.css`, the `#fleet-ground` layer in `web/index.html`; covered by `test/web-ground.test.js`.
+
 **Status:** OPEN · **Cost:** small, not medium (re-scoped down from an earlier estimate) · **Depends on:** nothing (the fleet-wide symbiote layer already exists)
 **Touches:** `web/css/fleet.css`, `web/js/render.js`, `web/css/tokens.css`
 
@@ -71,12 +73,22 @@ polling or computation is required.
 
 ## Done when
 
-- [ ] Page ground darkens measurably as fleet average integrity drops, without
-      overriding the existing diurnal `--void`/`--void-2` shift
-- [ ] Halftone dot size/density visibly coarsens at low fleet integrity and returns to
-      baseline at 100%
-- [ ] Both effects read the same `--fleet` value `setFleetSpread()` already computes — no
-      second, parallel calculation
-- [ ] AA text contrast holds at the worst combination of time-of-day and fleet-health
-      darkening
-- [ ] No change to the existing `.fleet-symbiote` mask mechanics in `web/css/fleet.css`
+- [x] Page ground darkens measurably as fleet average integrity drops, without
+      overriding the existing diurnal `--void`/`--void-2` shift — a separate fixed
+      `.fleet-ground` layer whose opacity is `--fleet-dim`, up to `0.34`. It composes over
+      the tokens rather than rewriting them. **Note:** the diurnal shift itself was never
+      built (`--void-2` is defined and unused), so this is compatibility by construction,
+      not a tested interaction
+- [x] Halftone dot size/density visibly coarsens at low fleet integrity and returns to
+      baseline at 100% — `--fleet-dot` drives `body::before`'s `background-size` from 4px
+      at full health to 9px at zero, over the same 1100ms curve the symbiote uses
+- [x] Both effects read the same `--fleet` value `setFleetSpread()` already computes — no
+      second, parallel calculation — `mountGround()` observes the `style` attribute on
+      `#fleet-sym` and re-reads `--fleet` off it, so there is one writer and one number
+- [x] AA text contrast holds at the worst combination of time-of-day and fleet-health
+      darkening — darkening the ground *raises* contrast for every foreground token.
+      Computed at the worst ground (`#14061F` under the overlay at full opacity, `#0f0518`):
+      `--paper` 17.36:1, `--dim` 6.64:1, `--dimmer` 5.60:1, all up from their values on the
+      bare `--void` and all above AA
+- [x] No change to the existing `.fleet-symbiote` mask mechanics in `web/css/fleet.css` —
+      the file is untouched; the ground is a sibling layer

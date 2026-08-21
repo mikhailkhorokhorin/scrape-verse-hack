@@ -2,7 +2,9 @@
 
 > One small spider that walks the history and settles on the newest point, pausing at a scar notch where a past incident sits — the animal, not the person.
 
-**Status:** OPEN, re-scoped · **Cost:** small, after the rig, and only if UI-18a through UI-18c are all in · **Depends on:** UI-18a, UI-18b, UI-18c
+**CUT — built first, then cut on look.** The overlay was implemented against a real rendered sparkline and cut before it was committed. There is no crawler code in the repository and no partial implementation left behind.
+
+**Status:** CUT (Aug 21) · **Cost:** small, after the rig, and only if UI-18a through UI-18c are all in · **Depends on:** UI-18a, UI-18b, UI-18c
 **Touches:** `web/js/sparkline.js`, a new small overlay module, `web/css/panel.css`
 
 ## What it is
@@ -65,13 +67,48 @@ scars.js` lines 28-34).
   carrying meaning, and a second small character competing inside a compact panel works
   against that.
 
+## The decision — built, looked at, cut
+
+The dependency held: UI-18a, UI-18b and UI-18c all landed first, and the overlay approach
+the Mechanism section above prescribes turned out to be right. The positioning worked. The
+problem was not the mechanism — it was the size.
+
+A sparkline is 44 viewBox units tall and renders around 40px in a panel. A spider that
+walks *along* the line and does not obscure it has to be smaller than that: the version
+built measured roughly **16 × 8 pixels**. At that size an eight-legged silhouette is four
+or five dark pixels with fringe. It does not read as a spider; it reads as a smudge, or as
+dirt on the screen.
+
+That would be survivable on its own. What made it a cut rather than a polish item is what
+it sits next to. UI-18a's rig now renders at 148-260px wide in the same panel, with legs
+that carry field state and eyes that carry the integrity band — a character that is
+legibly a character and legibly a readout. Putting a 16px smear on the chart beside it
+does not add a second character; it makes the first one look like it has a rendering
+artefact. The crawler's own justification — "every position it occupies is a real point in
+`history.json`" — is true and is already served better by UI-05's hover, which names the
+timestamp and the integrity of the point in words.
+
+The audit's third risk called this exactly: *"a second small character walking across the
+chart, next to a rig that already has legs, eyes and idle motion, risks visual clutter on
+an already-busy compact panel."* It was cheaper to build it and look than to keep arguing
+about it, and having looked, the answer is no.
+
+**Do not rebuild it.** Nothing in the cast depends on it, and the two things it was for —
+real positions on the chart, and life on the panel — are covered by UI-05 and UI-18e.
+
 ## Done when
 
-- [ ] The crawler's position at any moment corresponds to a real point in the collector's
+Not applicable — the idea is cut. The boxes below record what the built version did and
+did not achieve before it was removed.
+
+- [x] The crawler's position at any moment corresponds to a real point in the collector's
       series, converted correctly from SVG viewBox coordinates to the rendered element's
-      actual pixel box
-- [ ] Position tracking survives panel resize without becoming a smear or drifting off the
-      chart
-- [ ] The crawler visibly pauses at scar positions, using the same fractional positions
-      `scarsFor()` already computes
-- [ ] Built only after UI-18a, UI-18b and UI-18c are in place, per the stated dependency
+      actual pixel box — this worked, using the same conversion `rigReact()` now uses to
+      find the newest sparkline point in page coordinates
+- [x] Position tracking survives panel resize without becoming a smear or drifting off the
+      chart — the overlay approach solved the geometric smear the audit predicted
+- [ ] The crawler visibly pauses at scar positions — not reached; the idea was cut before
+      the scar-pause timing was wired
+- [x] Built only after UI-18a, UI-18b and UI-18c are in place, per the stated dependency —
+      the dependency was respected, which is why the comparison against the finished rig
+      was possible and why the cut is well-founded

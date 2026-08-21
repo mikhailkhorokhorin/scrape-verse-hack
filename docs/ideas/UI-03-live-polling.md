@@ -2,6 +2,8 @@
 
 > The console already re-fetches every 60 seconds; it should show the moment a new scan lands, not just re-render silently.
 
+**SHIPPED** — `web/js/delta.js` (the shared diff), `web/js/landing.js`, `web/css/landing.css`, called from `loadLive()` in `web/js/app.js`; covered by `test/web-delta.test.js`.
+
 **Status:** OPEN · **Cost:** small · **Depends on:** nothing (UI-18f rides on top of this once the cast exists)
 **Decision (Aug 21):** the previous-render diff is one shared module, `web/js/delta.js`, built by whichever of UI-03 / UI-18f / UI-21 enters work first — see the diff-module decision in `docs/TASKS.md`.
 **Touches:** `web/js/adapter.js`, `web/js/app.js`, `web/js/panel.js`
@@ -72,9 +74,17 @@ changed-collector signal is what makes that Spider react instead of a generic pa
 
 ## Done when
 
-- [ ] A genuinely new run for a given collector triggers a visible, brief animation on
-      that specific panel, not a silent full re-render
-- [ ] An unchanged fingerprint still short-circuits to no visible change, as it does today
-- [ ] The animation reads as "a new point landed," not as a state-change alarm (the fleet
-      may be 100% before and after)
-- [ ] Verified against a real poll cycle, not only by manually mutating `SPIDERS` in the console
+- [x] A genuinely new run for a given collector triggers a visible, brief animation on
+      that specific panel, not a silent full re-render — `announceLandings()` diffs the
+      previous snapshot through `deltaBetween()` and `markLanded()` adds `.panel--landed`
+      to that collector's panel only
+- [x] An unchanged fingerprint still short-circuits to no visible change, as it does today
+      — the `fingerprintOf()` early return in `loadLive()` is untouched, and
+      `deltaBetween()` returns no changes for a first render (no previous snapshot)
+- [x] The animation reads as "a new point landed," not as a state-change alarm (the fleet
+      may be 100% before and after) — a 900ms outline pulse plus a one-line note built by
+      `landingLineOf()`, which says `new scan` when nothing about the fields changed
+- [ ] **Not ticked: verified against a real poll cycle, not only by manually mutating
+      `SPIDERS`.** The diff is unit-tested against constructed snapshots and was exercised
+      by hand in the browser, but no landing has been watched arrive from the live 30-minute
+      cron

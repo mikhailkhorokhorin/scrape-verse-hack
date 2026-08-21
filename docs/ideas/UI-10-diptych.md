@@ -2,6 +2,8 @@
 
 > A healthy Spider and a taken one side by side, both from real history — the two characters, and the legend, drawn.
 
+**SHIPPED** — `web/js/diptych.js`, `web/js/from-record.js` (the shared record-to-spider helper UI-02 also uses), `web/css/diptych.css`, the `#diptych` section in `web/index.html`; covered by `test/web-diptych.test.js` and `test/web-from-record.test.js`.
+
 **Status:** ACCEPTED · **Cost:** small once [UI-18a](UI-18a-the-rig.md) exists · **Depends on:** UI-18a (better with it; the idea can also render without a rig, as a plain two-panel comparison)
 **Touches:** `web/js/render.js`, `web/index.html`, `web/js/panel.js`, `web/css/layout.css`
 
@@ -75,13 +77,22 @@ expected shape evolves.
 
 ## Done when
 
-- [ ] Two real historical records — one healthy, one at or near 0% integrity — render side
-      by side using the exact same `panelHTML()` path the live grid uses
-- [ ] Each half carries a caption naming its real date and, where applicable, the incident
-      it corresponds to
-- [ ] Neither half is synthesised data — both trace to specific, verifiable records in
-      `data/history.json`
-- [ ] Fully static — no animation required to convey the comparison, and it renders
-      identically with `prefers-reduced-motion` set
-- [ ] Placed above the grid, visually distinct from a live panel so it cannot be mistaken
-      for the current fleet state
+- [x] Two real historical records — one healthy, one at or near 0% integrity — render side
+      by side using the exact same `panelHTML()` path the live grid uses —
+      `diptychHalfHTML()` calls `spiderFromRecord()` then `panelHTML()`, no second
+      rendering path
+- [x] Each half carries a caption naming its real date and, where applicable, the incident
+      it corresponds to — `diptychCaption()` prints `held` / `taken`, the UTC date and
+      clock, and the incident id when `incidentAt()` matches one
+- [x] Neither half is synthesised data — both trace to specific, verifiable records in
+      `data/history.json`. **No timestamp is hard-coded:** `pickDiptych()` searches the
+      committed history at render time for the worst run per collector and its nearest
+      healthy neighbour, so pruning history re-picks rather than breaking
+- [x] Fully static — no animation required to convey the comparison, and it renders
+      identically with `prefers-reduced-motion` set — `diptychInert()` disables the panel
+      buttons and strips the chip roles, `.dip__panel .panel{animation:none}` cancels the
+      breathe, and the rig's idle animations are already cut under reduced motion
+- [x] Placed above the grid, visually distinct from a live panel so it cannot be mistaken
+      for the current fleet state — its own `From the archive` section sits between the
+      pulse and THE WATCH, framed in a dashed border, desaturated, and captioned
+      "Recorded runs — not the fleet as it stands now"

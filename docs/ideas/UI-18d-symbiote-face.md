@@ -2,6 +2,8 @@
 
 > Teeth and eyes added to the existing black-spread mechanism, so infection reads as something arriving, not just a fill level.
 
+**SHIPPED** — `web/js/symbiote.js` (`symbioteHTML()`, called from `panelHTML()`) and `web/css/symbiote-face.css`.
+
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** small, now that the mechanism is known · **Depends on:** nothing (rides the existing symbiote mechanism, independent of the rig)
 **Touches:** `web/css/panel.css`, a small addition to `web/js/panel.js`
 
@@ -76,11 +78,17 @@ absent in the markup `panelHTML()` emits.
 
 ## Done when
 
-- [ ] Teeth render as a zigzag strip pinned to the black's leading edge, filled
+- [x] Teeth render as a zigzag strip pinned to the black's leading edge, filled
       `--symbiote`, and visibly displace along with the rest of the substance under the
-      turbulence filter (not a separate, static layer)
-- [ ] Eyes appear only when `data-drowned="1"` is present, with no new JS threshold
-      introduced beyond what `panel.js` already computes
-- [ ] The whole substance — body, teeth, eyes — reads as one material under turbulence, not
-      two
-- [ ] Included in UI-09's performance pass
+      turbulence filter (not a separate, static layer) — `.symbiote__teeth` is a child of
+      `.symbiote`, which is where `filter:url(#symbiote-turbulence)` is applied, so it is
+      inside the filtered region by construction. It is pinned with
+      `bottom:calc(var(--spread) * 100%)` and rides the same 800ms curve as the body mask
+- [x] Eyes appear only when `data-drowned="1"` is present, with no new JS threshold
+      introduced beyond what `panel.js` already computes — one CSS rule,
+      `.panel[data-drowned] .symbiote__eyes{opacity:.92}`; `symbioteHTML()` always emits
+      the SVG and never branches on the threshold
+- [x] The whole substance — body, teeth, eyes — reads as one material under turbulence, not
+      two — all three are children of the single filtered `.symbiote` wrapper
+- [x] Included in UI-09's performance pass — pass 1 measured 76fps at 375px with six
+      turbulence-filtered layers on screen

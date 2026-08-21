@@ -2,6 +2,8 @@
 
 > Eight eyes, lit count from the integrity band, dimmed rather than removed so the socket still reads.
 
+**SHIPPED** — `eyesSVG()` in `web/js/rig.js`, `eyeRow()` / `litRankFor()` in `web/js/rig-parts.js`, `.rig__eye` in `web/css/rig.css`; covered by `test/web-rig.test.js`.
+
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** small · **Depends on:** [UI-18a](UI-18a-the-rig.md) ("eyes without a rig are nothing")
 **Touches:** `web/js/rig.js`, `web/css/panel.css` (or a rig-specific stylesheet)
 
@@ -68,11 +70,20 @@ inventing their own.
 
 ## Done when
 
-- [ ] Lit-eye count matches `statusOf(sp)` exactly: 8 healthy, partial degraded, 1
-      critical, 0 unwatched
-- [ ] Dimmed eyes use `--unwatched` fill and stay in the DOM — the socket is visible even
-      when dark
-- [ ] Blink timing is randomised per panel and does not visibly synchronise across the
-      three characters on screen at once
-- [ ] Blink timing is stable across re-renders (does not visibly reset on every poll)
-- [ ] Verified as part of UI-09's phone pass alongside the rest of the rig
+- [ ] **Not ticked as written: lit-eye count matches `statusOf(sp)` exactly: 8 healthy,
+      partial degraded, 1 critical, 0 unwatched.** The mapping is by rank, not by count:
+      `litRankFor()` returns 4 / 3 / 2 / 1 / 0 for healthy / reweaving / degraded /
+      critical / unwatched, and `eyeRow()` assigns the eight eyes ranks 1-4 in mirrored
+      pairs. So healthy is 8 lit and unwatched is 0 as specified, but **critical is 2 eyes,
+      not 1**, and degraded is 4. Keeping the pairs symmetric was worth more than hitting
+      the literal number — one lit eye on a mirrored face reads as a rendering fault
+- [x] Dimmed eyes use `--unwatched` fill and stay in the DOM — the socket is visible even
+      when dark — every eye is always emitted; `data-lit="0"` only changes the fill, and
+      there is no `display:none` on the path
+- [x] Blink timing is randomised per panel and does not visibly synchronise across the
+      three characters on screen at once — `--rig-blink` is `(seedOf(code) % 7) + 4`
+      seconds, which lands on three different periods — BODEGA 8s, KESTREL 9s, ATLAS 10s
+- [x] Blink timing is stable across re-renders (does not visibly reset on every poll) —
+      the seed is a hash of `sp.code`, not `Math.random()`, so it is identical on every
+      render
+- [x] Verified as part of UI-09's phone pass alongside the rest of the rig — pass 1

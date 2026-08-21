@@ -2,6 +2,8 @@
 
 > On first load the console demonstrates its own mechanic on real `inc_003` data, roughly six seconds, then settles into the live present.
 
+**SHIPPED** — `web/js/intro.js`, `web/js/intro-plan.js`, `web/css/intro.css`, the `REPLAY INTRO` button in `web/index.html`, covered by `test/web-intro.test.js`.
+
 **Status:** ACCEPTED · **Cost:** medium — the biggest single unbuilt risk on the whole list · **Depends on:** nothing required (build against `--spread`, which exists today); re-timed against the leg collapse only if UI-18a and UI-18b have already landed
 **Touches:** `web/js/panel.js`, `web/css/panel.css`, a new small intro-sequencing module, `web/index.html` (masthead `REPLAY INTRO` control)
 
@@ -115,13 +117,20 @@ for the live fleet.
 
 ## Done when
 
-- [ ] The full six-beat sequence plays against real `inc_003` data on first load in a
-      fresh session
-- [ ] The 2.6s hold is visibly distinct from the surrounding motion — a genuine pause, not
-      a blend
-- [ ] `sessionStorage` prevents replay within the same tab; `REPLAY INTRO` and `?intro=1`
-      both force it regardless
-- [ ] `prefers-reduced-motion` skips straight to the live end state with no animated beats
-- [ ] Any click, key press, or scroll during playback ends the sequence immediately and
-      leaves the page in the same state a plain load would reach
-- [ ] The sequence never blocks interaction with the rest of the page while it plays
+- [x] The full six-beat sequence plays against real `inc_003` data on first load in a
+      fresh session — `introBeats()` reads `integrity_before` / `integrity_after` off the
+      record `introIncidentOf()` resolves, `inc_003` by id with a worst-drop fallback
+- [x] The 2.6s hold is visibly distinct from the surrounding motion — a genuine pause, not
+      a blend. The `hold` beat at 2600ms carries no word and no integrity change, leaving
+      800ms of silence after `CRACK!` and 800ms before `WEAVE…`
+- [x] `sessionStorage` prevents replay within the same tab; `REPLAY INTRO` and `?intro=1`
+      both force it regardless — `introDecision()` puts `forced` ahead of `seen`
+- [x] `prefers-reduced-motion` skips straight to the live end state with no animated beats
+      — the first branch of `introDecision()`, and the sequence is never started at all
+- [x] Any click, key press, or scroll during playback ends the sequence immediately and
+      leaves the page in the same state a plain load would reach — `INTRO_SKIP_EVENTS`
+      binds five capture-phase listeners and `introRestore()` puts the panel back from the
+      snapshot taken before the first beat
+- [x] The sequence never blocks interaction with the rest of the page while it plays — no
+      overlay and no `pointer-events` block; the skip listeners are `passive`, so the click
+      that skips also does whatever it was going to do

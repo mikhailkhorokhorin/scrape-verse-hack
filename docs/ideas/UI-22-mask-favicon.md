@@ -2,6 +2,8 @@
 
 > A mask silhouette and a single lit eye-band whose width is the fleet integrity — re-scoped down from eight eyes to one shape, because a 16px favicon cannot render eight of anything.
 
+**SHIPPED** — `faviconFor()` and `fleetAverage()` in `web/js/finish.js`.
+
 **Status:** OPEN *(re-scoped down)* · **Cost:** trivial · **Depends on:** nothing
 **Touches:** `web/js/finish.js`
 

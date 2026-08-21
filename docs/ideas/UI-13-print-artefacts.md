@@ -2,6 +2,8 @@
 
 > One-pixel plate misregistration on borders, faint wear at panel corners, a dry-brush web in two page corners — the paper, not the ink.
 
+**SHIPPED** — `web/css/print-artefacts.css`.
+
 **Status:** OPEN · **Cost:** small · **Depends on:** nothing
 **Touches:** `web/css/layout.css`, `web/css/tokens.css`, new small CSS additions to panel/page chrome
 
@@ -63,10 +65,18 @@ it reads as a rendering bug."
 
 ## Done when
 
-- [ ] Panel and incident-card borders show a subtle plate-misregistration offset
-- [ ] Panel corners show faint wear, visible on close inspection but not distracting at
-      normal viewing distance
-- [ ] A dry-brush web motif sits in exactly two page corners, low-opacity, `--ink`/`--dim`
-- [ ] None of it reads as a layout bug to someone unfamiliar with the reference — checked
-      against a second pair of eyes, not just the author's own judgement
-- [ ] Survives `prefers-reduced-motion` untouched, since none of it should animate anyway
+- [x] Panel and incident-card borders show a subtle plate-misregistration offset — the
+      existing hard ink shadow gained a 1px pink and a -1px cyan companion at ~15% alpha,
+      riding alongside rather than replacing it. An unwatched panel drops the whole stack
+- [x] Panel corners show faint wear, visible on close inspection but not distracting at
+      normal viewing distance — four corner radial gradients layered into the existing
+      halftone `::before`, so no new markup
+- [x] A dry-brush web motif sits in exactly two page corners, low-opacity, `--ink`/`--dim`
+      — `.wrap::before` top-left and `.wrap::after` bottom-right, inline SVG at `.07`
+      opacity, `pointer-events:none`, hidden below 767px
+- [ ] **Not ticked: checked against a second pair of eyes.** Restraint was judged by the
+      author alone; nobody unfamiliar with the comic-print reference has looked at it yet.
+      The values are deliberately low (1px offsets, `.07` opacity), but "does not read as a
+      rendering bug" is the one claim here that cannot be self-certified
+- [x] Survives `prefers-reduced-motion` untouched, since none of it should animate anyway —
+      nothing in the file animates or transitions

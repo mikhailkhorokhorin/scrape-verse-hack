@@ -2,6 +2,8 @@
 
 > Each collector gets a character, and the character is not a mascot beside the data — it is the readout.
 
+**SHIPPED — all six sub-ideas.** `web/js/rig.js`, `web/js/rig-parts.js`, `web/js/rig-react.js`, `web/js/symbiote.js`, `web/js/sheet-rig.js` and `web/css/rig.css`, `rig-slot.css`, `rig-react.css`, `symbiote-face.css`, `sheet-rig.css`; covered by `test/web-rig.test.js` and `test/web-rig-react.test.js`. Nothing in the cut order (18a → 18b → 18c → 18e → 18d → 18f) had to be cut.
+
 **Status:** ACCEPTED · **Cost:** medium overall — the single largest piece of work on the list · **Depends on:** nothing (this is the foundation everything else in the cast, and several other ideas, build on)
 **Touches:** new `web/js/rig.js`; `web/js/panel.js`; `web/css/panel.css` and a new rig stylesheet
 
@@ -92,10 +94,16 @@ new surface area, not an addition squeezed into an already-dense file.
 
 ## Done when
 
-- [ ] Three distinct silhouettes exist, one per collector, recognisably different at panel
-      size (see UI-18a)
-- [ ] Each expected field maps to a leg pair whose state reflects that field's LIVE /
-      INFECTED / DEAD status (see UI-18b)
-- [ ] The rig lives in `web/js/rig.js`, not bolted onto `panel.js`
-- [ ] UI-09's phone pass has run at least once against the rig before it is considered done
-- [ ] No character art references or resembles a trademarked design
+- [x] Three distinct silhouettes exist, one per collector, recognisably different at panel
+      size (see UI-18a) — `RIG_BUILD` in `web/js/rig-parts.js`
+- [x] Each expected field maps to a leg pair whose state reflects that field's LIVE /
+      INFECTED / DEAD status (see UI-18b) — `legsSVG()` over `sp.fieldOrder`
+- [x] The rig lives in `web/js/rig.js`, not bolted onto `panel.js` — split further into
+      `rig-parts.js` (geometry) and `rig-react.js` (the landing reaction) to stay inside the
+      250-line cap; `panel.js` calls `rigSVG()` and nothing else
+- [x] UI-09's phone pass has run at least once against the rig before it is considered done
+      — pass 1 logged in `UI-09-phone-pass.md`, Chromium at 375×812, 76fps, no horizontal
+      scroll. Pass 2 (pre-submission) is still outstanding, as that brief records
+- [x] No character art references or resembles a trademarked design — every path is
+      authored in this repository as inline SVG from ellipses and hand-written path data;
+      no image file, no stock asset, no borrowed likeness

@@ -2,6 +2,8 @@
 
 > A fifth line under the tagline that states, in numbers, that this is not a mockup.
 
+**SHIPPED** — `evidenceParts()` / `renderEvidence()` in `web/js/masthead.js`, `web/css/evidence.css`, the `#evidence` line in `web/index.html`, and the `Count the tests` step in `.github/workflows/watch.yml`; covered by `test/web-evidence.test.js`.
+
 **Status:** ACCEPTED · **Cost:** trivial in the browser, ~15 minutes in the CI workflow · **Depends on:** nothing
 **Touches:** `web/index.html`, `web/js/masthead.js`, `web/js/render.js`, `.github/workflows/watch.yml`, `data/meta.json` (new, CI-generated)
 
@@ -76,12 +78,24 @@ prefix with an ellipsis, matching the format already used for `sp.cid` display i
 
 ## Done when
 
-- [ ] The masthead shows collector count, incidents-healed count, total rows, test count
-      and a truncated collector id, all below the tagline
-- [ ] Every number changes when the underlying JSON changes on a real poll, with no
-      hard-coded value in `web/js/config.js`
-- [ ] `data/meta.json` is written by the `build` job in `.github/workflows/watch.yml` and
-      committed to `public/` alongside `history.json` and `incidents.json`
-- [ ] A `data/meta.json` fetch failure hides only the test-count segment, not the whole
-      line
-- [ ] The line does not wrap at 375px
+- [x] The masthead shows collector count, incidents-healed count, total rows, test count
+      and a truncated collector id, all below the tagline — `evidenceParts()`, joined with
+      `·` into `#evidence`
+- [x] Every number changes when the underlying JSON changes on a real poll, with no
+      hard-coded value in `web/js/config.js` — the parts are read from `SPIDERS`,
+      `INCIDENTS`, `RAW_HISTORY` and `META`, and `META.tests` joins the poll fingerprint so
+      a changed test count re-renders
+- [x] `data/meta.json` is written by the `build` job in `.github/workflows/watch.yml` and
+      committed to `public/` alongside `history.json` and `incidents.json` — the
+      `Count the tests` step parses `# pass N` out of TAP and fails the job loudly if it
+      cannot, and the existing `cp -r data public/` carries it. **Caveat:** only the copy in
+      `public/` is regenerated per build. The `data/meta.json` committed in the repo is a
+      hand-written snapshot and currently reads `594` against a suite of 821, so a local
+      static server shows a stale test count until CI rebuilds
+- [x] A `data/meta.json` fetch failure hides only the test-count segment, not the whole
+      line — `fetchMeta()` returns `null` on any failure, `evidenceParts()` omits only that
+      part, and the line's `title` says why the count is missing
+- [x] The line does not wrap at 375px — `white-space:nowrap` with `text-overflow:ellipsis`,
+      a smaller face below 420px, and `renderEvidence()` switches to terse wording
+      (`coll` / `healed`) at or below `EVIDENCE_TERSE_PX` (480). Confirmed in the 375px pass
+      logged on UI-09
