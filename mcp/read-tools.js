@@ -28,8 +28,8 @@ function lastRunOf(history, codename) {
 function limitOf(args) {
   const raw = args.limit;
   if (raw === undefined || raw === null) return DEFAULT_LIMIT;
-  const n = Number(raw);
-  if (!Number.isFinite(n) || Math.floor(n) !== n || n < 1) {
+  const n = typeof raw === 'string' && raw.trim() ? Number(raw) : raw;
+  if (typeof n !== 'number' || !Number.isInteger(n) || n < 1) {
     throw new Error('limit must be a positive integer');
   }
   return Math.min(n, MAX_LIMIT);
