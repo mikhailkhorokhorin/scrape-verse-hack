@@ -1,0 +1,110 @@
+.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:var(--s4) var(--s4) var(--s6);}
+@media(max-width:768px){.wrap{padding:var(--s3) var(--s2) var(--s5);}}
+
+.masthead{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;gap:var(--s3) var(--s4);
+  padding-bottom:var(--s2);margin-bottom:var(--s2);
+}
+@media(max-width:900px){.masthead{grid-template-columns:minmax(0,1fr);}}
+
+.wordmark{
+  font-family:Anton,Impact,sans-serif;font-size:var(--t-masthead);
+  line-height:.78;letter-spacing:.01em;margin:0;color:var(--paper);
+  text-shadow:4px 0 var(--pink),-4px 0 var(--cyan);
+}
+.wordmark::after{
+  content:"WATCH";display:inline-block;vertical-align:.62em;margin-left:.45em;
+  font-size:.19em;letter-spacing:.34em;color:var(--ink);
+  background:var(--healthy);border:3px solid var(--ink);
+  padding:.28em .5em .2em;text-shadow:none;
+}
+.tagline{
+  max-width:44ch;margin:var(--s2) 0 0;color:#CFC2DE;
+  font-size:clamp(1rem,1.35vw,1.1875rem);line-height:1.45;
+}
+.tagline b{color:var(--paper);font-weight:700;}
+
+.readouts{
+  display:flex;gap:0;flex-wrap:wrap;align-self:end;
+  border:3px solid var(--ink);background:var(--void-2);box-shadow:5px 5px 0 var(--ink);
+}
+.readout{
+  min-width:132px;padding:9px var(--s2) 10px;
+  border-right:3px solid var(--ink);
+}
+.readout:last-child{border-right:0;}
+.readout__value{
+  font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  font-size:1.625rem;font-weight:600;line-height:1.15;display:block;margin-top:1px;
+}
+.readout__delta{font-size:.8125rem;font-weight:600;margin-left:6px;}
+.readout__delta--down{color:var(--critical);}
+.readout__delta--up{color:var(--healthy);}
+.readout__delta--flat{color:var(--dimmer);}
+.pulse{display:inline-block;width:10px;height:10px;background:var(--healthy);
+  border:2px solid var(--ink);margin-right:6px;animation:blink 2s steps(1) infinite;}
+@keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.25}}
+
+.sechead{
+  display:flex;align-items:center;gap:var(--s2);margin:var(--s5) 0 var(--s3);
+}
+.sechead h2{
+  font-family:Anton,Impact,sans-serif;font-size:var(--t-section);letter-spacing:.06em;
+  text-transform:uppercase;margin:0;color:var(--ink);
+  background:var(--paper);border:3px solid var(--ink);
+  padding:5px 13px 4px;box-shadow:3px 3px 0 var(--pink);
+}
+.sechead__count{
+  font-family:"IBM Plex Mono",monospace;font-size:.8125rem;font-weight:600;
+  color:var(--ink);background:var(--cyan);border:3px solid var(--ink);
+  padding:5px 9px 4px;
+}
+.sechead .rule{flex:1;height:4px;background:var(--ink);}
+
+.grid{
+  display:flex;max-width:100%;flex-wrap:wrap;align-content:flex-start;align-items:stretch;
+  column-gap:26px;row-gap:22px;
+}
+.cell{
+  min-width:0;position:relative;display:flex;flex-direction:column;
+  flex:0 1 calc((100% - 52px) / 3 * var(--u,1) + 26px * (var(--u,1) - 1) - 1.5px);
+}
+.cell > .panel{flex:0 0 var(--band,168px);height:var(--band,168px);}
+.cell--critical,.cell--reweaving{--u:2;--band:358px;}
+.cell--degraded{--u:1;--band:358px;}
+.cell--healthy,.cell--unwatched{--u:1;--band:168px;}
+@media(min-width:1200px){
+  .grid--tight .cell--critical,.grid--tight .cell--reweaving{--u:1;--band:436px;}
+  .grid--tight .cell--degraded{--band:392px;}
+}
+.cell.has-burst{z-index:40;}
+
+@media(max-width:1199px){
+  .cell{flex-basis:calc((100% - 26px) / 2 * var(--u,1) + 26px * (var(--u,1) - 1) - 1.5px);}
+}
+@media(max-width:767px){
+  .cell{flex:1 1 100%;}
+  .cell > .panel{flex:0 0 auto;height:auto;min-height:var(--band,168px);}
+}
+
+.rest{display:none;}
+.cell--tall .rest{
+  position:relative;flex:1 1 0;min-height:0;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;gap:5px;
+  margin-top:22px;padding:var(--s2) var(--s3);
+  border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);
+  background:var(--paper);
+}
+.cell--tall .rest::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(var(--paper-dot) 1px,transparent 1.4px);
+  background-size:5px 5px;opacity:.55;
+}
+.rest > *{position:relative;z-index:1;}
+.rest__label{
+  font-family:Anton,Impact,sans-serif;font-size:1.0625rem;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink);line-height:1;
+}
+.rest__line{font-size:.8125rem;line-height:1.4;color:#2A2438;}
+.rest__runs{font-size:.6875rem;color:#4A4160;letter-spacing:.04em;}

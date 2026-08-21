@@ -1,0 +1,32 @@
+.is-critical{animation:glitch-slice 3.2s steps(1) infinite;filter:saturate(.45);}
+.is-degraded{animation:glitch-slice 7s steps(1) infinite;filter:saturate(.82);}
+@keyframes glitch-slice{
+  0%,87%,100%{clip-path:inset(0 0 0 0);transform:translate(0);}
+  89%{clip-path:inset(18% 0 62% 0);transform:translate(-5px);}
+  92%{clip-path:inset(54% 0 26% 0);transform:translate(5px);}
+  95%{clip-path:inset(36% 0 44% 0);transform:translate(-3px);}
+  98%{clip-path:inset(72% 0 12% 0);transform:translate(3px);}
+}
+.is-reweaving{border-color:var(--cyan);animation:reweave 1.2s ease-in-out infinite;}
+@keyframes reweave{0%,100%{box-shadow:6px 6px 0 var(--ink);}50%{box-shadow:6px 6px 0 var(--ink),0 0 26px var(--cyan);}}
+.is-unwatched{
+  opacity:.32;filter:grayscale(1) brightness(.65);border-color:var(--unwatched);
+  box-shadow:none;transition:opacity 1.2s ease,filter 1.2s ease;animation:none;
+}
+.is-hit{animation:hit 220ms ease-in;}
+@keyframes hit{
+  0%{transform:translate(0)}25%{transform:translate(-5px,2px)}
+  50%{transform:translate(5px,-2px)}75%{transform:translate(-3px,1px)}100%{transform:translate(0)}
+}
+
+.burst{
+  position:absolute;top:-8%;left:64%;z-index:60;pointer-events:none;
+  font-family:Bangers,Impact,cursive;font-size:clamp(2.75rem,6.5vw,4.5rem);
+  letter-spacing:.03em;white-space:nowrap;
+  -webkit-text-stroke:4px var(--ink);paint-order:stroke fill;
+  filter:drop-shadow(4px 4px 0 var(--ink));
+  transform:translate(-50%,-50%) rotate(-11deg);
+  animation:burst-in 400ms cubic-bezier(.34,1.8,.64,1) both,burst-out 600ms ease-in 900ms both;
+}
+@keyframes burst-in{from{transform:translate(-50%,-50%) rotate(-11deg) scale(.5);opacity:0}}
+@keyframes burst-out{to{transform:translate(-50%,-50%) rotate(-11deg) scale(1.25);opacity:0}}

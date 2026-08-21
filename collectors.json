@@ -8,39 +8,84 @@
       "rows_per_run": 12,
       "note": "our own page, broken on purpose for the demo",
       "fields": {
-        "title":  { "type": "string", "min": 3, "max": 200 },
-        "price":  { "type": "number", "min": 0.01 },
-        "rating": { "type": "number", "min": 0, "max": 5 },
-        "image":  { "type": "url" }
+        "title": {
+          "type": "string",
+          "min": 3,
+          "max": 200
+        },
+        "price": {
+          "type": "number",
+          "min": 0.01
+        },
+        "rating": {
+          "type": "number",
+          "min": 0,
+          "max": 5
+        },
+        "image": {
+          "type": "url"
+        }
       }
     },
     {
       "codename": "ATLAS",
       "universe": "books.toscrape.com",
       "url": "https://books.toscrape.com/",
-      "collector_id": "",
+      "collector_id": "c_mt2fnqqngikv29od5",
       "rows_per_run": 20,
       "note": "sandbox built for scraping, no robots.txt, server-rendered. rating lives in a CSS class, not text",
       "fields": {
-        "title":        { "type": "string", "min": 3, "max": 200 },
-        "price":        { "type": "number", "min": 0.01 },
-        "rating":       { "type": "number", "min": 1, "max": 5, "words": true },
-        "image":        { "type": "url" },
-        "availability": { "type": "string", "min": 2, "max": 60 }
+        "title": {
+          "type": "string",
+          "min": 3,
+          "max": 200
+        },
+        "price": {
+          "type": "number",
+          "min": 0.01
+        },
+        "rating": {
+          "type": "number",
+          "min": 1,
+          "max": 5,
+          "words": true
+        },
+        "image": {
+          "type": "url"
+        },
+        "availability": {
+          "type": "string",
+          "min": 2,
+          "max": 60
+        }
       }
     },
     {
       "codename": "KESTREL",
       "universe": "news.ycombinator.com",
       "url": "https://news.ycombinator.com/",
-      "collector_id": "",
+      "collector_id": "c_mt2fnt3p2k4n644701",
       "rows_per_run": 30,
       "note": "real site. robots.txt allows the front page, Crawl-delay 30s — a 30-minute scan is well inside it",
       "fields": {
-        "title":    { "type": "string", "min": 3, "max": 300 },
-        "points":   { "type": "number", "min": 0 },
-        "comments": { "type": "number", "min": 0 },
-        "author":   { "type": "string", "min": 1, "max": 60 }
+        "title": {
+          "type": "string",
+          "min": 3,
+          "max": 300
+        },
+        "points": {
+          "type": "number",
+          "min": 0
+        },
+        "comments": {
+          "type": "number",
+          "min": 0
+        },
+        "author": {
+          "type": "string",
+          "min": 1,
+          "max": 60
+        }
       }
     }
   ]

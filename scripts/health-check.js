@@ -1,73 +1,53 @@
 #!/usr/bin/env node
 'use strict';
 
-/**
- * Scan every collector, score it, append to data/history.json.
- *
- * Exit code is 0 even when Integrity is 0. A broken scraper is the thing this
- * project exists to observe — reporting it is success, not failure. Only a
- * transport or config problem is an error.
- */
+const lib = require('./lib.js');
 
-const L = require('./lib.js');
+const TRANSPORT_ERROR = { transportError: true };
 
-function scan(c) {
-  const expected = Object.keys(c.fields);
-  const ts = new Date().toISOString();
+function firstLine(err) {
+  return err.message.split('\n')[0];
+}
 
-  if (!c.collector_id) {
-    console.log(`skip ${c.codename}: no collector_id yet (create it first)`);
+function scan(collector) {
+  if (!collector.collector_id) {
+    console.log(`skip ${collector.codename}: no collector_id yet (create it first)`);
     return null;
   }
-  if (!c.url) {
-    console.log(`skip ${c.codename}: no url in collectors.json`);
+  if (!collector.url) {
+    console.log(`skip ${collector.codename}: no url in collectors.json`);
     return null;
   }
 
-  let rows;
+  let payload;
   try {
-    rows = L.parsePayload(L.bdata(['scraper', 'run', c.collector_id, c.url, '--pretty']));
+    payload = lib.parsePayload(
+      lib.bdata(['scraper', 'run', collector.collector_id, collector.url, '--pretty']));
   } catch (err) {
-    console.error(`${c.codename}: run failed — ${err.message.split('\n')[0]}`);
-    return { transportError: true };
+    console.error(`${collector.codename}: run failed — ${firstLine(err)}`);
+    return TRANSPORT_ERROR;
   }
 
-  const list = L.rowsOf(rows);
-  if (!list.length) {
-    console.error(`${c.codename}: run returned no rows`);
-    return { transportError: true };
+  const rows = lib.rowsOf(payload);
+  if (!rows.length) {
+    console.error(`${collector.codename}: run returned no rows`);
+    return TRANSPORT_ERROR;
   }
 
-  // Score field by field across every row, then take the majority state.
-  // One bad row out of twenty is noise; twelve out of twenty is a break.
-  const states = {};
-  for (const field of expected) {
-    const tally = { live: 0, infected: 0, dead: 0 };
-    for (const row of list) tally[L.classify(row?.[field], c.fields[field])]++;
-    states[field] = Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
-  }
+  return lib.runRecord(collector, rows);
+}
 
-  const integrity = L.integrityOf(states);
-  const pick = (s) => expected.filter((f) => states[f] === s);
-
-  return {
-    collector_id: c.collector_id,
-    spider: c.codename,
-    universe: c.universe,
-    ts,
-    fields_expected: expected,
-    fields_live: pick('live'),
-    fields_infected: pick('infected'),
-    fields_dead: pick('dead'),
-    integrity,
-    status: L.statusOf(integrity),
-    rows: list.length,
-    sample: Object.fromEntries(expected.map((f) => [f, list[0]?.[f] ?? null]))
-  };
+function summarise(record) {
+  const failing = [
+    ...record.fields_infected.map((field) => `${field}!`),
+    ...record.fields_dead.map((field) => `${field}x`)
+  ];
+  return `${record.spider.padEnd(9)} ${String(record.integrity).padStart(3)}%  ` +
+    `${record.status.padEnd(8)} ${failing.length ? failing.join(' ') : 'all fields live'}`;
 }
 
 function main() {
-  const all = L.collectors();
+  const all = lib.collectors();
   if (!all.length) {
     console.error('collectors.json is empty');
     process.exit(1);
@@ -75,22 +55,20 @@ function main() {
 
   let transportFailures = 0;
 
-  for (const c of all) {
-    const record = scan(c);
+  for (const collector of all) {
+    const record = scan(collector);
     if (!record) continue;
-    if (record.transportError) { transportFailures++; continue; }
+    if (record === TRANSPORT_ERROR) {
+      transportFailures++;
+      continue;
+    }
 
-    L.appendHistory(record);
-    const bad = [...record.fields_infected.map((f) => `${f}!`),
-                 ...record.fields_dead.map((f) => `${f}x`)];
-    console.log(
-      `${record.spider.padEnd(9)} ${String(record.integrity).padStart(3)}%  ` +
-      `${record.status.padEnd(8)} ${bad.length ? bad.join(' ') : 'all fields live'}`
-    );
+    lib.appendHistory(record);
+    console.log(summarise(record));
   }
 
-  // Every collector unreachable means the CLI or the network is broken, not the sites.
-  if (transportFailures && transportFailures === all.filter((c) => c.collector_id).length) {
+  const runnable = all.filter((collector) => collector.collector_id).length;
+  if (transportFailures && transportFailures === runnable) {
     console.error('every collector failed to run — check auth and network');
     process.exit(1);
   }

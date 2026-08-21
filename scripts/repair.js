@@ -1,150 +1,205 @@
 #!/usr/bin/env node
 'use strict';
 
-/**
- * Heal collectors that have been broken for two consecutive scans.
- *
- * Two scans, not one: a single bad run is usually a transient network failure,
- * and healing on it burns credit for nothing.
- *
- * Never exits non-zero on a failed heal. A heal that did not work is data about
- * the target, not a broken pipeline.
- */
+const lib = require('./lib.js');
 
-const L = require('./lib.js');
+const BROKEN_BELOW = lib.DEGRADED_MIN;
+const RESOLVED_AT = lib.HEALTHY_MIN;
+const COOLDOWN_MS = 2 * 60 * 60 * 1000;
+const CONSECUTIVE_BAD_RUNS = 2;
+const HEAL_TIMEOUT_SECONDS = '900';
+const MAX_PROMPT_CHARS = 990;
 
-const THRESHOLD = 60;                       // integrity below this counts as broken
-const COOLDOWN_MS = 2 * 60 * 60 * 1000;     // never heal the same collector twice in 2h
+const runsFor = (history, codename) => history.filter((run) => run.spider === codename);
 
-const runsFor = (hist, code) => hist.filter((r) => r.spider === code);
+function firstLine(err) {
+  return err.message.split('\n')[0];
+}
 
-function lastHealAt(incs, code) {
-  const mine = incs.filter((i) => i.spider === code);
+function lastHealAt(incidents, codename) {
+  const mine = incidents.filter((incident) => incident.spider === codename);
   return mine.length ? new Date(mine[mine.length - 1].opened_at).getTime() : 0;
 }
 
-/**
- * Build the prompt from what actually broke. Never from user input — a prompt
- * that can be supplied externally is an injection into the healer.
- */
-function buildPrompt(run) {
-  const parts = [];
-  if (run.fields_dead.length)
-    parts.push(`${run.fields_dead.map((f) => `'${f}'`).join(' and ')} ` +
-               `${run.fields_dead.length > 1 ? 'return' : 'returns'} null after a layout change`);
-  if (run.fields_infected.length)
-    parts.push(`${run.fields_infected.map((f) => `'${f}'`).join(' and ')} ` +
-               `${run.fields_infected.length > 1 ? 'return' : 'returns'} an invalid value`);
-  return `On ${run.universe}: ${parts.join('; ')}. Fix the extraction for those fields.`
-    .slice(0, 990);
+function clause(fields, verb) {
+  const quoted = fields.map((field) => `'${field}'`).join(' and ');
+  return `${quoted} ${fields.length > 1 ? verb : verb + 's'}`;
 }
 
-function heal(c, run, stages) {
+const NARROW_TYPES = new Set(['number', 'url']);
+
+function isNarrow(rule) {
+  return !!rule && NARROW_TYPES.has(rule.type);
+}
+
+function shiftedPairs(run, collector) {
+  const pairs = [];
+  const broken = [...run.fields_dead, ...run.fields_infected];
+  for (const field of broken) {
+    const value = run.sample ? run.sample[field] : undefined;
+    if (value === null || value === undefined || value === '') continue;
+    if (!isNarrow(collector.fields[field])) continue;
+    for (const other of run.fields_expected) {
+      if (other === field || broken.includes(other)) continue;
+      if (!isNarrow(collector.fields[other])) continue;
+      if (lib.classify(value, collector.fields[other]) === 'live') {
+        pairs.push([field, other]);
+        break;
+      }
+    }
+  }
+  return pairs;
+}
+
+function strainOf(run, collector) {
+  const dead = run.fields_dead.length;
+  const infected = run.fields_infected.length;
+  const expected = run.fields_expected.length;
+
+  if (dead === expected && expected > 0) return 'THROTTLED';
+  if (shiftedPairs(run, collector).length) return 'SHIFTED';
+  if (infected > dead) return 'DRIFTED';
+  if (dead) return 'RENAMED';
+  return 'DRIFTED';
+}
+
+const STRAIN_HINT = {
+  THROTTLED: 'every field came back empty, so the request itself is likely being blocked ' +
+    'or served a different page',
+  RENAMED: 'the other fields still extract correctly, so a selector moved rather than the ' +
+    'page changing wholesale',
+  DRIFTED: 'the fields still return values and the values are wrong, so the selectors ' +
+    'match the wrong nodes rather than nothing',
+  SHIFTED: 'the columns appear to have slid — a broken field is returning a value that ' +
+    'belongs to a neighbouring field'
+};
+
+function buildPrompt(run, strain) {
+  const parts = [];
+  if (run.fields_dead.length) {
+    parts.push(`${clause(run.fields_dead, 'return')} null after a layout change`);
+  }
+  if (run.fields_infected.length) {
+    parts.push(`${clause(run.fields_infected, 'return')} an invalid value`);
+  }
+  const hint = strain && STRAIN_HINT[strain] ? ` Likely ${strain}: ${STRAIN_HINT[strain]}.` : '';
+  return `On ${run.universe}: ${parts.join('; ')}.${hint} Fix the extraction for those fields.`
+    .slice(0, MAX_PROMPT_CHARS);
+}
+
+function heal(collector, run, stages, strain) {
   stages.push({ stage: 'DIAGNOSED', ts: new Date().toISOString() });
-  const prompt = buildPrompt(run);
-  console.log(`${c.codename}: healing — ${prompt}`);
+  const prompt = buildPrompt(run, strain);
+  console.log(`${collector.codename}: healing [${strain}] — ${prompt}`);
 
   stages.push({ stage: 'REWEAVING', ts: new Date().toISOString() });
   try {
-    // --timeout is explicit: the CLI defaults to 600s and a heal runs up to 15
-    // minutes, so the default aborts a working heal and burns the credit anyway.
-    L.bdata(['scraper', 'heal', c.collector_id, prompt, '--url', c.url,
-             '--auto-approve', '--auto-save', '--timeout', '900']);
+    lib.bdata(['scraper', 'heal', collector.collector_id, prompt, '--url', collector.url,
+      '--auto-approve', '--auto-save', '--timeout', HEAL_TIMEOUT_SECONDS]);
   } catch (err) {
-    console.error(`${c.codename}: heal failed — ${err.message.split('\n')[0]}`);
+    console.error(`${collector.codename}: heal failed — ${firstLine(err)}`);
     return null;
   }
 
-  // Verify rather than trust. A heal that reports success and still returns
-  // nulls is exactly the silent failure this product is about.
   try {
-    const list = L.rowsOf(L.parsePayload(
-      L.bdata(['scraper', 'run', c.collector_id, c.url, '--pretty'])));
-    // Vote across every row, exactly as the scan does. Judging the heal on row
-    // zero lets one unlucky row report a working heal as a failed one.
-    const states = {};
-    for (const f of Object.keys(c.fields)) {
-      const tally = { live: 0, infected: 0, dead: 0 };
-      for (const row of list) tally[L.classify(row?.[f], c.fields[f])]++;
-      states[f] = Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
-    }
+    const rows = lib.rowsOf(lib.parsePayload(
+      lib.bdata(['scraper', 'run', collector.collector_id, collector.url, '--pretty'])));
     stages.push({ stage: 'VERIFIED', ts: new Date().toISOString() });
-    const integrity = L.integrityOf(states);
-    const pick = (st) => Object.keys(states).filter((f) => states[f] === st);
-    // The console reads history, not incidents. Without this the recovery is
-    // invisible on the sparkline until the next scheduled scan.
-    L.appendHistory({
-      collector_id: c.collector_id,
-      spider: c.codename,
-      universe: c.universe,
-      ts: new Date().toISOString(),
-      fields_expected: Object.keys(c.fields),
-      fields_live: pick('live'),
-      fields_infected: pick('infected'),
-      fields_dead: pick('dead'),
-      integrity,
-      status: L.statusOf(integrity),
-      rows: list.length,
-      after_heal: true,
-      sample: Object.fromEntries(
-        Object.keys(c.fields).map((f) => [f, list[0]?.[f] ?? null]))
-    });
-    return integrity;
+    const record = lib.runRecord(collector, rows);
+    lib.appendHistory({ ...record, after_heal: true });
+    return record;
   } catch (err) {
-    console.error(`${c.codename}: verification run failed — ${err.message.split('\n')[0]}`);
+    console.error(`${collector.codename}: verification run failed — ${firstLine(err)}`);
     return null;
   }
 }
 
-function main() {
-  const hist = L.history();
-  const incs = L.incidents();
-  const now = Date.now();
+function recoveredFields(run, after) {
+  const broken = [...run.fields_dead, ...run.fields_infected];
+  return broken.filter((field) => after.fields_live.includes(field));
+}
 
-  // A single collector can be forced from outside via the T-38 trigger endpoint.
-  // Allowlist it against collectors.json — server-side checks are not a substitute
-  // for validating at the point of use.
+function describe(run, after, recovered) {
+  const broken = [...run.fields_dead, ...run.fields_infected];
+  const listed = broken.join(' and ');
+  if (!after) {
+    return `Extraction kept succeeding while ${listed} stopped returning usable values. ` +
+      'The re-weave did not complete.';
+  }
+  if (recovered.length === broken.length) {
+    return `Extraction kept succeeding while ${listed} stopped returning usable values. ` +
+      `The re-weave restored ${recovered.join(' and ')} and Integrity returned to ${after.integrity}%.`;
+  }
+  if (recovered.length) {
+    return `Extraction kept succeeding while ${listed} stopped returning usable values. ` +
+      `The re-weave brought back ${recovered.join(' and ')}; the rest is still failing at ${after.integrity}%.`;
+  }
+  return `Extraction kept succeeding while ${listed} stopped returning usable values. ` +
+    `The re-weave did not restore them — Integrity is ${after.integrity}%.`;
+}
+
+function isBroken(recent, forced) {
+  if (!recent.length) return false;
+  if (forced) return recent[recent.length - 1].integrity < BROKEN_BELOW;
+  return recent.length === CONSECUTIVE_BAD_RUNS &&
+    recent.every((run) => run.integrity < BROKEN_BELOW);
+}
+
+function main() {
+  const history = lib.history();
+  const incidents = lib.incidents();
+  const now = Date.now();
   const forced = process.env.HEAL_COLLECTOR || null;
 
-  for (const c of L.collectors()) {
-    if (!c.collector_id) continue;
-    if (forced && c.collector_id !== forced) continue;
+  let healed = 0;
+  let failed = 0;
 
-    const runs = runsFor(hist, c.codename);
-    const last2 = runs.slice(-2);
+  for (const collector of lib.collectors()) {
+    if (!collector.collector_id) continue;
+    if (forced && collector.collector_id !== forced) continue;
 
-    const broken = forced
-      ? last2.length && last2[last2.length - 1].integrity < THRESHOLD
-      : last2.length === 2 && last2.every((r) => r.integrity < THRESHOLD);
+    const recent = runsFor(history, collector.codename).slice(-CONSECUTIVE_BAD_RUNS);
+    if (!isBroken(recent, forced)) continue;
 
-    if (!broken) continue;
-
-    if (now - lastHealAt(incs, c.codename) < COOLDOWN_MS) {
-      console.log(`${c.codename}: within cooldown, skipping`);
+    if (now - lastHealAt(incidents, collector.codename) < COOLDOWN_MS) {
+      console.log(`${collector.codename}: within cooldown, skipping`);
       continue;
     }
 
-    const run = last2[last2.length - 1];
+    const run = recent[recent.length - 1];
     const stages = [{ stage: 'DETECTED', ts: run.ts }];
-    const opened = new Date().toISOString();
-    const after = heal(c, run, stages);
+    const openedAt = new Date().toISOString();
+    const strain = strainOf(run, collector);
+    const after = heal(collector, run, stages, strain);
+    const recovered = after ? recoveredFields(run, after) : [];
 
-    L.appendIncident({
-      id: `inc_${String(incs.length + 1).padStart(3, '0')}`,
-      spider: c.codename,
-      collector_id: c.collector_id,
-      opened_at: opened,
+    lib.appendIncident({
+      spider: collector.codename,
+      collector_id: collector.collector_id,
+      opened_at: openedAt,
       closed_at: after === null ? null : new Date().toISOString(),
       integrity_before: run.integrity,
-      integrity_after: after,
+      integrity_after: after === null ? null : after.integrity,
       anomalies: [...run.fields_dead, ...run.fields_infected],
-      rows_per_run: c.rows_per_run,
-      heal_prompt: buildPrompt(run),
-      resolved: after !== null && after >= 90,
+      recovered_fields: recovered,
+      summary: describe(run, after, recovered),
+      rows_per_run: collector.rows_per_run,
+      strain: strain,
+      heal_prompt: buildPrompt(run, strain),
+      resolved: after !== null && after.integrity >= RESOLVED_AT,
       stages
     });
 
-    console.log(`${c.codename}: ${run.integrity}% -> ${after === null ? 'heal failed' : after + '%'}`);
+    if (after === null) failed++;
+    else healed++;
+
+    console.log(`${collector.codename}: ${run.integrity}% -> ` +
+      (after === null ? 'heal failed' : after.integrity + '%'));
+  }
+
+  if (failed && !healed) {
+    console.error('every attempted heal failed');
+    process.exit(1);
   }
 }
 

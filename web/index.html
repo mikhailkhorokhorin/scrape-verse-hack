@@ -8,7 +8,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bangers&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/pulse.css">
+<link rel="stylesheet" href="css/panel.css">
+<link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/sizes.css">
+<link rel="stylesheet" href="css/states.css">
+<link rel="stylesheet" href="css/feed.css">
+<link rel="stylesheet" href="css/sheet.css">
+<link rel="stylesheet" href="css/track.css">
+<link rel="stylesheet" href="css/empty.css">
+<link rel="stylesheet" href="css/scars.css">
+<link rel="stylesheet" href="css/infection.css">
+<link rel="stylesheet" href="css/legend.css">
+<link rel="stylesheet" href="css/mock.css">
+<link rel="stylesheet" href="css/capture.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -23,7 +38,8 @@
   <header class="masthead">
     <div>
       <h1 class="wordmark">THWIP</h1>
-      <p class="tagline">Scrapers don't crash. They decay — quietly, alone, and nobody is watching. This is the watch.</p>
+      <p class="tagline">Scrapers don't crash. They <b>decay</b> — quietly, alone, at 3am, and
+      nobody is watching. This is the watch.</p>
     </div>
     <div class="readouts">
       <div class="readout">
@@ -45,19 +61,21 @@
     </div>
   </header>
 
-  <div class="sechead"><h2>The Watch</h2><span class="rule"></span></div>
+  <div class="pulseline" id="pulse" hidden></div>
 
-  <!-- T-28 — the legend. Static markup on purpose: always visible, no hover,
-       no tooltip, no JS. The symbiote is the strongest idea on the page and it
-       is unreadable to anyone seeing it for the first time. -->
+  <div class="sechead"><h2>The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
+
+  <div class="grid" id="grid"></div>
+
   <aside class="legend" aria-label="How to read this page">
     <h3 class="legend__title">How to read a Spider</h3>
 
     <p class="legend__lede">
       <span class="legend__black" aria-hidden="true"></span>
-      A scraper that breaks does not crash — it keeps running and the rows go quietly
-      wrong. <b>The black is what the scraper lost.</b> It climbs each panel from the
-      base, covering exactly as much of the Spider as its Integrity is missing.
+      A scraper that breaks does not crash — it keeps running and the rows go quietly wrong.
+      <b>The black is what the scraper lost.</b> It climbs each panel from the base, covering
+      exactly as much of the Spider as its Integrity is missing. Nothing else on this page
+      needs reading to know which Spider is in trouble.
     </p>
 
     <div class="legend__cols">
@@ -97,9 +115,8 @@
     </div>
   </aside>
 
-  <div class="grid" id="grid"></div>
 
-  <div class="sechead"><h2>Incident Feed</h2><span class="rule"></span></div>
+  <div class="sechead"><h2>Incident Feed</h2><span class="sechead__count" id="feedcount" hidden></span><span class="rule"></span></div>
   <div class="feed" id="feed"></div>
 
 </div>
@@ -111,7 +128,19 @@
   </div>
 </div>
 
-<script src="fixtures.js"></script>
-<script src="app.js"></script>
+<script src="js/config.js"></script>
+<script src="js/format.js"></script>
+<script src="js/sparkline.js"></script>
+<script src="js/pulse.js"></script>
+<script src="js/received.js"></script>
+<script src="js/panel.js"></script>
+<script src="js/render.js"></script>
+<script src="js/sheet.js"></script>
+<script src="js/scars.js"></script>
+<script src="js/infection.js"></script>
+<script src="js/finish.js"></script>
+<script src="js/adapter.js"></script>
+<script src="js/fixtures.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

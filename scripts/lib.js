@@ -9,17 +9,37 @@ const HISTORY = path.join(ROOT, 'data', 'history.json');
 const INCIDENTS = path.join(ROOT, 'data', 'incidents.json');
 const CONFIG = path.join(ROOT, 'collectors.json');
 
-// Keep history bounded. 3 collectors x 48 scans/day fills up faster than it looks,
-// and the console fetches the whole file on every load.
 const MAX_HISTORY = 2000;
+const MAX_ROWS = 5000;
+const MAX_PAYLOAD_BYTES = 24 * 1024 * 1024;
+const HEALTHY_MIN = 90;
+const DEGRADED_MIN = 60;
+const INFECTED_CREDIT = 0.5;
 
 const readJSON = (p, fallback) => {
-  try { return JSON.parse(fs.readFileSync(p, 'utf8')); }
-  catch { return fallback; }
+  let raw;
+  try { raw = fs.readFileSync(p, 'utf8'); }
+  catch (err) {
+    if (err.code === 'ENOENT') return fallback;
+    throw err;
+  }
+  try { return JSON.parse(raw); }
+  catch (err) {
+    throw new Error(`${p} exists but is not valid JSON — refusing to overwrite it: ${err.message}`);
+  }
 };
 
-const writeJSON = (p, data) =>
-  fs.writeFileSync(p, JSON.stringify(data, null, 2) + '\n');
+const writeJSON = (p, data) => {
+  const tmp = `${p}.${process.pid}.tmp`;
+  const fd = fs.openSync(tmp, 'w');
+  try {
+    fs.writeFileSync(fd, JSON.stringify(data, null, 2) + '\n');
+    fs.fsyncSync(fd);
+  } finally {
+    fs.closeSync(fd);
+  }
+  fs.renameSync(tmp, p);
+};
 
 const collectors = () => readJSON(CONFIG, { collectors: [] }).collectors;
 const history = () => readJSON(HISTORY, []);
@@ -31,21 +51,21 @@ const appendHistory = (record) => {
   writeJSON(HISTORY, all.slice(-MAX_HISTORY));
 };
 
+const nextIncidentId = (existing) => {
+  const used = new Set(existing.map((inc) => inc && inc.id));
+  let n = existing.length + 1;
+  while (used.has(`inc_${String(n).padStart(3, '0')}`)) n += 1;
+  return `inc_${String(n).padStart(3, '0')}`;
+};
+
 const appendIncident = (record) => {
   const all = incidents();
-  all.push(record);
+  all.push({ ...record, id: record.id || nextIncidentId(all) });
   writeJSON(INCIDENTS, all);
 };
 
-// books.toscrape spells its rating in the CSS class: "star-rating Three".
-// The field is populated and correct; only its notation is not a numeral.
 const WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5 };
 
-/**
- * Classify one field value against its declared validator.
- * Three states, because two is not enough: a field that returns a wrong value
- * passes every null check and still poisons the pipeline.
- */
 function classify(value, rule) {
   if (value === null || value === undefined || value === '' ||
       (Array.isArray(value) && value.length === 0)) return 'dead';
@@ -67,8 +87,6 @@ function classify(value, rule) {
       try {
         const u = new URL(s, 'https://example.invalid');
         if (!/^https?:$/.test(u.protocol)) return 'infected';
-        // a relative path that resolved against the dummy base is a placeholder,
-        // not a real image URL
         if (!/^https?:\/\//i.test(s)) return 'infected';
         return 'live';
       } catch { return 'infected'; }
@@ -82,21 +100,61 @@ function classify(value, rule) {
   }
 }
 
-/** Integrity weights infection at half credit: garbage is worse than correct,
- *  better than nothing — nothing at least fails loudly. */
 function integrityOf(states) {
-  const vals = Object.values(states);
-  if (!vals.length) return 0;
-  const live = vals.filter((s) => s === 'live').length;
-  const inf = vals.filter((s) => s === 'infected').length;
-  return Math.round(((live + 0.5 * inf) / vals.length) * 100);
+  const values = Object.values(states);
+  if (!values.length) return 0;
+  const live = values.filter((state) => state === 'live').length;
+  const infected = values.filter((state) => state === 'infected').length;
+  return Math.round(((live + INFECTED_CREDIT * infected) / values.length) * 100);
 }
 
-const statusOf = (i) => (i >= 90 ? 'HEALTHY' : i >= 60 ? 'DEGRADED' : 'CRITICAL');
+const statusOf = (integrity) =>
+  integrity >= HEALTHY_MIN ? 'HEALTHY' : integrity >= DEGRADED_MIN ? 'DEGRADED' : 'CRITICAL';
 
-/** Run the CLI. Long by nature — create is 5-25 min, heal up to 15. Never retry here. */
+function dominantState(rows, field, rule) {
+  const tally = { live: 0, infected: 0, dead: 0 };
+  for (const row of rows) tally[classify(row?.[field], rule)]++;
+  return Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
+}
+
+function fieldStates(rows, fields) {
+  const states = {};
+  for (const field of Object.keys(fields)) {
+    states[field] = dominantState(rows, field, fields[field]);
+  }
+  return states;
+}
+
+function partitionByState(states) {
+  const of = (wanted) => Object.keys(states).filter((field) => states[field] === wanted);
+  return { fields_live: of('live'), fields_infected: of('infected'), fields_dead: of('dead') };
+}
+
+function runRecord(collector, rows) {
+  const states = fieldStates(rows, collector.fields);
+  const integrity = integrityOf(states);
+  return {
+    collector_id: collector.collector_id,
+    spider: collector.codename,
+    universe: collector.universe,
+    ts: new Date().toISOString(),
+    fields_expected: Object.keys(collector.fields),
+    ...partitionByState(states),
+    integrity,
+    status: statusOf(integrity),
+    rows: rows.length,
+    sample: Object.fromEntries(
+      Object.keys(collector.fields).map((field) => [field, rows[0]?.[field] ?? null]))
+  };
+}
+
+const WINDOWS = process.platform === 'win32';
+const CLI = ['-y', '-p', '@brightdata/cli', 'bdata'];
+
 function bdata(args, { timeout = 20 * 60 * 1000 } = {}) {
-  return execFileSync('npx', ['-y', '-p', '@brightdata/cli', 'bdata', ...args], {
+  const command = WINDOWS ? 'cmd' : 'npx';
+  const argv = WINDOWS ? ['/c', 'npx', ...CLI, ...args] : [...CLI, ...args];
+  return execFileSync(command, argv, {
     encoding: 'utf8',
     timeout,
     maxBuffer: 32 * 1024 * 1024,
@@ -104,35 +162,46 @@ function bdata(args, { timeout = 20 * 60 * 1000 } = {}) {
   });
 }
 
-/** Rows may arrive bare or wrapped in a container. Unwrap to the actual list,
- *  or scoring runs against the envelope and every field reads dead. */
+const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
 function rowsOf(payload) {
-  if (Array.isArray(payload)) return payload;
+  const cap = (a) => a.slice(0, MAX_ROWS);
+  if (Array.isArray(payload)) return cap(payload);
   if (payload && typeof payload === 'object') {
     for (const key of ['data', 'records', 'results', 'items', 'rows', 'output']) {
-      if (Array.isArray(payload[key])) return payload[key];
+      if (has(payload, key) && Array.isArray(payload[key])) return cap(payload[key]);
     }
     const nested = Object.values(payload)
-      .find((v) => Array.isArray(v) && v.every((e) => e && typeof e === 'object'));
-    if (nested) return nested;
+      .find((v) => Array.isArray(v) && v.length && v.every((e) => e && typeof e === 'object'));
+    if (nested) return cap(nested);
   }
   return [payload];
 }
 
-/** The CLI prints progress around the JSON; take the outermost array or object. */
 function parsePayload(raw) {
+  if (typeof raw !== 'string') throw new Error('CLI output is not text');
+  if (raw.length > MAX_PAYLOAD_BYTES) {
+    throw new Error(`CLI output too large (${raw.length} bytes) — refusing to parse`);
+  }
   const start = raw.search(/[[{]/);
   if (start === -1) throw new Error('no JSON in CLI output');
   const open = raw[start];
   const close = open === '[' ? ']' : '}';
   const end = raw.lastIndexOf(close);
   if (end <= start) throw new Error('unterminated JSON in CLI output');
-  return JSON.parse(raw.slice(start, end + 1));
+  try {
+    return JSON.parse(raw.slice(start, end + 1));
+  } catch (err) {
+    throw new Error(`CLI output is not valid JSON: ${err.message}`);
+  }
 }
 
 module.exports = {
   ROOT, HISTORY, INCIDENTS, CONFIG,
+  HEALTHY_MIN, DEGRADED_MIN,
   readJSON, writeJSON, collectors, history, incidents,
   appendHistory, appendIncident,
-  classify, integrityOf, statusOf, bdata, parsePayload, rowsOf
+  classify, integrityOf, statusOf,
+  fieldStates, partitionByState, runRecord,
+  bdata, parsePayload, rowsOf
 };
