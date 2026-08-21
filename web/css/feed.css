@@ -3,6 +3,9 @@
   .feed--many{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start;}
   .feed > .plate{grid-column:1/-1;}
 }
+@media(min-width:1000px){
+  .feed--many > .incident:last-child:nth-child(odd){grid-column:1/-1;}
+}
 @media(min-width:1280px){
   .feed--many{grid-template-columns:minmax(0,3fr) minmax(0,2fr);}
   .feed--one .incident{max-width:860px;}

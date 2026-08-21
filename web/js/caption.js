@@ -59,9 +59,13 @@ function captionFor(kind, raw) {
 }
 
 function captionHTML(caption) {
+  const sep = '<span class="caption__sep">: </span>';
   return (
-    '<span class="caption__title">' + esc(caption.title) + "</span>" +
-    (caption.num ? '<span class="caption__num">' + esc(caption.num) + "</span>" : "") +
+    '<span class="caption__title">' + esc(caption.title) + "</span>" + sep +
+    (caption.num
+      ? '<span class="caption__num">' + esc(caption.num) + "</span>" +
+        '<span class="caption__sep"> </span>'
+      : "") +
     '<span class="caption__lede">' + esc(caption.lede) + "</span>"
   );
 }

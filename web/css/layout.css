@@ -48,8 +48,9 @@
 @keyframes blink{0%,60%{opacity:1}61%,100%{opacity:.25}}
 
 .sechead{
-  display:flex;align-items:center;gap:var(--s2);margin:var(--s5) 0 var(--s3);
+  display:flex;align-items:center;gap:var(--s2);margin:var(--s6) 0 var(--s3);
 }
+@media(max-width:767px){.sechead{margin-top:var(--s5);}}
 .sechead h2{
   font-family:Anton,Impact,sans-serif;font-size:var(--t-section);letter-spacing:.06em;
   text-transform:uppercase;margin:0;color:var(--ink);
@@ -81,6 +82,12 @@
   .grid--tight .cell--degraded{--band:392px;}
 }
 .cell.has-burst{z-index:40;}
+
+@media(min-width:768px){
+  .grid:not(.grid--calm) > .cell--critical,
+  .grid:not(.grid--calm) > .cell--reweaving,
+  .grid:not(.grid--calm) > .cell--degraded{flex-grow:1;}
+}
 
 .grid--calm .cell{flex:1 1 320px;}
 .grid--calm .cell > .panel{min-height:232px;}
