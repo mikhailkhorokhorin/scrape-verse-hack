@@ -3,6 +3,7 @@
 > When polling picks up a new record, that Spider reacts: a step, a head turn toward the new sparkline point, `THWIP!` only if the record carries `after_heal`.
 
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** small · **Depends on:** [UI-18a](UI-18a-the-rig.md); rides on [UI-03](UI-03-live-polling.md)'s change detection
+**Decision (Aug 21):** the per-collector diff this needs is the shared `web/js/delta.js` module, built by whichever of UI-03 / UI-18f / UI-21 enters work first — see the diff-module decision in `docs/TASKS.md`.
 **Touches:** `web/js/rig.js`, `web/js/adapter.js`, `web/js/panel.js`
 
 ## What it is

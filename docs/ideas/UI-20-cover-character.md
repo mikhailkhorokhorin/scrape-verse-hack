@@ -2,7 +2,19 @@
 
 > One large character drawn from fleet state rather than a single collector — standing and inked when the fleet is clean, half-taken when anything is critical.
 
-**Status:** OPEN, contested space · **Cost:** medium, and it is the first medium to cut · **Depends on:** UI-18a (for a consistent art system); contests the masthead slot with UI-04
+**Status:** REJECTED — decided Aug 21: the figure does not replace the tagline block, and the idea is cut · **Cost:** medium, and it was the first medium to cut · **Depends on:** UI-18a (for a consistent art system); contested the masthead slot with UI-04
+
+## Decision (Aug 21)
+
+Cut, not deferred. Four reasons, in order: the tagline block carries the product thesis
+("Scrapers don't crash. They decay") — trading the argument for a decoration-adjacent
+figure works against the track's own rule; UI-04 wins the contested slot because it is
+trivial-cost, ACCEPTED, and the only idea that also scores in Best Code; the fleet's
+state already has three above-the-fold readouts (fleet integrity readout, the pulse line,
+the page-wide symbiote layer) plus UI-22's favicon, so a fourth fleet-level signal is
+redundant; and UI-10's diptych already puts characters above the grid, at small cost.
+With one developer and two days left, a medium-cost item that needs its own art-direction
+pass ("there is no obvious silhouette for an average of three collectors") does not fit.
 **Touches:** `web/index.html` (masthead), `web/js/rig.js`, `web/js/masthead.js`
 
 ## What it is
@@ -65,8 +77,8 @@ ATLAS and KESTREL.
 *(Contingent on the slot decision being made first — none of the below should be started
 until it is.)*
 
-- [ ] A decision is recorded: either the figure replaces the tagline block, or this idea is
-      marked cut, not left ambiguous
+- [x] A decision is recorded: cut — the figure does not replace the tagline block (see
+      Decision above)
 - [ ] If built: the character's state (inked vs. half-taken) is driven by fleet-average
       integrity via the same computation `setFleetSpread()` already performs, not a second,
       parallel calculation
