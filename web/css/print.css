@@ -7,6 +7,7 @@
   .fleet-ground,.fleet-symbiote,.modal,.mockflag,.demobar{display:none !important;}
   .intro-replay,.intro,.bubble,.wild-note,.evidence{display:none !important;}
   .pagenav{display:none !important;}
+  .open{display:none !important;}
 
   .masthead .readouts,
   .masthead .tagline,

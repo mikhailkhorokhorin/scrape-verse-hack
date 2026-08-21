@@ -1,0 +1,93 @@
+.open{
+  position:relative;
+  margin:0 0 var(--s4);
+  padding:var(--s3) var(--s3) var(--s3);
+  background:var(--paper);
+  border:3px solid var(--ink);
+  box-shadow:8px 8px 0 var(--ink);
+}
+
+.open::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(var(--paper-dot) 1px,transparent 1.4px);
+  background-size:5px 5px;opacity:.55;
+}
+
+.open__line{
+  position:relative;z-index:1;
+  margin:0;color:var(--ink);
+  font-family:Anton,Impact,sans-serif;
+  text-transform:uppercase;letter-spacing:.02em;
+  line-height:1.02;
+  text-wrap:balance;
+  overflow-wrap:break-word;
+}
+
+.open__line + .open__line{margin-top:var(--s2);}
+
+.open__line--gap{
+  font-size:clamp(1.5rem,4.4vw,3.25rem);
+  padding-bottom:var(--s2);
+  border-bottom:4px solid var(--ink);
+}
+
+.open__num{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-variant-numeric:tabular-nums;
+  font-weight:600;
+  letter-spacing:-.01em;
+}
+
+.open__line--gap .open__num{
+  color:var(--ink);
+  background:var(--degraded);
+  border:3px solid var(--ink);
+  padding:.06em .22em .02em;
+  display:inline-block;
+  white-space:nowrap;
+}
+
+.open__line--count{
+  font-size:clamp(1rem,2.3vw,1.6rem);
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:0 .4em;
+  margin-top:var(--s2);
+}
+.open__line--count .open__head{color:var(--ink);}
+.open__line--count .open__dash{color:var(--purple);}
+.open__line--count .open__num{
+  font-size:.92em;color:var(--ink);
+  background:var(--cyan);
+  border:3px solid var(--ink);
+  padding:.1em .34em .04em;
+  letter-spacing:.02em;
+}
+
+.open__line--thesis{
+  font-size:clamp(1rem,2.3vw,1.6rem);
+  max-width:68ch;
+  margin-top:var(--s3);
+}
+
+.open__line--close{
+  font-size:clamp(1rem,2.3vw,1.6rem);
+  max-width:68ch;
+  color:var(--ink);
+  margin-top:var(--s1);
+  text-shadow:2px 0 var(--pink),-2px 0 var(--cyan);
+}
+
+@media(max-width:768px){
+  .open{padding:var(--s2);box-shadow:5px 5px 0 var(--ink);margin-bottom:var(--s3);}
+  .open__line--gap{font-size:clamp(1.35rem,7vw,2rem);}
+  .open__line--count{font-size:1rem;gap:0 .3em;}
+  .open__line--count .open__dash{display:none;}
+  .open__line--thesis,.open__line--close{font-size:1rem;max-width:none;}
+}
+
+@media(max-width:375px){
+  .open__line--gap{font-size:1.25rem;}
+  .open__line--count .open__num{padding:.1em .24em .04em;}
+}
+
+.is-capture .open{display:none !important;}
+.intro-running .open{visibility:hidden;}
