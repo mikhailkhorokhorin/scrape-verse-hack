@@ -15,9 +15,19 @@ watches for that, shows it, and repairs it.
 **Source repository → https://github.com/mikhailkhorokhorin/scrape-verse-hack**
 (branches `main` and `develop`; the GitLab project is a mirror.)
 
-**Specs, backlog and plan live in the docs repository, cloned into `docs/`.**
-
 <!-- TODO before submitting: demo video link -->
+
+## The four things a judge asks — answered here
+
+| Question | Answer, in one line | Section |
+|---|---|---|
+| **How was the scraper designed?** | Three Bright Data Scraper Studio collectors, created with `bdata scraper create` from a plain-English field description; per-field validators live in `collectors.json` | [The collectors](#the-collectors) |
+| **How is it driven from an agent?** | An MCP server with six tools — status, history, incidents, heal receipts, and two that scan and heal for real | [MCP server](#mcp-server--the-fleet-in-your-agent) |
+| **What happened when the site changed?** | KESTREL returned 30 rows of zeroes and no error. One `heal` command repaired it unattended, on the same Collector ID | [It already caught a real one](#it-already-caught-a-real-one) |
+| **What did the output actually give you?** | Real rows on screen, each stamped with the collector, the scan time, and the Integrity the Spider was at when the row was captured | [THE HAUL](#the-haul--the-data-itself) |
+
+Full specs, the collector registry with every heal logged, and the eighteen-audit
+checklist are in **[`docs/`](docs/README.md)**.
 
 ## It already caught a real one
 
@@ -47,7 +57,8 @@ repaired, not recreated — the same one that broke is the one that came back.
 
 Check it yourself: the broken and healed payloads are committed as `kestrel-probe.json`
 and `kestrel-after.json`, the scans are in `data/history.json` (`04:43:39Z` and
-`05:13:45Z` broken, `05:40:09Z` healed), and the heal is logged in `docs/COLLECTORS.md`.
+`05:13:45Z` broken, `05:40:09Z` healed), and the heal is logged in
+[`docs/COLLECTORS.md`](docs/COLLECTORS.md).
 
 ## Layout
 
@@ -59,6 +70,7 @@ test/                       238 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the Chaos Lab — three variants of the same shop page
 collectors.json             targets and per-field validators
+docs/                       specs, the collector registry, the audit checklist
 .github/workflows/watch.yml scan every 30 min, heal, publish Pages
 ```
 
@@ -110,10 +122,12 @@ All three are generated from one source of truth: `demo-target/build-data.js` ho
 
 ## THE HAUL — the data itself
 
-The console does not stop at a health score. **The Haul** is a section on the main page
-showing what the fleet actually brought back: the real rows, card by card, each stamped
-with the collector that fetched it, the timestamp of the scan, and the Integrity the
-Spider was at when that row was captured.
+A health score is not an outcome. **The Haul** is the section that shows what the fleet
+actually brought back — the real scraped rows, card by card, each stamped with the
+collector that fetched it, the timestamp of the scan, and the Integrity the Spider was at
+when that row was captured. Titles, prices, ratings and image URLs off
+books.toscrape.com and the shop page; titles, points, authors and comment counts off
+Hacker News.
 
 It is built from the `sample` on every history record, so it is the committed data and not
 a fixture — the same JSON the pipeline wrote. A row captured at 90% Integrity carries that
@@ -206,55 +220,59 @@ The cron is in the file, so the schedule needs no setup in the UI. `concurrency:
 keeps two scans from writing `data/` at once. The `scan` job runs only on the cron or on
 a manual dispatch, so pushing code never spends credit.
 
-## Targets
+## The collectors
 
-Three, already chosen and checked against `robots.txt`. See `collectors.json`.
+Three real Bright Data Scraper Studio collectors, each created with a single
+`bdata scraper create` call that describes the wanted fields in plain English — no
+selectors written by hand:
 
-| Codename | Universe | Why |
-|---|---|---|
-| BODEGA | our own demo page | breakable on purpose, so the demo is reproducible |
-| ATLAS | books.toscrape.com | no robots.txt, built for scraping, server-rendered |
-| KESTREL | news.ycombinator.com | real site; robots allows the front page, `Crawl-delay: 30` |
+```bash
+bdata scraper create "https://<target>/" \
+  "For each of the 12 product cards extract: the product title, the price including the
+   currency symbol, the rating text such as 4.4 out of 5, and the absolute image URL." \
+  --name thwip-bodega --pretty -o create-bodega.json
+```
 
-Do not substitute a target. Each was verified as public, login-free and outside Bright
-Data's pre-built scraper library — swapping one silently breaks a hackathon rule.
+| Codename | Target | Collector ID | Why this site |
+|---|---|---|---|
+| BODEGA | our own demo page | `c_mt2lkwxa1bb5uz223s` | breakable on purpose, so the demo is reproducible |
+| ATLAS | books.toscrape.com | `c_mt2fnqqngikv29od5` | no robots.txt, built for scraping, server-rendered |
+| KESTREL | news.ycombinator.com | `c_mt2fnt3p2k4n644701` | real site; robots allows the front page, `Crawl-delay: 30` |
 
-## Collector IDs
+Scraper Studio decides *how* to extract. What counts as a **correct** value is ours, and
+it is declared per field in `collectors.json` — a `price` must parse as a number, an
+`image` must be an absolute URL, a `rating` must fall in range. That validator list is
+what turns a run into an Integrity score, and it is why a field can be present and still
+be reported as broken.
 
-All three are real Scraper Studio collectors, created with `bdata scraper create`. The
-registry with creation dates and the full heal log is in `docs/COLLECTORS.md`.
-
-| Codename | Collector ID |
-|---|---|
-| BODEGA | `c_mt2lkwxa1bb5uz223s` |
-| ATLAS | `c_mt2fnqqngikv29od5` |
-| KESTREL | `c_mt2fnt3p2k4n644701` |
+The full `create` envelopes are committed as `create-atlas.json`, `create-kestrel.json`
+and `create-bodega.json`. Each target was verified as public, login-free, robots-checked
+and outside Bright Data's pre-built scraper library — do not substitute one.
 
 **These IDs do not change when a collector heals.** That is the point of the self-healing
 loop and the thing worth checking: the same collector that broke is the one that came
 back, repaired rather than replaced. The KESTREL heal at the top of this file is the
 worked example — same `c_mt2fnt3p2k4n644701` before and after. Every heal is logged
-against its ID in `docs/COLLECTORS.md`.
+against its ID in [`docs/COLLECTORS.md`](docs/COLLECTORS.md), with creation dates.
 
-### What is not finished
+## What is not finished
 
 Stated plainly rather than left for you to find:
 
-- **Three heals happened; `data/incidents.json` holds two records, one of them open.**
-  KESTREL 0% → 100% is the complete one (`inc_001`, all four stages, resolved). `inc_002`
-  is BODEGA, opened by `repair.js` at `07:48:20Z` and **never closed** — it stops at
-  `REWEAVING` with `resolved: false`. BODEGA did recover to 100% at `09:13:59Z`, which is
-  in `data/history.json`, but the record was not written back, so the incident stays open
-  on screen. The ATLAS 90% → 100% heal has **no incident record at all**; it is evidenced
-  by the step in `data/history.json` (`06:39:48Z` at 90, `06:59:24Z` at 100) and by
-  `docs/COLLECTORS.md`. We did not hand-write the missing records after the fact —
-  manufacturing that evidence is precisely the failure this project exists to expose
-- **The automated repair path is untested end to end.** `scripts/repair.js` is written,
-  unit-tested and wired into CI, but both heals that actually happened were invoked by
-  hand. The decision logic is covered by tests; the unattended round trip is not
-- **MTTR is currently a mean of one sample.** `renderMttr()` averages `closed_at −
-  opened_at` across incidents that have both; `inc_002` has no `closed_at`, so the mean is
-  `inc_001`'s 26m 24s alone. It reads `--` when there are none
+- **The automated repair path is proven in part, not end to end.** Two of the three heals
+  (`inc_001` KESTREL, `inc_002` ATLAS) were invoked by hand. `repair.js` did open
+  `inc_003` autonomously during a scheduled run — but the heal it fired fixed nothing,
+  because nothing on the target was broken; the watcher's own payload parser was. The
+  record keeps that false `THROTTLED` diagnosis rather than tidying it away
+- **A wrong diagnosis is in the log on purpose.** See `inc_003` above and
+  [`docs/COLLECTORS.md`](docs/COLLECTORS.md), which states the provenance of each record.
+  Manufacturing cleaner evidence is precisely the failure this project exists to expose
+- **MTTR is a mean of three samples.** `renderMttr()` averages `closed_at − opened_at`
+  across `data/incidents.json`. Three heals is enough to display honestly and not enough
+  to be a trend. It reads `--` when there are none
+- **`REWEAVING` is a state the console can render and nothing writes.** `repair.js` runs
+  to completion inside one CI job, so no mid-heal record is ever persisted. The branch in
+  `web/js/adapter.js` is reachable only from mock data
 
 ## The data
 
@@ -266,7 +284,7 @@ Two committed JSON files, no database:
 | `data/incidents.json` | One record per heal: what broke, the strain, the prompt sent to Scraper Studio, what came back, and the four stage timestamps |
 
 Both are written by the scheduled pipeline and read directly by the console. The full
-field-by-field contract is in `docs/CLAUDE.md`.
+field-by-field contract is in [`docs/CLAUDE.md`](docs/CLAUDE.md).
 
 ## Architecture
 
@@ -340,7 +358,8 @@ Steps 4 through 6 above are not theory. On KESTREL, `heal` ran the full chain un
 css_selector_extractor → user_approval → save_new_template` — in roughly **9 minutes**,
 with `--auto-approve --auto-save` and nobody watching. A verification run afterwards
 returned 30 rows carrying real titles, points, comments and authors where every field had
-been `null`, on the same Collector ID. Full log in `docs/COLLECTORS.md`.
+been `null`, on the same Collector ID. Full log in
+[`docs/COLLECTORS.md`](docs/COLLECTORS.md).
 
 ## Roadmap
 
@@ -357,11 +376,21 @@ steps, not because they exist.
   start failing
 - **Cost per clean row** — what one correct row actually costs, counting runs and heals
 
-## If you are an agent
+## Documentation
 
-Read `docs/CLAUDE.md` first — it puts you in autonomous mode. Then `docs/PLAN.md` for what
-is being built, then take the first unchecked item in `docs/PROGRESS.md` and work down the
-queue. Do not ask what to do next; the queue is the answer.
+Everything that shaped this build is in **[`docs/`](docs/README.md)**. The three worth
+opening:
+
+- [`docs/COLLECTORS.md`](docs/COLLECTORS.md) — the collector registry: every `c_*` with
+  its creation date and a dated log of every heal it survived
+- [`docs/DESIGN-SPEC.md`](docs/DESIGN-SPEC.md) — the visual contract the console was
+  built against, including the banned-patterns list that rules out the generic dashboard
+- [`docs/AUDIT-PIPELINE.md`](docs/AUDIT-PIPELINE.md) — eighteen audits with a pass bar
+  each, run before submitting
+
+If you are a coding agent, start at [`docs/CLAUDE.md`](docs/CLAUDE.md) — it puts you in
+autonomous mode — then take the first unchecked item in
+[`docs/PROGRESS.md`](docs/PROGRESS.md) and work down the queue.
 
 ## Deploying the console anywhere
 
@@ -387,7 +416,8 @@ deployed layout is arranged.
 
 - Real `bdata` calls, never mocked. A judge checks the Collector ID
 - `create` takes 5-25 minutes and `heal` up to 15, and both cost credit. **Never recreate a
-  collector that already has an ID** in `docs/COLLECTORS.md` — if `run` fails, `heal` it
+  collector that already has an ID** in [`docs/COLLECTORS.md`](docs/COLLECTORS.md) — if
+  `run` fails, `heal` it
 - Run `npm test` before changing anything in `scripts/` — the suite is the contract
   between what the pipeline writes and what the console reads
 - No secrets in the repo, in CI logs, or in any frame of the demo video
