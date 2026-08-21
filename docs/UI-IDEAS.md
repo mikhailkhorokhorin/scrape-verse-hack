@@ -1,117 +1,56 @@
-# UI ideas
+# UI ideas — Suit-Up (Best UI)
 
-Running list for the Suit-Up (Best UI) push. Add freely; nothing here is committed to
-until it moves into `PROGRESS.md`.
+Every idea has a stable id. Reference them by id in commits and prompts.
 
-Format: what it is, why it helps the prize, rough cost. Cost is honest — a "small" that
-turns out to be a day gets re-labelled, not quietly attempted.
+Status: **ACCEPTED** = going into the build · **OPEN** = candidate · **REJECTED** = decided
+against, with a reason, so it stops resurfacing.
+
+Cost is honest. A "small" that turns out to be a day gets re-labelled, not quietly
+attempted.
 
 ---
 
-## Correction to an earlier reading
-
-An earlier version of this file claimed the broken states were unreachable. That was
-wrong, and the correction changes what needs building:
-
-- **`?mock=1` already works.** Title becomes `[MOCK] THWIP Watch`, a pink warning band
-  appears, BODEGA sits at 63% with the symbiote climbing its panel, and the break/heal
-  controls mount. Honestly labelled.
-- **Incident Replay on the front page runs on real data** — `inc_003`, BODEGA at 0%,
-  `SNAP!`, all four fields dead, the four stages, the blast radius.
-- **The incident feed** carries three real cards with strain badges.
-
-So the states exist and are honest. The actual problem is narrower:
+## The problem all of this serves
 
 **The first screen is all green, and the strongest thing in the design lives below the
-fold and behind a URL parameter nobody knows about.**
+fold.**
 
-A Best UI judge decides in five seconds. Right now those five seconds show three healthy
-panels and a legend describing states that are not on screen.
+Three Spiders at 100%. No symbiote, no glitch, no infected chip. A judge decides in five
+seconds and those five seconds show a healthy grid plus a legend describing states that
+are not on screen.
 
----
-
-## DECIDED — the opening sequence
-
-**On first load, the console demonstrates its own mechanic before settling into the
-present.** Roughly six seconds, on real recorded data, then the page is exactly what a
-plain load would have shown.
-
-### The sequence
-
-Driven by `inc_003` — BODEGA, a real incident that went 0% and recovered.
-
-| Time | What happens |
-|---|---|
-| 0.0s | Panel healthy, 100%, clean. Holds long enough to register as the normal state |
-| 0.8s | Integrity drops hard, `SNAP!` fires, fields start striking through |
-| 1.6s | The symbiote climbs. `CRACK!`. Panel desaturates, chromatic offset goes hard |
-| 2.6s | Holds at the bottom. This is the beat that has to land — the judge needs a moment to read the black as *loss* |
-| 3.4s | `WEAVE...`, cyan pulse on the border, stages tick |
-| 4.6s | `PURGE!` — the substance retracts downward, faster than it crept |
-| 5.4s | `THWIP!`, colour floods back, integrity overshoots and settles |
-| 6.0s | Dissolves into the live console at its real current state |
-
-The hold at 2.6s matters more than the motion around it. Infection has to feel slow and
-removal violent — that asymmetry is the whole emotional argument of the product.
-
-### When it plays
-
-| Situation | Behaviour |
-|---|---|
-| First visit in a tab | Plays |
-| `cmd+R` | Does not play — `sessionStorage` remembers |
-| New tab, or a different judge | Plays |
-| `REPLAY INTRO` button in the masthead | Plays on demand |
-| `?intro=1` | Forces it, ignoring `sessionStorage` |
-| `prefers-reduced-motion: reduce` | Skipped entirely, straight to the live state |
-
-`sessionStorage`, not `localStorage`: one play per tab is the right grain. A judge who
-reloads should not sit through it twice; a judge who opens it fresh tomorrow should see it.
-
-**Note on hard refresh:** `cmd+shift+R` clears the resource cache but not Web Storage, and
-JavaScript cannot distinguish it from an ordinary reload — `navigation.type` reads
-`"reload"` for both. The button and `?intro=1` cover that need instead.
-
-### Non-negotiable constraints
-
-- **Real data only.** Every value shown during the sequence comes from `inc_003`. No
-  invented panel, no illustrative numbers. On a project about data honesty a fabricated
-  hero is a failure of the argument, however well it renders
-- **Skippable at any point** — any click, key or scroll jumps to the end state
-- **Never blocks interaction.** The page stays usable throughout; skipping mid-sequence
-  must leave nothing half-animated
-- **Always ends in exactly the state a plain load produces.** If the two ever differ,
-  that is a bug, not a flourish
-- The `REPLAY INTRO` button is not hidden. A feature that cannot be repeated is a feature
-  the judge saw once and could not verify
-
-### Why this over the alternatives
-
-Two other openings were considered and are still worth having if time allows:
-
-- **Diptych** — a healthy panel and an infected one side by side above the grid, both from
-  real history. Cheaper, static, teaches the visual language in two seconds
-- **Evidence line** — `3 collectors · 4 incidents healed · 698 rows · 528 tests · c_a628…`
-  in the masthead. Cheapest of the three, and the only one that addresses the fact that
-  the first screen currently carries no proof at all
-
-The sequence wins because it is also the video's cold open, and because it shows the
-mechanic rather than describing it.
+The states are not unreachable — `?mock=1` works and is honestly labelled, Incident Replay
+runs the real `inc_003`, and the feed holds three real incidents. They are just not where
+the judge looks.
 
 ---
 
-## Comic as a medium, not a paint job
+## ACCEPTED
 
-The art direction currently borrows the *look* of a comic — panels, halftone, bursts. It
-does not use the comic's **grammar**: issues, covers, panel numbers, gutters, transitions.
-That grammar is unclaimed, and it maps onto our data with almost no stretching.
+### UI-01 · Opening sequence
+On first load the console demonstrates its own mechanic on real `inc_003` data, ~6s, then
+settles into the live present.
 
-### 11. Every incident is an issue
-**The strongest idea in this file after the opening sequence.**
+`0.0s` healthy · `0.8s` `SNAP!`, integrity drops · `1.6s` symbiote climbs, `CRACK!` ·
+**`2.6s` hold** · `3.4s` `WEAVE...` · `4.6s` `PURGE!` · `5.4s` `THWIP!` · `6.0s` live.
 
+The hold matters more than the motion around it. Infection slow, removal violent — that
+asymmetry is the emotional argument of the product.
+
+**Playback:** `sessionStorage`, once per tab. `REPLAY INTRO` button in the masthead.
+`?intro=1` forces it. `prefers-reduced-motion` skips to the end state.
+
+*(`cmd+shift+R` clears the resource cache but not Web Storage, and JS cannot distinguish a
+hard refresh — `navigation.type` reads `"reload"` for both. The button covers that need.)*
+
+**Constraints:** real data only · skippable at any point · never blocks interaction ·
+always ends in exactly the state a plain load produces.
+
+**Cost:** medium.
+
+### UI-02 · Every incident is an issue
 An incident is not a log entry, it is an **issue of a comic**. `inc_004` becomes
-`ISSUE #4`. The incident feed becomes a shelf of covers. Each cover carries the Spider,
-the strain as a subtitle, the date, and the integrity drop as the stakes:
+`ISSUE #4`. The feed becomes a shelf of covers.
 
 ```
         ISSUE #3
@@ -121,117 +60,105 @@ the strain as a subtitle, the date, and the integrity drop as the stakes:
         100% → 0%
 ```
 
-Why it works: it is not decoration. Issue numbers *are* incident numbers, the subtitle
-*is* the strain gloss we already write, the cover art *is* the panel at its worst moment.
-Every element is data we already store.
+Not decoration: the issue number *is* the incident number, the subtitle *is* the strain
+gloss we already write, the cover *is* the panel at its worst moment. Every element is a
+field already stored.
 
-It also fixes a real weakness — the incident feed is the least designed part of the
-console right now, and it holds the best evidence we have.
+Also fixes a real weakness — the incident feed is the least designed part of the console
+and holds the best evidence we have.
 
-Cost: medium. Feed cards already carry every field this needs.
-
-### 12. Panel numbers
-Real comic panels are numbered. Ours are not. A small `1` `2` `3` in the corner of each
-Spider panel, in the ink colour, costs nothing and makes the page read as a printed spread
-rather than a CSS grid.
-
-Cost: trivial.
-
-### 13. Speech bubbles for state changes
-When a Spider changes state, it says so — a tailed bubble, Bangers, one short line.
-`"price is gone."` `"something's wrong with rating."` `"I'm back."`
-
-The console currently narrates in labels. A comic narrates in voice. This is the single
-most characteristic comic device we are not using.
-
-Risk: easy to overdo into cutesy. One bubble at a time, only on transition, never idle.
-
-Cost: small.
-
-### 14. Transitions between sections
-Comics move between scenes with a caption box — `MEANWHILE…`, `LATER THAT NIGHT…`. Our
-section headers are `THE WATCH`, `THE HAUL`, `INCIDENT FEED`.
-
-Give them caption-box treatment with a temporal phrase drawn from real data:
-`MEANWHILE — 698 ROWS SHIPPED CLEAN`, `EARLIER — 07:48Z`.
-
-Cost: small.
-
-### 15. Print artefacts
-Cheap comic printing misregisters plates, and paper wears at the folds. A one-pixel plate
-offset on borders, faint wear at panel corners. Sub-perceptual individually; collectively
-it is the difference between "comic-styled" and "printed".
-
-Cost: small. Risk: overdone, it reads as a rendering bug.
+**Cost:** medium.
 
 ---
 
-## Restored — cut by accident in an earlier edit
+## OPEN — ranked by impact per hour
 
-### 16. Live polling
-Re-read `data/*.json` every 30s. If a scan lands while the judge is on the page, the
-console moves on its own — pulse advances, timestamp updates, a panel changes.
+### UI-03 · Live polling
+Re-read `data/*.json` every 30s. A scan landing while the judge is on the page moves the
+console on its own. Turns a screenshot into an instrument. **Cost:** small.
 
-Turns a screenshot into an instrument. Best ratio on the board after the opening sequence.
+### UI-04 · Evidence line in the masthead
+`3 collectors · 4 incidents healed · 698 rows · 528 tests · c_a628…`
 
-Cost: small.
+The first screen currently carries **no proof at all** — no collector id, no incident
+count, no test count. Cheapest credibility available. **Cost:** trivial.
 
-### 17. History scrubber
-A drag handle across the top spanning all recorded time. Pull back and the whole console
-renders that moment — panels, symbiote, haul, integrity. Release, it snaps to now.
+### UI-05 · Sparkline hover
+Hover a point, get that scan's timestamp and integrity. The charts are decorative right
+now; this makes them readable. **Cost:** trivial.
 
-Makes 48 hours explorable instead of summarized, and reaches every past state including
-the broken ones.
+### UI-06 · Panel numbers
+A small `1` `2` `3` in the corner of each Spider panel, in ink. Real comic panels are
+numbered. Stops the page reading as a CSS grid. **Cost:** trivial.
 
-Cost: medium. The replay engine already models time; this generalizes it.
+### UI-07 · Speech bubbles on state change
+A tailed bubble, Bangers, one line: `"price is gone."` `"I'm back."`
 
-### 18. Sparkline hover
-Hover any point on a sparkline, get that scan's timestamp and integrity. The charts are
-currently decorative; this makes them readable.
+The console narrates in labels; a comic narrates in voice. The most characteristic comic
+device we are not using. One at a time, only on transition, never idle — it goes cutesy
+fast. **Cost:** small.
 
-Cost: trivial.
+### UI-08 · Caption-box section headers
+`MEANWHILE — 698 ROWS SHIPPED CLEAN` instead of `THE HAUL`. Comics move between scenes
+with a caption box; the temporal phrase comes from real data. **Cost:** small.
 
----
+### UI-09 · Phone pass
+Nobody has checked what the pulse, the heatmap or THE HAUL do at 375px. A judge may well
+open the URL on a phone. Cheap to verify, embarrassing to lose on. **Cost:** small.
 
-## Worth doing
+### UI-10 · Diptych above the grid
+A healthy panel and an infected one side by side, both from real history, one line of
+caption. Teaches the visual language in two seconds without motion. Partly redundant with
+UI-01 — worth it only if UI-01 slips. **Cost:** small.
 
-### 4. Phone pass
-A judge may well open the live URL on a phone. Nobody has checked what the pulse, the
-heatmap, or THE HAUL do at 375px. Cheap to verify, embarrassing to lose on.
+### UI-11 · Keyboard path
+Tab through panels, Enter opens the sheet, Escape closes, arrows step the replay. Also the
+accessible path, so it scores twice. **Cost:** small.
 
-### 5. Deep link to an incident
+### UI-12 · Deep link to an incident
 `#inc_003` opens with that replay ready. The README and the video both want to point at
-one specific case; without it we describe it in prose.
+one specific case. Pairs naturally with UI-02. **Cost:** small.
 
-### 6. Keyboard path
-Tab through panels, Enter opens the sheet, Escape closes, arrows step the replay. Also
-the accessible path, so it counts twice.
+### UI-13 · Print artefacts
+One-pixel plate misregistration on borders, faint wear at panel corners. Sub-perceptual
+alone; together it is the difference between comic-styled and printed. Overdone, it reads
+as a rendering bug. **Cost:** small.
 
-### 7. First-load reveal
-Sparklines draw, panels stagger in, the pulse traces once. Skippable, once per session.
-Was cut earlier for time; the first five seconds are what Suit-Up is judged on.
+### UI-14 · History scrubber
+A drag handle spanning all recorded time. Pull back, the whole console renders that
+moment; release, it snaps to now. Makes 48 hours explorable and reaches every past state.
+**Cost:** medium.
 
----
-
-## Speculative
-
-### 8. Side-by-side Spiders
+### UI-15 · Side-by-side Spiders
 Compare two collectors on one axis — whose fields fail more, who recovers faster.
+**Cost:** medium.
 
-### 9. The page reacts to fleet health
-Ambient: the ground shifts as fleet integrity drops, so the whole page feels the state
-rather than just the panels.
+### UI-16 · The page reacts to fleet health
+The ground shifts as fleet integrity drops, so the whole page carries the state rather
+than just the panels. **Cost:** medium.
 
-### 10. Print / PDF view
-A one-page incident report. Probably nobody prints it, but it is a distinctive artifact.
+### UI-17 · Print / PDF incident report
+A one-page report per incident. Probably nobody prints it; it is a distinctive artifact.
+**Cost:** medium.
 
 ---
 
-## Rejected, with reasons
+## REJECTED
 
-- **Sound.** Autoplay is blocked, and audio during judging hurts more than it helps.
-- **Threads between infected Spiders.** Would look good and would be a lie — the
-  collectors are unrelated and no correlation exists.
-- **Dark/light toggle.** The design deliberately commits to one world. A light mode would
-  weaken it, not broaden it.
-- **Rewriting the console.** Two days out, finished beats better.
+| Idea | Why |
+|---|---|
+| Sound design | Autoplay is blocked, and audio during judging hurts more than it helps |
+| Threads between infected Spiders | Would look good and would be a lie — the collectors are unrelated, no correlation exists |
+| Dark/light toggle | The design commits to one world. A light mode weakens it rather than broadening it |
+| Registration / accounts to gate the intro | Needs a backend, and puts a form between the judge and the product |
+| Rewriting the console | Two days out, finished beats better |
+
+---
+
+## If it comes to cutting
+
+Ship in this order: **UI-04, UI-05, UI-06** first — all trivial, all visible. Then
+**UI-01**, then **UI-02**. Everything below UI-09 is optional.
+
+Two finished ideas beat five half-finished ones. A half-done animation reads as a bug, not
+as a missing feature.
