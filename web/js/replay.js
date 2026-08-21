@@ -165,7 +165,11 @@ function replayPause() {
   REPLAY.last = 0;
   if (REPLAY.frame) cancelAnimationFrame(REPLAY.frame);
   REPLAY.frame = null;
-  if (REPLAY.slots) REPLAY.slots.toggle.textContent = "Play";
+  if (REPLAY.slots) {
+    REPLAY.slots.toggle.textContent = "Play";
+    const btn = document.getElementById("replay-toggle");
+    if (btn) btn.setAttribute("aria-label", "Play the incident timeline");
+  }
   if (REPLAY.root) REPLAY.root.classList.remove("is-playing");
 }
 
@@ -176,6 +180,8 @@ function replayPlay() {
   REPLAY.playing = true;
   REPLAY.last = 0;
   REPLAY.slots.toggle.textContent = "Pause";
+  const btn = document.getElementById("replay-toggle");
+  if (btn) btn.setAttribute("aria-label", "Pause the incident timeline");
   REPLAY.root.classList.add("is-playing");
   REPLAY.frame = requestAnimationFrame(replayTick);
 }
