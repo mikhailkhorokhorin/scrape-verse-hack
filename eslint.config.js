@@ -51,4 +51,8 @@ module.exports = [
       'no-warning-comments': ['error', { terms: ['todo', 'fixme', 'hack'] }],
     },
   },
+  {
+    files: ['web/js/config.js'],
+    rules: { 'prefer-const': 'off' }
+  },
 ];
