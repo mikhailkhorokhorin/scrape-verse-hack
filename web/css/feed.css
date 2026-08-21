@@ -24,7 +24,6 @@
 .incident > *{position:relative;z-index:1;}
 @keyframes feed-in{from{opacity:0;transform:translateX(-18px)}}
 
-.incident__top{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s1) var(--s2);margin-bottom:var(--s2);}
 .incident__who{
   font-family:Anton,Impact,sans-serif;font-size:1.25rem;letter-spacing:.04em;
   line-height:1;color:var(--ink);background:var(--paper);
@@ -48,21 +47,6 @@
 .stage:last-child .stage__name{color:var(--healthy);}
 .stage__name{font-family:"IBM Plex Mono",monospace;font-size:var(--t-tick);font-weight:600;letter-spacing:.1em;color:var(--cyan);}
 .stage__ts{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:.8125rem;color:var(--dim);}
-
-.strain{
-  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s1) 10px;
-  margin:0 0 var(--s2);
-}
-.strain__tag{
-  font-family:"IBM Plex Mono",monospace;font-size:var(--t-tick);font-weight:600;
-  letter-spacing:.14em;color:var(--ink);background:var(--infected);
-  border:2px solid var(--ink);padding:3px 8px 2px;
-}
-.strain--throttled .strain__tag{background:var(--critical);}
-.strain--renamed .strain__tag{background:var(--degraded);}
-.strain--shifted .strain__tag{background:var(--reweaving);}
-.strain__gloss{color:var(--dim);font-size:.8125rem;line-height:1.4;max-width:52ch;}
-.incident p.strain{margin-bottom:var(--s2);}
 
 .blast{
   margin:0 0 var(--s2);font-size:.875rem;line-height:1.5;color:var(--dim);

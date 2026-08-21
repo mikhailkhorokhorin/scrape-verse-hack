@@ -2,7 +2,9 @@
 
 > That Spider's character at the top of the detail sheet, each leg labelled with its field name — the leg-to-field mapping stated once, explicitly, where a curious judge actually goes to check it.
 
-**Status:** OPEN · **Cost:** small, once [UI-18a](UI-18a-the-rig.md) exists · **Depends on:** UI-18a, UI-18b (for the leg-to-field mapping)
+**SHIPPED, with one deliberate change of form** — `web/js/sheet-rig.js` and `web/css/sheet-rig.css`, mounted by `openSheet()` above the field-diagnosis section. The mapping is stated as a named chip per field beside the character rather than as `<text>` labels drawn on each leg: at the size the sheet renders the rig (200×122), ten 6px labels around eight-to-ten legs collided with each other and with the legs they annotate. The chips carry the same `sp.fieldOrder` order and each field's live / infected / dead state, so the fact is stated, just not as leader lines.
+
+**Status:** SHIPPED · **Cost:** small, once [UI-18a](UI-18a-the-rig.md) exists · **Depends on:** UI-18a, UI-18b (for the leg-to-field mapping)
 **Touches:** `web/js/sheet.js`, `web/css/sheet.css`
 
 ## What it is
@@ -60,12 +62,21 @@ detail itself.
 
 ## Done when
 
-- [ ] The Spider's character renders at the top of its detail sheet, above the existing
-      field-diagnosis section
-- [ ] Every leg is labelled with the exact field name it maps to, using the same mapping
-      UI-18b establishes on the grid — no separate or inconsistent mapping
-- [ ] ATLAS's pedipalp pair is labelled correctly for its fifth field, not left unlabelled
-      or mislabelled as a ninth leg
-- [ ] Existing `trackHTML()` per-field rows remain unchanged below the character
-- [ ] Legible at the sheet's actual rendered size on both desktop and the 375px case UI-09
-      checks
+- [x] The Spider's character renders at the top of its detail sheet, above the existing
+      field-diagnosis section — verified in a browser: the rig sits above all five `.track`
+      rows in DOM order
+- [x] Every leg is labelled with the exact field name it maps to, using the same mapping
+      UI-18b establishes on the grid — no separate or inconsistent mapping — **as chips, not
+      as labels on the legs themselves** (see the status note). `sheetRigHTML()` walks the
+      same `sp.fieldOrder` the rig does, so there is no second mapping to drift
+- [x] ATLAS's pedipalp pair is labelled correctly for its fifth field, not left unlabelled
+      or mislabelled as a ninth leg — ATLAS renders ten leg paths and five named chips, and
+      the copy names the pedipalp pair explicitly when a collector watches five fields
+- [x] Existing `trackHTML()` per-field rows remain unchanged below the character — five
+      tracks still render, untouched
+- [x] Legible at the sheet's actual rendered size on both desktop and the 375px case UI-09
+      checks — measured at 375, 768 and 1440: the rig renders 200x122 on desktop and 300x140
+      in the single-column layout below 640px, the chip row wraps to two lines, and the rig
+      contributes no horizontal overflow (removing it from the DOM leaves the sheet's 4px
+      scroll unchanged — that belongs to the deliberately-offset `.sheet__close` button and
+      predates this idea)

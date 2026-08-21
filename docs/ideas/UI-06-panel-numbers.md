@@ -2,6 +2,8 @@
 
 > A small `1` `2` `3` in the corner of each Spider panel, in ink.
 
+**SHIPPED** — `.panel__no` in `panelHTML()` (`web/js/panel.js`) and `web/css/panel.css`.
+
 **Status:** OPEN · **Cost:** trivial · **Depends on:** nothing
 **Touches:** `web/js/panel.js`, `web/css/panel.css`
 
@@ -50,7 +52,13 @@ the existing padding rather than adding a new row.
 
 ## Done when
 
-- [ ] Every panel shows its 1-based grid position in a fixed corner
-- [ ] The number does not overlap the badge, the symbiote, or (once built) the rig
-- [ ] It survives the compact, big and mobile panel sizes without repositioning logic
-- [ ] It reads as a print mark (small, ink, low-opacity) and not as a new UI label
+- [x] Every panel shows its 1-based grid position in a fixed corner — `idx + 1`, from the
+      same `idx` already written into `data-idx`
+- [x] The number does not overlap the badge, the symbiote, or (once built) the rig — it is
+      pinned to the top-left at `-3px`, the badge is top-right, and the big panel's rig
+      watermark hangs off the right edge
+- [x] It survives the compact, big and mobile panel sizes without repositioning logic — one
+      absolute rule for all sizes; the big panel only takes a larger face
+- [x] It reads as a print mark (small, ink, low-opacity) and not as a new UI label —
+      `--t-tick` mono on `--ink` at `opacity:.55`, `pointer-events:none`, and
+      `aria-hidden="true"` so it is not announced as content

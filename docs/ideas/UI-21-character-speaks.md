@@ -2,6 +2,8 @@
 
 > A tailed speech bubble, one line, issued by the character: `"price is gone."` on a field going dead, `"I'm back."` on a verified heal, `"...still here."` on a long clean streak.
 
+**SHIPPED** — `web/js/speech.js` (line selection), `web/js/bubble.js` (mounting and the one-at-a-time rule), `web/css/bubble.css`, called from `announceLandings()` in `web/js/landing.js`; covered by `test/web-speech.test.js` and `test/web-bubble.test.js`.
+
 **Status:** OPEN *(absorbs UI-07 — speech bubbles)* · **Cost:** small only after the diff module exists; medium counted honestly from today · **Depends on:** UI-18a (a bubble needs a mouth); the shared per-field diff module (unbuilt)
 **Decision (Aug 21):** that diff module is the shared `web/js/delta.js`, built once with full per-field granularity by whichever of UI-03 / UI-18f / UI-21 enters work first — see the diff-module decision in `docs/TASKS.md`.
 **Touches:** `web/js/rig.js`, a new small diff-state module, `web/js/panel.js`, `web/css/panel.css`
@@ -82,12 +84,26 @@ carry over. Dismissal is a `setTimeout` under 3000ms, matching the stated rule.
 
 ## Done when
 
-- [ ] A small diff module exists, tracking each field's previous state per collector
-      across renders, independent of the fleet-level fingerprint
-- [ ] Each of the three example lines fires only on its exact named transition, verified
-      against real or realistically simulated data, never as an idle or generic aside
-- [ ] At most one bubble is visible at any time across the whole grid
-- [ ] Every bubble auto-dismisses under 3 seconds
-- [ ] No bubble appears during the UI-01 opening sequence
-- [ ] The symbiote's own lines render in the stated lowercase, calm register, distinct
-      from the character's Bangers voice
+- [x] A small diff module exists, tracking each field's previous state per collector
+      across renders, independent of the fleet-level fingerprint — `web/js/delta.js`, the
+      shared module the Aug 21 decision called for. `snapshotOf()` keeps every field's
+      state per collector; `fieldChangesBetween()` yields `{name, from, to}`
+- [x] Each of the three example lines fires only on its exact named transition, verified
+      against real or realistically simulated data, never as an idle or generic aside —
+      `speechDeadLine()` requires `from !== "dead" && to === "dead"`,
+      `speechHealLine()` requires `change.afterHeal`, and `speechStreakLine()` requires a
+      new run, `streak >= MIN_STREAK` and every changed field landing `live`. A field that
+      was already dead says nothing. **Same caveat as UI-18f:** the `I'm back.` line is
+      gated on `after_heal`, and no such record exists in the committed history yet, so
+      that one line has only fired in tests and under `?mock=1`
+- [x] At most one bubble is visible at any time across the whole grid — a module-level
+      `BUBBLE` singleton; `bubbleMount()` calls `bubbleClear()` before mounting, and
+      `speechPickOf()` reduces every candidate across the fleet to one by the ranking
+      dead → infected → heal → streak
+- [x] Every bubble auto-dismisses under 3 seconds — `SPEECH_MS` is 2600ms
+- [x] No bubble appears during the UI-01 opening sequence — `bubbleBlocked()` checks the
+      `intro-running` class the intro puts on the root element
+- [x] The symbiote's own lines render in the stated lowercase, calm register, distinct
+      from the character's Bangers voice — the infected line is issued as
+      `voice: "symbiote"` and `.bubble--symbiote` renders it in mono, lowercase, regular
+      weight on symbiote ink, against the character's uppercase Bangers on paper

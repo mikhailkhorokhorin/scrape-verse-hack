@@ -2,6 +2,8 @@
 
 > `MEANWHILE — 698 ROWS SHIPPED CLEAN` instead of `THE HAUL`.
 
+**SHIPPED** — `web/js/caption.js` and `web/css/caption.css`, over the four `.sechead h2` elements in `web/index.html`; covered by `test/web-caption.test.js`.
+
 **Status:** OPEN · **Cost:** small · **Depends on:** nothing
 **Touches:** `web/index.html`, `web/js/render.js` (or a small new render function), `web/css/layout.css`
 
@@ -52,9 +54,18 @@ than inventing a new panel style.
 
 ## Done when
 
-- [ ] All four section headers read as data-driven captions, not static titles
-- [ ] Each number in a caption matches the count already shown elsewhere on the page for
-      that section (no duplicate, independently-computed number)
-- [ ] Zero-count states (no incidents, no rows yet) render a sane caption, not `0` dropped
-      into the sentence awkwardly
-- [ ] Visually distinct from a plain `<h2>` — reads as a caption box, ink border, no blur
+- [x] All four section headers read as data-driven captions, not static titles — THE WATCH,
+      MEANWHILE / n ROWS SHIPPED CLEAN, INCIDENT REPLAY and INCIDENT FEED, repainted by
+      `paintCaptions()` on every mutation inside `#main`
+- [x] Each number in a caption matches the count already shown elsewhere on the page for
+      that section (no duplicate, independently-computed number) — `captionSourceText()`
+      reads the rendered count node itself (`#fleetcount`, the haul totals cell,
+      `#replayhead`, `#feedcount`) and `captionCount()` parses the number back out, so
+      there is exactly one calculation per section
+- [x] Zero-count states (no incidents, no rows yet) render a sane caption, not `0` dropped
+      into the sentence awkwardly — `NOBODY IS WATCHING YET`, `NOTHING IN THE BAG YET`,
+      `NO BREAK TO REPLAY`, `ALL QUIET`, each with no number and the `caption--quiet` class.
+      Singular and plural are handled separately (`ROW` / `ROWS`, `BREAK` / `BREAKS`)
+- [x] Visually distinct from a plain `<h2>` — reads as a caption box, ink border, no blur —
+      the `.sechead h2` base already gives it a paper fill, a 3px ink border and a hard
+      shadow; `.caption` adds the mono kicker line above the lede and a second hard shadow

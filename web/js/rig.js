@@ -64,21 +64,3 @@ function rigSVG(sp, status) {
     "</svg>"
   );
 }
-
-function rigLabelsSVG(sp) {
-  const build = rigBuildOf(sp.code);
-  const fields = (sp.fieldOrder || FIELDS || []).slice(0, 5);
-  return fields
-    .map((field, i) => {
-      const pedipalp = i === 4;
-      const slot = pedipalp ? PEDIPALP_SLOT : LEG_SLOTS[i];
-      const scale = pedipalp ? 0.46 : 1;
-      const spread = 1 - slot * 0.12;
-      const y = build.body.cy + (slot - 1.5) * build.body.ry * 0.44 +
-        build.legDrop * scale + slot * 4 + 6;
-      const x = build.body.rx * 0.72 + build.legSpan * scale * spread + 4;
-      return '<text class="rig__label" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) +
-        '">' + esc(field) + "</text>";
-    })
-    .join("");
-}

@@ -2,6 +2,8 @@
 
 > An incident is not a log entry — it is an issue of a comic. `inc_004` becomes `ISSUE #4`, and the feed becomes a shelf of covers.
 
+**SHIPPED** — `web/js/issue.js`, `web/js/issue-route.js`, `web/css/issue.css`, `web/css/print.css`, mounted by `renderFeed()` in `web/js/render.js`; covered by `test/web-issue.test.js`.
+
 **Status:** ACCEPTED *(absorbs UI-12 — deep link — and UI-17 — print report)* · **Cost:** medium · **Depends on:** [UI-18a](UI-18a-the-rig.md) for the character-at-its-worst version of the cover (the idea works without it, using the panel's own worst-moment styling)
 **Touches:** `web/js/render.js`, `web/css/feed.css`, a new hash-routing module, `web/js/panel.js`
 
@@ -109,14 +111,24 @@ above exists, not new layout.
 
 ## Done when
 
-- [ ] Every incident card in the feed renders as a comic-issue cover: issue number, strain
-      gloss as subtitle, collector panel at its worst moment, integrity delta
-- [ ] `#inc_XXX` in the URL opens the console directly to that issue with Incident Replay
-      pre-seeded, for any real incident id
-- [ ] An unknown or malformed hash falls back to the normal THE WATCH view without erroring
-- [ ] Each rendered issue exposes its own shareable link (a real `<a href>`, not just an
-      implied convention)
-- [ ] A browser print of an open issue produces a single, readable page via `@media print`,
-      with page chrome (masthead, grid, replay controls) hidden
-- [ ] No incident data is invented for display — every element on the cover traces to a
-      field already in `data/incidents.json`
+- [x] Every incident card in the feed renders as a comic-issue cover: issue number, strain
+      gloss as subtitle, collector panel at its worst moment, integrity delta.
+      **One deliberate deviation:** the cover art is `rigSVG()` on the collector's own
+      character built from the worst run in the incident window (`worstRunOf()` +
+      `spiderFromRecord()`), not the whole `panelHTML()` panel — the panel's chrome fought
+      the cover layout, and the character carries the same field-state read
+- [x] `#inc_XXX` in the URL opens the console directly to that issue with Incident Replay
+      pre-seeded, for any real incident id — `issue-route.js` reads `location.hash` on load
+      and on `hashchange`, builds the replay through `buildReplay()` and scrolls to it
+- [x] An unknown or malformed hash falls back to the normal THE WATCH view without erroring
+      — `parseIssueHash()` returns `null` for anything that is not `inc_<digits>`, including
+      a hash that fails `decodeURIComponent`, and `routedReplay()` returns `null` for a
+      well-formed id with no matching record
+- [x] Each rendered issue exposes its own shareable link (a real `<a href>`, not just an
+      implied convention) — `issueLinkHTML()`
+- [x] A browser print of an open issue produces a single, readable page via `@media print`,
+      with page chrome (masthead, grid, replay controls) hidden — `web/css/print.css`.
+      With no issue open it prints every issue, one per page
+- [x] No incident data is invented for display — every element on the cover traces to a
+      field already in `data/incidents.json` (`id`, `strain`, `opened_at`,
+      `integrity_before`/`after`) or, for the art, to a run in `data/history.json`

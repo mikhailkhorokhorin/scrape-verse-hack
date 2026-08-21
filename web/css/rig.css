@@ -39,11 +39,6 @@
 
 .rig__body{animation:rig-weight var(--rig-sway,11s) ease-in-out infinite;transform-origin:center;}
 
-.rig__label{
-  fill:var(--dim);font-family:"IBM Plex Mono",ui-monospace,monospace;
-  font-size:6px;letter-spacing:.04em;dominant-baseline:middle;
-}
-
 @keyframes rig-plant{
   0%,100%{transform:translateY(0);}
   46%{transform:translateY(-1.4px);}

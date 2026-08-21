@@ -2,6 +2,8 @@
 
 > Hover a point on any sparkline and get that scan's timestamp and integrity; the same pass gives the whole console a keyboard route.
 
+**SHIPPED** — `web/js/sparkhover.js`, `web/css/sparkhover.css`, the grid `keydown` handler in `web/js/app.js`, and the existing replay key handler in `web/js/replay-mount.js`; covered by `test/web-sparkhover.test.js`.
+
 **Status:** OPEN *(absorbs UI-11 — keyboard path)* · **Cost:** small · **Depends on:** nothing
 **Touches:** `web/js/sparkline.js`, `web/js/panel.js`, `web/js/sheet.js`, `web/js/replay.js`, `web/css/panel.css`
 
@@ -73,9 +75,21 @@ step is new, walking the same `pts` array index by index.
 
 ## Done when
 
-- [ ] Hovering or focusing a sparkline point shows that run's real timestamp and integrity
-- [ ] Tab reaches every panel in grid order; Enter opens the sheet; Escape closes it
-- [ ] Arrow keys step the sparkline point by point when a panel has focus, and step
-      Incident Replay when the replay strip has focus
-- [ ] Hit targets remain accurate across panel resize and across `preserveAspectRatio="none"` distortion
-- [ ] No existing Tab order regresses (verified against today's behaviour before adding tabindex)
+- [x] Hovering or focusing a sparkline point shows that run's real timestamp and integrity
+      — `sparkTipHTML()` reads `sp.series[i]` and `sp.seriesTs[i]`, the same arrays the
+      chart is drawn from, and says `time not recorded` rather than inventing a stamp
+- [x] Tab reaches every panel in grid order; Enter opens the sheet; Escape closes it — the
+      panel is a native `<button>`, so Tab and Enter are the browser's; the grid `click`
+      handler in `web/js/app.js` opens the sheet (Enter on a button fires `click`), and the
+      document `keydown` handler closes it. No `tabindex` was added to the panel
+- [x] Arrow keys step the sparkline point by point when a panel has focus, and step
+      Incident Replay when the replay strip has focus — `sparkStep()` from the grid
+      handler, `replayStep()` from `web/js/replay-mount.js`. Escape on a focused panel
+      clears the cursor without closing anything else
+- [x] Hit targets remain accurate across panel resize and across
+      `preserveAspectRatio="none"` distortion — the hit targets are `<rect>`s inside the
+      same `viewBox`, so they stretch with the chart and need no recompute on resize; the
+      tooltip is positioned as a percentage of the same 240-unit space
+- [x] No existing Tab order regresses (verified against today's behaviour before adding
+      tabindex) — nothing gained a `tabindex`; the only focusable things inside a panel are
+      the ones that were already focusable (the panel itself and the reveal chips)

@@ -2,6 +2,8 @@
 
 > When polling picks up a new record, that Spider reacts: a step, a head turn toward the new sparkline point, `THWIP!` only if the record carries `after_heal`.
 
+**SHIPPED** — `web/js/rig-react.js`, `web/css/rig-react.css`, driven from `markLanded()` in `web/js/landing.js`; covered by `test/web-rig-react.test.js`.
+
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** small · **Depends on:** [UI-18a](UI-18a-the-rig.md); rides on [UI-03](UI-03-live-polling.md)'s change detection
 **Decision (Aug 21):** the per-collector diff this needs is the shared `web/js/delta.js` module, built by whichever of UI-03 / UI-18f / UI-21 enters work first — see the diff-module decision in `docs/TASKS.md`.
 **Touches:** `web/js/rig.js`, `web/js/adapter.js`, `web/js/panel.js`
@@ -64,11 +66,23 @@ onomatopoeia, reused rather than reinvented.
 
 ## Done when
 
-- [ ] A genuinely new run for one collector triggers a physical reaction (step, head turn)
-      on that collector's character specifically, not the whole fleet
-- [ ] `THWIP!` fires only when the landing record's `after_heal` is `true`, verified
-      against real data, not just a manual trigger
-- [ ] The reaction reuses the existing `burst()` helper rather than a parallel
-      implementation
-- [ ] Per-collector change detection is shared with (or at least consistent with) UI-03's
-      and UI-21's equivalent needs, not duplicated three separate ways
+- [x] A genuinely new run for one collector triggers a physical reaction (step, head turn)
+      on that collector's character specifically, not the whole fleet — `markLanded()`
+      resolves the one panel through `panelOf(change.code)` and `rigReact()` turns that
+      rig toward its own newest sparkline point, converting the point out of viewBox units
+      into page coordinates. The stepping leg is chosen by field name from the diff
+      (`data-field`), falling back to a seeded index when nothing field-level changed
+- [ ] **Half ticked: `THWIP!` fires only when the landing record's `after_heal` is `true`
+      — but this has never been verified against real data.** The gate itself is correct
+      and unit-tested: `snapshotOf()` carries `sp.afterHeal` from the record's `after_heal`,
+      `deltaBetween()` only sets `afterHeal` on a new run, and `markLanded()` bursts on
+      nothing else. **There is not one `after_heal: true` record in `data/history.json`.**
+      `repair.js` writes the flag on its post-heal verification run, but all three committed
+      heals were run outside that path, so the burst has only ever been seen in tests and
+      under `?mock=1`
+- [x] The reaction reuses the existing `burst()` helper rather than a parallel
+      implementation — `burst(panel, "THWIP!", COLOR.healthy)` from `web/js/panel.js`
+- [x] Per-collector change detection is shared with (or at least consistent with) UI-03's
+      and UI-21's equivalent needs, not duplicated three separate ways — all three read one
+      `deltaBetween()` call in `announceLandings()`: UI-21 through `speak()`, UI-03 and this
+      idea through `markLanded()`. There is exactly one previous-render snapshot on the page

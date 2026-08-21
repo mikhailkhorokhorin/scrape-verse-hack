@@ -2,6 +2,8 @@
 
 > Healthy panels already breathe. Characters need more — a leg re-plants, the body shifts weight, the mask plate catches a highlight, all offset per panel so nothing syncs.
 
+**SHIPPED, one element short** — `rig-plant`, `rig-twitch` and `rig-weight` in `web/css/rig.css`, seeded per panel by `rigSVG()`. The mask-plate highlight was not built; see the last two boxes.
+
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** small · **Depends on:** [UI-18a](UI-18a-the-rig.md), [UI-18b](UI-18b-legs-are-fields.md)
 **Touches:** `web/js/rig.js`, `web/css/panel.css` (or a rig-specific stylesheet)
 
@@ -68,11 +70,27 @@ timers.
 
 ## Done when
 
-- [ ] At least one leg, the body, and the mask plate each carry independent idle motion
-      with non-round periods (6-11s range for legs, similar for the others)
-- [ ] No two of the three characters' idle motion visibly synchronises when viewed side by
-      side for at least a full period
-- [ ] Idle motion composes with the existing panel-level breathe animation without visual
-      conflict
-- [ ] Included in UI-09's performance pass
-- [ ] Respects `prefers-reduced-motion` per `docs/DESIGN-SPEC.md`'s global reduced-motion rule
+- [ ] **Partly done: at least one leg, the body, and the mask plate each carry independent
+      idle motion with non-round periods.** Legs and body have it — every live leg runs
+      `rig-plant` on the `--rig-sway` period with a per-leg `--rig-delay` in the 6.0-7.0s
+      range, and `.rig__body` runs `rig-weight` on the same period. **The mask plate has no
+      idle motion.** A slow highlight sweep across `.rig__plate` was left out: at panel
+      size the plate is roughly 25px across, and every sweep tried either read as a flicker
+      or was invisible. Left unbuilt rather than shipped as noise
+- [ ] **Not ticked: no two of the three characters' idle motion visibly synchronises.** The
+      blink periods are genuinely distinct (BODEGA 8s, KESTREL 9s, ATLAS 10s), but the
+      leg and body rhythm is not. `--rig-sway` is `(seed % 5) + 9` and `--rig-delay` is
+      `((seed + i*37) % 11)/10 + 6`; ATLAS (seed 825) and KESTREL (seed 880) collide on
+      **both** — same 9s period and the same per-leg offsets 6.0 / 6.4 / 6.8 / 6.1 / 6.5.
+      Two of the three characters re-plant their legs in lockstep. BODEGA (13s, different
+      offsets) is clear of both. This is a real defect in the seeding, not a wording
+      quibble; it is left unfixed here because this is a documentation pass, and the fix is
+      a wider modulus on `seedOf`'s two consumers
+- [x] Idle motion composes with the existing panel-level breathe animation without visual
+      conflict — the rig animations are on SVG sub-groups with `transform-box:fill-box`
+      inside the panel, so they compose with rather than override the panel's own transform
+- [x] Included in UI-09's performance pass — pass 1 held 76fps with 82 animated rig parts
+      on screen
+- [x] Respects `prefers-reduced-motion` per `docs/DESIGN-SPEC.md`'s global reduced-motion
+      rule — `web/css/rig.css` cancels `.rig__leg`, `.rig__eye` and `.rig__body` animations
+      under the query

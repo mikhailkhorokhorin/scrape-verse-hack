@@ -2,6 +2,8 @@
 
 > Each expected field owns a mirrored pair of legs. A Spider at 50% integrity is standing on half its legs, and it looks like it.
 
+**SHIPPED** — `legsSVG()` / `legPairSVG()` in `web/js/rig.js`, `legPath()` in `web/js/rig-parts.js`, leg states in `web/css/rig.css`; covered by `test/web-rig.test.js`.
+
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** medium, and only after [UI-18a](UI-18a-the-rig.md) · **Depends on:** UI-18a
 **Touches:** `web/js/rig.js`, `web/js/panel.js`, `web/css/panel.css`
 
@@ -80,12 +82,23 @@ so a field's chip and its leg stay visually synchronised.
 
 ## Done when
 
-- [ ] Each field in `sp.fieldOrder` maps to one mirrored leg pair, in order, with no
-      re-derivation of the mapping outside what `fieldOrder` already provides
-- [ ] Leg posture (planted / twitching / limp) matches that field's live/infected/dead
-      state exactly, with the infected twitch on the same 2s cadence as the chip pulse
-- [ ] ATLAS's fifth field renders as a pedipalp pair, not a ninth/tenth leg, on every
-      character every time — never a generic "extra field" fallback
-- [ ] On a compact panel the rig is the panel body; on a big panel it sits behind content,
-      below `.symbiote` in z-order, with field chips still present and unreplaced
-- [ ] Verified legible at 375px as part of UI-09's phone pass
+- [x] Each field in `sp.fieldOrder` maps to one mirrored leg pair, in order, with no
+      re-derivation of the mapping outside what `fieldOrder` already provides — `legsSVG()`
+      maps index `i` to `LEG_SLOTS[i]` and writes the field name onto both paths as
+      `data-field`, which is also what the landing reaction steps on
+- [x] Leg posture (planted / twitching / limp) matches that field's live/infected/dead
+      state exactly, with the infected twitch on the same 2s cadence as the chip pulse —
+      `data-state` comes straight off `sp.fields[field]`; `rig-twitch` is `2s`, the same
+      period as `chip-pulse`. A dead leg additionally shortens its reach and drops its knee
+      in `legPath()`, so it hangs rather than only changing colour
+- [x] ATLAS's fifth field renders as a pedipalp pair, not a ninth/tenth leg, on every
+      character every time — never a generic "extra field" fallback — index 4 is an
+      explicit branch to `PEDIPALP_SLOT` at 0.46 scale with a `rig__leg--palp` class.
+      **One honest limit:** `legsSVG()` slices `fieldOrder` at five, so a hypothetical
+      sixth field would be dropped from the rig rather than mis-drawn. No collector has one
+- [x] On a compact panel the rig is the panel body; on a big panel it sits behind content,
+      below `.symbiote` in z-order, with field chips still present and unreplaced —
+      `.rig-slot` in the compact branch, `.rig-mark` at `z-index:0` in the big one (the
+      symbiote is `z-index:1`, panel content `z-index:2`); the chips branch is untouched
+- [x] Verified legible at 375px as part of UI-09's phone pass — pass 1, rig silhouettes
+      148-260px wide, logged in `UI-09-phone-pass.md`

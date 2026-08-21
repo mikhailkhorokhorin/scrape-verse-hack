@@ -2,6 +2,8 @@
 
 > One SVG spider, authored once and parameterised, so BODEGA, ATLAS and KESTREL are a cast and not one sprite repeated three times.
 
+**SHIPPED** — `rigSVG()` in `web/js/rig.js`, geometry in `web/js/rig-parts.js`, styling in `web/css/rig.css` and `web/css/rig-slot.css`; covered by `test/web-rig.test.js`.
+
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** medium — "the one thing on the list worth a whole day" · **Depends on:** nothing; everything else in the cast depends on this
 **Touches:** new `web/js/rig.js`; a new stylesheet for rig-specific rules; `web/js/panel.js` (mount point only)
 
@@ -76,13 +78,28 @@ behind content on a big panel).
 
 ## Done when
 
-- [ ] One spider template exists in `web/js/rig.js`, parameterised by collector
-- [ ] BODEGA, ATLAS and KESTREL are visually distinguishable at actual panel size by
-      silhouette alone (leg curve, mask marking, accent plate) — not by colour
-- [ ] Ink line art at `--ink` weight 3, flat fills, no gradients, matching
-      `docs/DESIGN-SPEC.md` section 1
-- [ ] Recolours correctly with panel state using existing CSS custom properties, with no
-      per-state art asset
-- [ ] Renders inside both the compact and big panel layouts without layout breakage
-- [ ] UI-18b, UI-18c and the rest of the cast can mount on top of it without touching the
-      base template
+- [x] One spider template exists in `web/js/rig.js`, parameterised by collector —
+      `rigSVG(sp, status)` assembles legs, abdomen, plate, head, mark and eyes from one
+      `rigBuildOf(code)` parameter set
+- [x] BODEGA, ATLAS and KESTREL are visually distinguishable at actual panel size by
+      silhouette alone (leg curve, mask marking, accent plate) — not by colour. BODEGA is
+      squat (body 30×20, legs 40 long and 5 thick) on quadratic curves; ATLAS is
+      long-limbed (17×24 body, 64-unit legs at 2.8 weight) with a five-sided plate; KESTREL
+      is `angular:true`, so its legs are drawn as straight two-segment lines rather than
+      curves. Nothing in `RIG_BUILD` carries a colour
+- [x] Flat fills, no gradients, matching `docs/DESIGN-SPEC.md` section 1 — solid `--ink`
+      body and `--paper` stroke throughout, not one gradient in `rig.css`. **Stroke weight
+      is not literally 3:** the body outline is 2.4 and leg weight is a per-collector
+      parameter from 2.8 (ATLAS) to 5 (BODEGA), because a single weight erased the
+      silhouette difference the row above depends on
+- [x] Recolours correctly with panel state using existing CSS custom properties, with no
+      per-state art asset — `data-status` on the `<svg>` sets `color`, and the plate, mark
+      and lit eyes take `currentColor`; a dead leg takes `--symbiote-edge`, an infected one
+      `--infected`
+- [x] Renders inside both the compact and big panel layouts without layout breakage — the
+      compact panel mounts it in `.rig-slot` as the panel body, the big panel mounts the
+      same SVG as a `.rig-mark` watermark behind content
+- [x] UI-18b, UI-18c and the rest of the cast can mount on top of it without touching the
+      base template — 18b, 18c and 18e are attributes and CSS on parts the template already
+      emits; 18f (`rig-react.js`) and UI-23 (`sheet-rig.js`) both operate on the rendered
+      SVG from outside, and neither edits `rigSVG()`
