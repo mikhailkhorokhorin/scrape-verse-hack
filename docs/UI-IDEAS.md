@@ -3,6 +3,10 @@
 Every idea has a stable id. Reference them by id in commits and prompts. Ids are never
 reused: a merged idea keeps its number and points at where it went.
 
+A **second wave** was written on 21 Aug, after this one was built and the console could be
+looked at rather than imagined: `docs/UI-IDEAS-WAVE-2.md`, ids UI-24 onward. It does not
+supersede this file — it starts where this one finished.
+
 This file is the argument: what is in, what is out, and why. **The working briefs live one
 per file in `docs/ideas/`** — mechanism, risks and a done-when checklist for each idea,
 indexed with paths in `docs/TASKS.md`. Decide here, build from there.
