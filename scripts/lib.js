@@ -183,6 +183,7 @@ function runRecord(collector, rows) {
     integrity,
     status: statusOf(integrity),
     rows: rows.length,
+    rows_expected: collector.rows_per_run ?? null,
     sample: Object.fromEntries(
       Object.keys(collector.fields).map((field) => [field, rows[0]?.[field] ?? null]))
   };
