@@ -25,7 +25,6 @@ const styles = `
   .product-title { margin:.5rem 0 0; font-size:1rem; font-weight:600; }
   .product-price, .price-tag { margin:0; font-size:1.125rem; font-weight:700; color:var(--ink); }
   .product-rating, .product-stock { margin:0; font-size:.875rem; color:var(--mut); }
-  .product-card[data-rating]::after { content:"rating in data-rating"; font-size:.75rem; color:#a89b8c; font-style:italic; }
   footer { margin-top:3rem; color:var(--mut); font-size:.875rem; border-top:1px solid var(--line); padding-top:1rem; }
   footer code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8125rem; }
   @media (max-width:520px) { .product-list { grid-template-columns:1fr 1fr; gap:1rem; } .lab h2 { font-size:1rem; } .switch a { flex:1 1 100%; } }

@@ -55,11 +55,12 @@ function loadMock() {
     sp.fillRates = mockFillRates(sp.tracks);
   });
   INCIDENTS = MOCK_INCIDENTS;
-  RAW_HISTORY = mockRawHistory(SPIDERS).concat(mockIncidentRuns());
+  RAW_HISTORY = mockRawHistory(SPIDERS).concat(mockIncidentRuns()).concat(mockHaulRuns());
   attachScars(SPIDERS);
 
   renderGrid();
   renderFeed();
+  renderHaul();
   renderReplay();
 
   mountMockControls({

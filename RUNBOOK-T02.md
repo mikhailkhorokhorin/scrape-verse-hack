@@ -1,59 +1,30 @@
-# T-02 — the three `create` calls, ready to paste
+# T-02 — the three `create` calls
 
-Run after `bdata login`. Each takes 5-25 minutes and spends credit — **they are
-irreversible**. Fire all three back to back in three terminals; do not wait on one.
+> **Executed Aug 21, 2026. All three collectors exist.** This file is kept as a record of
+> what was run, not as work outstanding. **Do not run these commands again** — `create`
+> spends credit and a collector that already has an ID is healed, never recreated.
 
-`--pretty -o` writes the full envelope to a file so the Collector ID survives a lost
-terminal. That is the whole reason the flag is there.
+The Collector IDs and the heal history are in `docs/COLLECTORS.md`; the URLs and
+per-field validators are in `collectors.json`.
 
----
+| Codename | Collector ID | Target |
+|---|---|---|
+| BODEGA | `c_mt2lkwxa1bb5uz223s` | our own demo page, `demo-target/` |
+| ATLAS | `c_mt2fnqqngikv29od5` | books.toscrape.com |
+| KESTREL | `c_mt2fnt3p2k4n644701` | news.ycombinator.com |
 
-## ATLAS — books.toscrape.com
+The full `create` envelopes are committed as `create-atlas.json`, `create-kestrel.json`
+and `create-bodega.json` — `--pretty -o` wrote them so the ID would survive a lost
+terminal, and they are the evidence that each collector is real.
 
-```bash
-npx -y -p @brightdata/cli bdata scraper create \
-  "https://books.toscrape.com/" \
-  "For each of the 20 book cards on the page extract: title (the link text), price including the currency symbol, the star rating written as an English word in the CSS class such as star-rating Three, the absolute image URL, and the availability text such as In stock." \
-  --name thwip-atlas --pretty -o create-atlas.json
-```
+BODEGA was created last because it needed the demo page's public URL, which needed Pages
+live. That sequence is recorded in `GITHUB-SETUP.md`, including the exact command.
 
-## KESTREL — news.ycombinator.com
-
-```bash
-npx -y -p @brightdata/cli bdata scraper create \
-  "https://news.ycombinator.com/" \
-  "For each of the 30 stories on the front page extract: the story title text, the points as a number, the number of comments as a number, and the author username. Stories with no points or no comments should return 0, not null." \
-  --name thwip-kestrel --pretty -o create-kestrel.json
-```
-
-## BODEGA — our own demo page
-
-**Blocked until Pages is live.** The URL below only exists after the `pages` job has run
-on `main` at least once. Substitute the real host if it differs.
-
-```bash
-npx -y -p @brightdata/cli bdata scraper create \
-  "https://hackathons6943133.gitlab.io/scrape-verse/app/demo-target/" \
-  "For each of the 12 product cards extract: the product title, the price including the currency symbol, the rating text such as 4.4 out of 5, and the absolute image URL." \
-  --name thwip-bodega --pretty -o create-bodega.json
-```
-
----
-
-## The moment each one returns
-
-Take `collector_id` from the output and write it in **both** places, immediately:
-
-1. `collectors.json` — the `collector_id` field of that collector
-2. `docs/COLLECTORS.md` — the registry table, plus the created date
-
-BODEGA also needs its `url` filled into `collectors.json`; it is empty until Pages exists.
-
-Then confirm the pipeline sees it:
+To confirm the pipeline still sees all three:
 
 ```bash
 node scripts/health-check.js
 ```
 
-It prints one line per collector. A collector with an ID that still prints `skip` means
-the ID did not land in `collectors.json`.
+One line per collector. A collector with an ID that prints `skip` means the ID is missing
+from `collectors.json`.
