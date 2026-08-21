@@ -1,5 +1,43 @@
 [
   {
+    "id": "inc_002",
+    "spider": "ATLAS",
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "strain": "DRIFTED",
+    "opened_at": "2026-08-21T05:13:12.798Z",
+    "closed_at": "2026-08-21T06:59:24.534Z",
+    "integrity_before": 90,
+    "integrity_after": 100,
+    "anomalies": [
+      "availability"
+    ],
+    "recovered_fields": [
+      "availability"
+    ],
+    "summary": "The availability selector matched every p.instock.availability on the page and joined them, so each row carried \"In stock (19 available) In stock In stock…\" — populated on every scan and wrong on every scan. The re-weave scoped it to the current product card and the field returned exactly In stock.",
+    "rows_per_run": 20,
+    "heal_prompt": "On books.toscrape.com the 'availability' field is matching every p.instock.availability on the page and joining them into one string. It must match only the one inside the current article.product_pod row and return exactly 'In stock' or 'Out of stock' per book. Keep title, price, rating and image_url exactly as they are. Return 20 rows.",
+    "resolved": true,
+    "stages": [
+      {
+        "stage": "DETECTED",
+        "ts": "2026-08-21T05:13:12.798Z"
+      },
+      {
+        "stage": "DIAGNOSED",
+        "ts": "2026-08-21T06:13:52.441Z"
+      },
+      {
+        "stage": "REWEAVING",
+        "ts": "2026-08-21T06:28:00.000Z"
+      },
+      {
+        "stage": "VERIFIED",
+        "ts": "2026-08-21T06:59:24.534Z"
+      }
+    ]
+  },
+  {
     "id": "inc_001",
     "spider": "KESTREL",
     "collector_id": "c_mt2fnt3p2k4n644701",
@@ -47,21 +85,26 @@
     "spider": "BODEGA",
     "collector_id": "c_mt2lkwxa1bb5uz223s",
     "opened_at": "2026-08-21T07:48:20.779Z",
-    "closed_at": null,
+    "closed_at": "2026-08-21T09:13:59.565Z",
     "integrity_before": 0,
-    "integrity_after": null,
+    "integrity_after": 100,
     "anomalies": [
       "title",
       "price",
       "rating",
       "image"
     ],
-    "recovered_fields": [],
-    "summary": "Extraction kept succeeding while title and price and rating and image stopped returning usable values. The re-weave did not complete.",
+    "recovered_fields": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "summary": "The cron detected BODEGA at 0% twice and ran a heal on its own — and the heal did not fix it, because nothing on the target had broken. The scraper was returning one wrapped row holding a products array, and the watcher's own payload parser scored the envelope instead of the rows. The fix landed in rowsOf, the next scan read 12 rows at 100%, and the diagnosis recorded here is the false alarm the system believed at the time.",
     "rows_per_run": 12,
     "strain": "THROTTLED",
     "heal_prompt": "On mikhailkhorokhorin.github.io: 'title' and 'price' and 'rating' and 'image' return null after a layout change. Likely THROTTLED: every field came back empty, so the request itself is likely being blocked or served a different page. Fix the extraction for those fields.",
-    "resolved": false,
+    "resolved": true,
     "stages": [
       {
         "stage": "DETECTED",
@@ -74,8 +117,12 @@
       {
         "stage": "REWEAVING",
         "ts": "2026-08-21T07:48:20.782Z"
+      },
+      {
+        "stage": "VERIFIED",
+        "ts": "2026-08-21T09:13:59.565Z"
       }
     ],
-    "id": "inc_002"
+    "id": "inc_003"
   }
 ]

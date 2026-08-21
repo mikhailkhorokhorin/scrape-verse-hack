@@ -35,13 +35,14 @@ Commit each task separately. A single commit spanning six tasks cannot be review
 | Question | Answer |
 |---|---|
 | Target sites | `collectors.json`, chosen and robots-checked. **Never substitute one** |
-| Collector IDs | `docs/COLLECTORS.md`. Empty means not yet created |
+| Collector IDs | `docs/COLLECTORS.md`. All three are created and pinned — never re-create one |
 | Field validators | `collectors.json`, per collector |
 | Scripts language | Node |
 | Console framework | None. Vanilla, no build step |
 | Frontend starting point | Port `docs/prototype.html`. Never rewrite it from the spec |
 | CI | **GitHub Actions** — `.github/workflows/watch.yml`, `*/30` cron in the file. GitLab runners never came up; that project is a mirror and `.gitlab-ci.yml` is kept only as history |
-| Tests | `node:test`, no dependencies. `npm test` — 193 tests, must stay green |
+| Tests | `node:test`, no dependencies. `npm test` — 238 tests, must stay green |
+| MCP server | `mcp/`, stdio JSON-RPC, no SDK. Six tools. See `mcp/README.md` |
 
 ## Two hard stops — the only reasons to come back to a human
 

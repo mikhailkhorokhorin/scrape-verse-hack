@@ -54,7 +54,8 @@ and `kestrel-after.json`, the scans are in `data/history.json` (`04:43:39Z` and
 ```
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
-test/                       193 tests, node:test, no dependencies
+mcp/                        MCP server — the fleet, answering a coding agent
+test/                       238 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the Chaos Lab — three variants of the same shop page
 collectors.json             targets and per-field validators
@@ -107,6 +108,49 @@ All three are generated from one source of truth: `demo-target/build-data.js` ho
 12 products and the variant definitions, `build-page.js` renders them, and
 `node demo-target/build.js` rewrites all three HTML files. Edit the data, not the markup.
 
+## THE HAUL — the data itself
+
+The console does not stop at a health score. **The Haul** is a section on the main page
+showing what the fleet actually brought back: the real rows, card by card, each stamped
+with the collector that fetched it, the timestamp of the scan, and the Integrity the
+Spider was at when that row was captured.
+
+It is built from the `sample` on every history record, so it is the committed data and not
+a fixture — the same JSON the pipeline wrote. A row captured at 90% Integrity carries that
+number, which is the point: provenance travels with the data. `web/js/haul-data.js`
+resolves the rows, `haul-view.js` renders them.
+
+## MCP server — the fleet, in your agent
+
+The whole loop — *is anything broken? what broke? fix it. prove it* — also runs inside a
+coding agent. `mcp/` is an MCP server speaking JSON-RPC 2.0 over stdio, implemented
+straight against the spec with **no SDK and no dependencies**. Connect it in one line:
+
+```bash
+claude mcp add thwip -- node mcp/server.js
+```
+
+Cursor and any other MCP client work the same way — it is a plain stdio process
+(`npm run mcp`). Full setup and a worked conversation are in
+[`mcp/README.md`](mcp/README.md).
+
+Six tools. Four read the committed data — instant, free, no network:
+
+| Tool | What it answers |
+|---|---|
+| `fleet_status` | How is every Spider right now — Integrity, status, which fields are live / infected / dead, how stale the scan is |
+| `spider_history` | How has one Spider behaved over time, with post-heal runs marked |
+| `incident_log` | What broke, and did the repair hold |
+| `heal_receipt` | Prove one repair — every phase with timestamps and gaps, beside the `collector_id` that did not change |
+
+Two drive Bright Data for real and **spend credit**: `scan_fleet` scrapes and scores the
+fleet, `heal_spider` diagnoses, re-weaves, verifies and opens an incident. Their tool
+descriptions say so in the text the agent reads, so a well-behaved agent asks first.
+
+`heal_receipt` exists because the judged claim is that the Collector ID survives healing.
+It prints the phases and the unchanged ID side by side, so the evidence is one tool call
+away rather than a file to go and read.
+
 ## Running it for real
 
 Only needed to produce new data. This calls Bright Data and costs credit:
@@ -125,7 +169,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-193 tests, `node:test`, no dependencies and no test framework to install:
+238 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
@@ -133,8 +177,10 @@ npm test
 
 They cover the parts that decide whether the pipeline is telling the truth: field
 classification and its exact boundaries, Integrity scoring, payload shapes, strain
-diagnosis, the heal decision (two consecutive bad scans, 2-hour cooldown), and atomic
-JSON storage. No network and no `bdata` calls — the suite runs offline in under a second.
+diagnosis, the heal decision (two consecutive bad scans, 2-hour cooldown), atomic
+JSON storage, and the MCP server's protocol handling and tool output. No network and no
+`bdata` calls — the credit-spending paths run against a mocked `lib.bdata`, so the suite
+runs offline in well under a second and never spends anything.
 
 ## CI
 
@@ -194,17 +240,21 @@ against its ID in `docs/COLLECTORS.md`.
 
 Stated plainly rather than left for you to find:
 
-- **`data/incidents.json` holds one incident, not two.** Two heals happened — KESTREL
-  0% → 100% and ATLAS 90% → 100% — but both were invoked by hand, before the automated
-  incident loop was wired in. Only KESTREL was written back as an incident record
-  (`inc_001`); the ATLAS heal is visible in `data/history.json` as a 90 → 100 step at
-  `06:59:24Z` and is logged in `docs/COLLECTORS.md`, without an incident record of its own
+- **Three heals happened; `data/incidents.json` holds two records, one of them open.**
+  KESTREL 0% → 100% is the complete one (`inc_001`, all four stages, resolved). `inc_002`
+  is BODEGA, opened by `repair.js` at `07:48:20Z` and **never closed** — it stops at
+  `REWEAVING` with `resolved: false`. BODEGA did recover to 100% at `09:13:59Z`, which is
+  in `data/history.json`, but the record was not written back, so the incident stays open
+  on screen. The ATLAS 90% → 100% heal has **no incident record at all**; it is evidenced
+  by the step in `data/history.json` (`06:39:48Z` at 90, `06:59:24Z` at 100) and by
+  `docs/COLLECTORS.md`. We did not hand-write the missing records after the fact —
+  manufacturing that evidence is precisely the failure this project exists to expose
 - **The automated repair path is untested end to end.** `scripts/repair.js` is written,
   unit-tested and wired into CI, but both heals that actually happened were invoked by
   hand. The decision logic is covered by tests; the unattended round trip is not
-- **MTTR is currently a mean of one sample.** `renderMttr()` averages every incident's
-  `closed_at − opened_at`; with one incident on disk that average is that single
-  incident's 26m 24s. It reads `--` when there are none
+- **MTTR is currently a mean of one sample.** `renderMttr()` averages `closed_at −
+  opened_at` across incidents that have both; `inc_002` has no `closed_at`, so the mean is
+  `inc_001`'s 26m 24s alone. It reads `--` when there are none
 
 ## The data
 

@@ -2,15 +2,24 @@
 
 const HAUL_VALUE_MAX = 108;
 
+function haulHostOf(raw) {
+  try {
+    return new URL(raw).hostname || null;
+  } catch (error) {
+    return null;
+  }
+}
+
 function haulValueHTML(cell) {
   if (cell.empty) {
     return '<span class="haul__val haul__val--void">' + esc(cell.raw === undefined ? "missing" : "null") + "</span>";
   }
   const text = truncateMiddle(cell.text, HAUL_VALUE_MAX);
   const cls = "haul__val haul__val--" + cell.state;
-  if (cell.media) {
+  const host = cell.media ? haulHostOf(cell.raw) : null;
+  if (host) {
     return '<span class="' + cls + ' haul__val--media"><span class="haul__host">' +
-      esc(new URL(cell.raw).hostname) + "</span>" + esc(truncateMiddle(cell.raw.replace(/^https?:\/\/[^/]+/, ""), 44)) + "</span>";
+      esc(host) + "</span>" + esc(truncateMiddle(cell.raw.replace(/^https?:\/\/[^/]+/, ""), 44)) + "</span>";
   }
   return '<span class="' + cls + '">' + esc(text) + "</span>";
 }
@@ -33,7 +42,8 @@ function haulStampHTML(h) {
         '<span class="stamp__word">integrity<br>at capture</span>' +
       "</span>" +
       '<span class="stamp__lines">' +
-        '<span class="stamp__line"><i>collector</i>' + esc(h.cid) + "</span>" +
+        '<span class="stamp__line stamp__line--cid"><i>collector</i>' +
+          '<span class="stamp__cid" title="' + esc(h.cid) + '">' + esc(h.cid) + "</span></span>" +
         '<span class="stamp__line"><i>captured</i>' + esc(clockOf(h.ts)) + " · " + esc(agoOf(h.ts)) + "</span>" +
         '<span class="stamp__line"><i>this scan</i>' + groupNum(h.rowsThisScan) + " rows · " +
           groupNum(h.rowsTotal) + " on record</span>" +
@@ -99,7 +109,8 @@ function haulMovementHTML(h) {
 function haulSpreadHTML(h) {
   const sp = h.spread;
   if (!sp) return "";
-  const fmt = (n) => String(Math.round(n * 100) / 100);
+  const unit = sp.unit || { prefix: "", suffix: "" };
+  const fmt = (n) => unit.prefix + String(Math.round(n * 100) / 100) + unit.suffix;
   return (
     '<div class="spreadstat">' +
       '<span class="spreadstat__tag">Across the haul</span>' +
