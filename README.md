@@ -45,9 +45,11 @@ were written by hand, and none was taken from Bright Data's pre-built library:
 | ATLAS | books.toscrape.com | `c_mt2fnqqngikv29od5` | title, price, rating, image, availability |
 | KESTREL | news.ycombinator.com | `c_mt2fnt3p2k4n644701` | title, points, comments, author |
 
-The `create` envelope for each is committed (`create-bodega.json`, `create-atlas.json`,
-`create-kestrel.json`), and the registry with creation dates and every heal since is
-[`docs/COLLECTORS.md`](docs/COLLECTORS.md).
+The `create` envelope for each is committed
+([`docs/evidence/create-bodega.json`](docs/evidence/create-bodega.json),
+[`create-atlas.json`](docs/evidence/create-atlas.json),
+[`create-kestrel.json`](docs/evidence/create-kestrel.json)), and the registry with
+creation dates and every heal since is [`docs/COLLECTORS.md`](docs/COLLECTORS.md).
 
 Scraper Studio decides *how* to extract. What counts as a **correct** value is ours, and it
 is declared per field in `collectors.json` — `price` must parse as a number, `image` must be
@@ -150,8 +152,10 @@ no human in the loop:
 The Collector ID is the row that matters. **It did not change.** The collector was
 repaired, not recreated — the same one that broke is the one that came back.
 
-Check it yourself: the broken and healed payloads are committed as `kestrel-probe.json`
-and `kestrel-after.json`, the scans are in `data/history.json` (`04:43:39Z` and
+Check it yourself: the broken and healed payloads are committed as
+[`docs/evidence/kestrel-probe.json`](docs/evidence/kestrel-probe.json)
+and [`kestrel-after.json`](docs/evidence/kestrel-after.json), the scans are in
+`data/history.json` (`04:43:39Z` and
 `05:13:45Z` broken, `05:40:09Z` healed), and the heal is logged in
 [`docs/COLLECTORS.md`](docs/COLLECTORS.md).
 
@@ -378,7 +382,8 @@ it is declared per field in `collectors.json` — a `price` must parse as a numb
 what turns a run into an Integrity score, and it is why a field can be present and still
 be reported as broken.
 
-The full `create` envelopes are committed as `create-atlas.json`, `create-kestrel.json`
+The full `create` envelopes are committed under
+[`docs/evidence/`](docs/evidence/) as `create-atlas.json`, `create-kestrel.json`
 and `create-bodega.json`. Each target was verified as public, login-free, robots-checked
 and outside Bright Data's pre-built scraper library — do not substitute one.
 

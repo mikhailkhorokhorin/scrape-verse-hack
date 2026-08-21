@@ -3,7 +3,6 @@
 !.env.example
 credentials.json
 config.json
-create-*.json
 kestrel-before.json
 atlas-before.json
 bodega-before.json
@@ -11,3 +10,6 @@ node_modules/
 .DS_Store
 nul
 public/
+web/data
+.impeccable/
+.playwright-mcp/

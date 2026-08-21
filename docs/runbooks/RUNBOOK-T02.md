@@ -13,8 +13,9 @@ per-field validators are in `collectors.json`.
 | ATLAS | `c_mt2fnqqngikv29od5` | books.toscrape.com |
 | KESTREL | `c_mt2fnt3p2k4n644701` | news.ycombinator.com |
 
-The full `create` envelopes are committed as `create-atlas.json`, `create-kestrel.json`
-and `create-bodega.json` — `--pretty -o` wrote them so the ID would survive a lost
+The full `create` envelopes are committed under `docs/evidence/` as `create-atlas.json`,
+`create-kestrel.json` and `create-bodega.json` — `--pretty -o` wrote them so the ID
+would survive a lost
 terminal, and they are the evidence that each collector is real.
 
 BODEGA was created last because it needed the demo page's public URL, which needed Pages
