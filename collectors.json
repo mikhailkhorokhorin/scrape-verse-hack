@@ -2,8 +2,8 @@
   "collectors": [
     {
       "codename": "BODEGA",
-      "universe": "",
-      "url": "",
+      "universe": "mikhailkhorokhorin.github.io",
+      "url": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/",
       "collector_id": "",
       "rows_per_run": 12,
       "note": "our own page, broken on purpose for the demo",
