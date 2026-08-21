@@ -1,62 +1,64 @@
 "use strict";
 
-/* Mock fleet — only reachable behind ?mock=1.
-   It exists so every Spider state stays testable while real history is thin.
-   The default route never touches this file's data. */
-
 const MOCK = new URLSearchParams(location.search).get("mock") === "1";
 
 const MOCK_FIELDS = ["title", "price", "rating", "image"];
 
 const MOCK_SPIDERS = [
   { code:"ATLAS", universe:"books.toscrape.com", cid:"c_mock_atlas",
-    fields:{title:"live",price:"live",rating:"live",image:"live"},
-    sample:{title:"A Light in the Attic",price:"£51.77",rating:"star-rating Three",image:"https://books.toscrape.com/media/cache/2c/da/x.jpg"},
+    order:["title","price","rating","image","availability"],
+    fields:{title:"live",price:"live",rating:"live",image:"live",availability:"live"},
+    sample:{title:"A Light in the Attic",price:"£51.77",rating:"star-rating Three",image:"https://books.toscrape.com/media/cache/2c/da/x.jpg",availability:"In stock"},
     seed:11 },
-  { code:"BODEGA", universe:"bodega-demo.github.io", cid:"c_mock_bodega",
+  { code:"BODEGA", universe:"hackathons6943133.gitlab.io", cid:"c_mock_bodega",
+    order:["title","price","rating","image"],
     fields:{title:"live",price:"dead",rating:"infected",image:"live"},
-    sample:{title:"Danforth Anchor, 8 kg Galvanised",price:null,rating:"undefined",image:"https://picsum.photos/seed/harbor-anchor/480/320"},
+    sample:{title:"Ceramic pour-over dripper",price:null,rating:"undefined",image:"img/01.svg"},
     seed:29 },
   { code:"KESTREL", universe:"news.ycombinator.com", cid:"c_mock_kestrel",
-    fields:{title:"live",price:"live",rating:"live",image:"infected"},
-    sample:{title:"The August 17 outage, and the work ahead",price:"124 points",rating:"129 comments",image:"/assets/placeholder-missing.svg"},
+    order:["title","points","comments","author"],
+    fields:{title:"live",points:"live",comments:"live",author:"infected"},
+    sample:{title:"The August 17 outage, and the work ahead",points:"124",comments:"129",author:"undefined"},
     seed:47 }
 ];
 
 const MOCK_INCIDENTS = [
-  { id:"inc_014", who:"BODEGA", opened:"Aug 20 · 09:12Z", before:98, after:42,
+  { id:"inc_014", who:"BODEGA", opened:"Aug 20 · 09:12Z", before:98, after:42, verified:true,
+    openedAt:new Date(Date.now() - 26 * 3600 * 1000).toISOString(),
     what:"Target renamed .product-price to .price-tag and moved rating into a data attribute. Extraction kept succeeding — it returned rows with a null price and the literal string \"undefined\" for rating.",
     stages:[["DETECTED","09:12:04"],["DIAGNOSED","09:12:31"],["REWEAVING","09:13:02"],["VERIFIED","09:26:48"]] },
-  { id:"inc_013", who:"KESTREL", opened:"Aug 19 · 22:40Z", before:96, after:78,
+  { id:"inc_013", who:"KESTREL", opened:"Aug 19 · 22:40Z", before:96, after:78, verified:true,
+    openedAt:new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
     what:"Lazy-loaded images began resolving to a placeholder SVG. The image field stayed populated the whole time — it just stopped being true.",
     stages:[["DETECTED","22:40:11"],["DIAGNOSED","22:40:39"],["REWEAVING","22:41:07"],["VERIFIED","22:52:19"]] }
 ];
 
-/* Deterministic pseudo-random so mock history is stable across reloads.
-   Real history is never generated — see the note in app.js. */
 function mockRng(seed) {
   let s = seed;
   return () => (s = (s * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
 }
 
+const MOCK_RUNS = 48;
+const MOCK_DECLINE_RUNS = 6;
+
 function mockHistory(seed, endValue) {
-  const r = mockRng(seed);
-  const out = [];
-  let v = 96 + r() * 4;
-  for (let i = 0; i < 48; i++) {
-    v += (r() - 0.45) * 2.2;
-    v = Math.max(88, Math.min(100, v));
-    out.push(v);
+  const random = mockRng(seed);
+  const series = [];
+  let value = 96 + random() * 4;
+  for (let i = 0; i < MOCK_RUNS; i++) {
+    value += (random() - 0.45) * 2.2;
+    value = Math.max(88, Math.min(100, value));
+    series.push(value);
   }
-  for (let i = 0; i < 6; i++) {
-    const t = (i + 1) / 6;
-    out[42 + i] = out[42 + i] * (1 - t) + endValue * t;
+
+  const declineStart = MOCK_RUNS - MOCK_DECLINE_RUNS;
+  for (let i = 0; i < MOCK_DECLINE_RUNS; i++) {
+    const blend = (i + 1) / MOCK_DECLINE_RUNS;
+    series[declineStart + i] = series[declineStart + i] * (1 - blend) + endValue * blend;
   }
-  return out;
+  return series;
 }
 
-/* The prototype's demo control bar. Injected only under ?mock=1 so it can
-   never ship on the live URL. */
 function mountMockControls(api) {
   const bar = document.createElement("div");
   bar.className = "demobar";
@@ -127,4 +129,47 @@ function mountMockControls(api) {
     api.renderGrid();
     document.getElementById("btn-heal").disabled = true;
   });
+}
+
+function mockRawHistory(spiders) {
+  const rows = [];
+  const step = 30 * 60 * 1000;
+  const now = Date.now();
+  for (const sp of spiders) {
+    const series = sp.series || [];
+    series.forEach((value, i) => {
+      rows.push({
+        collector_id: sp.cid,
+        spider: sp.code,
+        ts: new Date(now - (series.length - 1 - i) * step).toISOString(),
+        integrity: clampPct(value),
+      });
+    });
+  }
+  return rows;
+}
+
+function mockTracks(sp) {
+  const tracks = {};
+  const fields = sp.fieldOrder || MOCK_FIELDS;
+  const series = sp.series || [];
+  const rng = mockRng((sp.seed || 3) * 7 + 1);
+  for (const field of fields) {
+    const now = sp.fields[field];
+    tracks[field] = series.slice(-FIELD_TRACK_MAX).map((value, i, all) => {
+      if (i >= all.length - MOCK_DECLINE_RUNS && now !== "live") return now;
+      return value < HEALTHY_MIN && rng() < 0.35 ? "infected" : "live";
+    });
+  }
+  return tracks;
+}
+
+function mockFillRates(tracks) {
+  const rates = {};
+  for (const [field, track] of Object.entries(tracks)) {
+    const live = track.filter((s) => s === "live").length;
+    const infected = track.filter((s) => s === "infected").length;
+    rates[field] = Math.round(((live + INFECTED_CREDIT * infected) / track.length) * 100);
+  }
+  return rates;
 }

@@ -1,0 +1,43 @@
+.chips{position:relative;}
+.chip--reveals{cursor:help;position:static;}
+.chip--reveals:focus-visible{outline:3px solid var(--cyan);outline-offset:2px;}
+
+.reveal{
+  position:absolute;left:0;right:auto;bottom:calc(100% + 9px);z-index:60;
+  display:none;flex-direction:column;gap:3px;
+  min-width:max-content;max-width:100%;
+  padding:8px 10px;
+  background:var(--paper);color:var(--ink);
+  border:3px solid var(--ink);border-radius:2px;
+  box-shadow:4px 4px 0 var(--purple);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.6875rem;line-height:1.45;letter-spacing:0;
+  text-align:left;text-decoration:none;white-space:normal;
+  cursor:default;
+}
+.chip--reveals:hover .reveal,
+.chip--reveals:focus-visible .reveal,
+.chip--reveals.is-open .reveal{display:flex;}
+
+.reveal__row{display:flex;gap:8px;align-items:baseline;}
+.reveal__key{
+  flex:0 0 4.5rem;text-transform:uppercase;letter-spacing:.08em;
+  font-weight:600;color:#6B5F7D;
+}
+.reveal__val{
+  flex:1 1 auto;font-weight:600;min-width:0;
+  overflow-wrap:anywhere;word-break:break-word;
+}
+.reveal__val--infected{color:var(--purple);}
+.reveal__val--dead{color:#B01212;}
+
+.reveal::after{
+  content:"";position:absolute;top:100%;left:18px;
+  width:0;height:0;
+  border-left:7px solid transparent;border-right:7px solid transparent;
+  border-top:9px solid var(--ink);
+}
+
+.cell:has(.chip--reveals:hover),
+.cell:has(.chip--reveals:focus-visible),
+.cell:has(.chip--reveals.is-open){z-index:50;}

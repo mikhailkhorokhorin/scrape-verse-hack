@@ -1,7 +1,10 @@
 .env
-.env.local
+.env.*
+!.env.example
 credentials.json
 config.json
+create-*.json
+*-probe.json
 node_modules/
 .DS_Store
 docs/

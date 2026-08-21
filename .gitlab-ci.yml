@@ -27,6 +27,7 @@ watch:
     # a failed heal is data, not a broken pipeline
     - node scripts/repair.js || true
     - |
+      set +x
       git config user.email "ci@thwip.local"
       git config user.name  "thwip watch"
       git add data/
@@ -34,7 +35,17 @@ watch:
         echo "no change this scan"
       else
         git commit -m "data: scan $(date -u +%FT%TZ)"
-        git push "https://oauth2:${DATA_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" HEAD:main
+        printf 'https://oauth2:%s@%s\n' "${DATA_TOKEN}" "${CI_SERVER_HOST}" > "${HOME}/.git-credentials"
+        chmod 600 "${HOME}/.git-credentials"
+        git config credential.helper store
+        if git push "https://${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git" HEAD:main 2>push.log; then
+          echo "pushed"
+        else
+          sed -e "s#${DATA_TOKEN}#***#g" push.log >&2
+          rm -f "${HOME}/.git-credentials" push.log
+          exit 1
+        fi
+        rm -f "${HOME}/.git-credentials" push.log
       fi
 
 # GitLab publishes only from a job named exactly `pages`, serving `public/`.
