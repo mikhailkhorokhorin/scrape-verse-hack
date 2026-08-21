@@ -7,6 +7,40 @@ look at the field.
 
 Ids continue from UI-23 and are never reused.
 
+---
+
+## Culled, 21 Aug, the day it was written
+
+**Everything below except UI-29 is rejected.** Read the header of each idea, then the
+reason, then stop reconsidering them.
+
+The reason is one thing and it is worth writing down, because it is the difference
+between wave two and wave three: **this wave proposed chrome, and chrome loses.** Crop
+marks, a barcode, a countdown, a stamp, a link preview, page numbers — every one of them
+decorates or services the console without adding anything to the world it is set in. They
+were ranked by cost, which is how a list of chores gets written by accident.
+
+The single item that landed, **UI-29 · the ad page**, is not chrome. It is an artifact
+from inside the fiction that nobody expects to find on a monitoring console, it is funny
+before it is useful, and the thing it jokes about is real. That is the test wave three is
+written against, and it is the only test that matters here.
+
+`UI-24` `UI-25` `UI-26` `UI-27` `UI-28` `UI-30` `UI-31` `UI-32` `UI-33` `UI-34` `UI-35`
+`UI-36` `UI-37` `UI-38` `UI-39` `UI-40` `UI-41` `UI-42` `UI-43` `UI-44` `UI-45` `UI-46`
+`UI-47` `UI-48` — **REJECTED, chrome.** The ideas are kept below in full so the same
+ground is not re-walked.
+
+Two notes so nothing useful is lost with them:
+
+- **UI-30's letters page comes back in wave three as UI-52**, inverted. The version here
+  reformatted the heal prompt as evidence; the version that survives makes it the punchline
+  of a correspondence with the Spiders.
+- **The missing `og:image` is a defect, not an idea.** `index.html` carries no `og:` or
+  `twitter:` tags, so the link renders blank wherever it is pasted. It gets fixed as a
+  chore, in the same commit as anything else in `<head>`, and it is not on any idea list.
+
+**Alive:** UI-29 only. It belongs to wave three now — see `docs/UI-IDEAS-WAVE-3.md`.
+
 The rule from wave one still holds and every idea below is measured against it:
 
 > **A drawing that is not driven by a field in `history.json` is decoration, and
