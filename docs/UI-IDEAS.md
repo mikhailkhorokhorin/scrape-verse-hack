@@ -100,6 +100,99 @@ mechanic rather than describing it.
 
 ---
 
+## Comic as a medium, not a paint job
+
+The art direction currently borrows the *look* of a comic — panels, halftone, bursts. It
+does not use the comic's **grammar**: issues, covers, panel numbers, gutters, transitions.
+That grammar is unclaimed, and it maps onto our data with almost no stretching.
+
+### 11. Every incident is an issue
+**The strongest idea in this file after the opening sequence.**
+
+An incident is not a log entry, it is an **issue of a comic**. `inc_004` becomes
+`ISSUE #4`. The incident feed becomes a shelf of covers. Each cover carries the Spider,
+the strain as a subtitle, the date, and the integrity drop as the stakes:
+
+```
+        ISSUE #3
+        BODEGA
+   "THE SHOP SHIPS A REDESIGN"
+      THROTTLED · 07:48Z
+        100% → 0%
+```
+
+Why it works: it is not decoration. Issue numbers *are* incident numbers, the subtitle
+*is* the strain gloss we already write, the cover art *is* the panel at its worst moment.
+Every element is data we already store.
+
+It also fixes a real weakness — the incident feed is the least designed part of the
+console right now, and it holds the best evidence we have.
+
+Cost: medium. Feed cards already carry every field this needs.
+
+### 12. Panel numbers
+Real comic panels are numbered. Ours are not. A small `1` `2` `3` in the corner of each
+Spider panel, in the ink colour, costs nothing and makes the page read as a printed spread
+rather than a CSS grid.
+
+Cost: trivial.
+
+### 13. Speech bubbles for state changes
+When a Spider changes state, it says so — a tailed bubble, Bangers, one short line.
+`"price is gone."` `"something's wrong with rating."` `"I'm back."`
+
+The console currently narrates in labels. A comic narrates in voice. This is the single
+most characteristic comic device we are not using.
+
+Risk: easy to overdo into cutesy. One bubble at a time, only on transition, never idle.
+
+Cost: small.
+
+### 14. Transitions between sections
+Comics move between scenes with a caption box — `MEANWHILE…`, `LATER THAT NIGHT…`. Our
+section headers are `THE WATCH`, `THE HAUL`, `INCIDENT FEED`.
+
+Give them caption-box treatment with a temporal phrase drawn from real data:
+`MEANWHILE — 698 ROWS SHIPPED CLEAN`, `EARLIER — 07:48Z`.
+
+Cost: small.
+
+### 15. Print artefacts
+Cheap comic printing misregisters plates, and paper wears at the folds. A one-pixel plate
+offset on borders, faint wear at panel corners. Sub-perceptual individually; collectively
+it is the difference between "comic-styled" and "printed".
+
+Cost: small. Risk: overdone, it reads as a rendering bug.
+
+---
+
+## Restored — cut by accident in an earlier edit
+
+### 16. Live polling
+Re-read `data/*.json` every 30s. If a scan lands while the judge is on the page, the
+console moves on its own — pulse advances, timestamp updates, a panel changes.
+
+Turns a screenshot into an instrument. Best ratio on the board after the opening sequence.
+
+Cost: small.
+
+### 17. History scrubber
+A drag handle across the top spanning all recorded time. Pull back and the whole console
+renders that moment — panels, symbiote, haul, integrity. Release, it snaps to now.
+
+Makes 48 hours explorable instead of summarized, and reaches every past state including
+the broken ones.
+
+Cost: medium. The replay engine already models time; this generalizes it.
+
+### 18. Sparkline hover
+Hover any point on a sparkline, get that scan's timestamp and integrity. The charts are
+currently decorative; this makes them readable.
+
+Cost: trivial.
+
+---
+
 ## Worth doing
 
 ### 4. Phone pass
