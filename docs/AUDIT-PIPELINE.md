@@ -647,10 +647,11 @@ claim, then find what a stranger would trip over.
 - **Module size and single responsibility.** Confirm every file under 250 lines
   (`render.js` at 219 and `replay-view.js` at 206 are the two to watch). More importantly:
   can each file's purpose be stated in one sentence from its name alone?
-- **Dead code.** `app/nul` (10.9KB, an accidental Windows redirect artifact),
-  `atlas-probe.json`, `create-*.json`, `public/` empty directory. A stranger opening the
-  repo root sees these first. Anything not needed to run, understand, or evidence the
-  project is deleted or moved into a clearly named directory.
+- **Dead code — resolved Aug 21.** `app/nul` (an accidental Windows redirect artifact)
+  is deleted; the probe and `create-*` envelopes now live in `docs/evidence/` beside the
+  docs that cite them, tracked rather than gitignored; `HANDOFF.md` moved to `docs/`.
+  The repo root is now README, LICENSE, CLAUDE.md and configs. Anything not needed to
+  run, understand, or evidence the project is deleted or moved into a named directory.
 - **Two CI systems.** Both `.gitlab-ci.yml` and `.github/workflows/watch.yml` exist. One
   of them is now vestigial. A stranger cannot tell which pipeline is real — this is
   actively confusing and must be resolved or explicitly documented.
@@ -766,9 +767,9 @@ Cloudflare Worker heal endpoint and the GitHub Actions workflow.
 - **Secrets in output.** `BRIGHTDATA_API_KEY` is passed as env to both scripts. Confirm
   neither script ever prints it, including inside an error object or a stack trace, and
   that no `bdata` output containing a key is echoed into logs.
-- **Committed data.** `data/*.json`, `kestrel-probe.json`, `kestrel-after.json`,
-  `atlas-probe.json` are real scraped payloads committed to a public repo. Confirm none
-  contains anything that should not be public.
+- **Committed data.** `data/*.json` and the payloads under `docs/evidence/` are real
+  scraped rows committed to a public repo. Confirm none contains anything that should
+  not be public.
 - **Atomic writes.** Re-verify: two concurrent workflow runs cannot corrupt
   `history.json`. `concurrency: group: watch` guards it at the workflow level — verify the
   file-level write is still atomic in case the guard is ever removed.
