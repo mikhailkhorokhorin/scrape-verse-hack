@@ -192,3 +192,16 @@
 @media(prefers-reduced-motion:reduce){
   .rledger__row.is-flip{animation:none;}
 }
+
+.replay__blast{
+  margin:var(--s2) 0 0;font-size:.875rem;line-height:1.5;color:var(--dim);
+  max-width:58ch;
+}
+.replay__blast .blast__n{
+  color:var(--critical);font-family:"IBM Plex Mono",monospace;
+  font-variant-numeric:tabular-nums;font-weight:600;
+}
+.replay__blast .blast__n.is-frozen{color:var(--degraded);}
+.replay__blast code{
+  font-family:"IBM Plex Mono",monospace;font-size:.8125rem;color:var(--infected);
+}

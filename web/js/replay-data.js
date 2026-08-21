@@ -129,10 +129,17 @@ function buildReplay(incident, history) {
     before: before,
     after: after,
     healthy: healthy,
+    blastRows: blastRowsOf(incident, history),
+    anomalies: incident.anomalies || [],
     stages: stages,
     fields: replayFieldsOf(incident, pair),
     pair: pair,
   };
+}
+
+function blastRowsOf(incident, history) {
+  const blast = blastRadius(history || [], incident);
+  return blast ? blast.rows : 0;
 }
 
 function pickReplay(incidents, history) {

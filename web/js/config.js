@@ -4,14 +4,19 @@ const DATA = { history: "data/history.json", incidents: "data/incidents.json" };
 const REFRESH_MS = 60000;
 const UNWATCHED_MS = 3 * 60 * 60 * 1000;
 const FULL_SERIES = 6;
+const SPARSE_SERIES = 4;
 const SERIES_MAX_POINTS = 48;
 const FIELD_TRACK_MAX = 40;
 const MIN_STREAK = 5;
+const ABSOLUTE_SCALE_SPAN = 25;
+const RECOVERY_MIN_GAIN = 25;
 
 const HEALTHY_MIN = 90;
 const DEGRADED_MIN = 60;
 const INFECTED_CREDIT = 0.5;
 const MIN_VISIBLE_SPREAD = 0.03;
+const MAX_VISIBLE_SPREAD = 0.85;
+const PAPER_SPREAD = 0.5;
 
 const COLOR = {
   healthy: "#B6FF3C",

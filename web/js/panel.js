@@ -4,7 +4,7 @@ function panelHTML(sp, idx) {
   const integ = integrityOf(sp);
   const st = statusOf(sp);
   const color = COLOR[st];
-  const spread = ((100 - integ) / 100).toFixed(2);
+  const spread = Math.min(MAX_VISIBLE_SPREAD, (100 - integ) / 100).toFixed(2);
   const fields = sp.fieldOrder || FIELDS;
 
   const chips = fields.map((field) => chipHTML(sp, field)).join("");
@@ -56,7 +56,7 @@ function panelHTML(sp, idx) {
     '<div class="cell cell--' + st + '">' +
     '<button class="panel' + (compact ? " panel--compact" : big ? " panel--big" : "") + ' is-' + st + '" data-idx="' + idx +
       '"' + (sp.healed ? ' data-healed="' + (sp.healed > 9 ? "9+" : sp.healed) + '"' : "") +
-      ' style="--spread:' + (sp.unwatched ? 0 : spread) + '">' +
+      ' style="--spread:' + (sp.unwatched ? 0 : spread) + '"' + (!sp.unwatched && Number(spread) > PAPER_SPREAD ? ' data-drowned="1"' : '') + '>' +
       (showSymbiote ? '<div class="symbiote" style="--spread:' + (sp.unwatched ? 0 : shown) + '"><div class="symbiote__body"></div></div>' : "") +
       head +
       body +

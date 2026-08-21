@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "inc_001",
+    "spider": "KESTREL",
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "strain": "RENAMED",
+    "opened_at": "2026-08-21T05:13:45.636Z",
+    "closed_at": "2026-08-21T05:40:09.733Z",
+    "integrity_before": 0,
+    "integrity_after": 100,
+    "anomalies": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "recovered_fields": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "summary": "The generated scraper emitted story_points and comment_count instead of the contracted keys, and every value came back 0, so all four fields read dead. The re-weave restored title and points and comments and author and Integrity returned to 100%.",
+    "rows_per_run": 30,
+    "heal_prompt": "Extract from each row on the Hacker News front page. Rows are tr.athing.submission plus the following tr with td.subtext. Output exactly these keys: title = text of span.titleline > a; points = integer parsed from span.score; comments = integer from the last td.subtext link ending in \"comments\", 0 if it says \"discuss\"; author = text of a.hnuser. Return 30 rows. Do not output story_points, comment_count or product_page_url.",
+    "resolved": true,
+    "stages": [
+      {
+        "stage": "DETECTED",
+        "ts": "2026-08-21T05:13:45.636Z"
+      },
+      {
+        "stage": "DIAGNOSED",
+        "ts": "2026-08-21T05:14:52.000Z"
+      },
+      {
+        "stage": "REWEAVING",
+        "ts": "2026-08-21T05:15:10.000Z"
+      },
+      {
+        "stage": "VERIFIED",
+        "ts": "2026-08-21T05:40:09.733Z"
+      }
+    ]
+  }
+]

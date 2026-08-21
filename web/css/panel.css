@@ -108,3 +108,18 @@
 @keyframes chip-pulse{0%,100%{opacity:1}50%{opacity:.45}}
 
 .lastscan{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);}
+
+.panel[data-drowned] .universe{color:#C9B6E4;}
+.panel[data-drowned] .spark__note,
+.panel[data-drowned] .lastscan .label{color:#B9AACB;}
+.panel[data-drowned] .lastscan .mono{color:var(--paper);}
+.panel[data-drowned] .chip{
+  background:#0B0A10;border-color:#4B4160;
+  box-shadow:0 0 0 3px rgba(5,4,8,.85);
+}
+.panel[data-drowned] .chip--dead{color:#A99BC0;}
+.panel[data-drowned] .bar{box-shadow:0 0 0 3px rgba(5,4,8,.9);}
+.panel[data-drowned] .codename,
+.panel[data-drowned] .integrity__value{
+  text-shadow:0 2px 14px #050408,0 0 26px #050408,4px 0 var(--pink),-4px 0 var(--cyan);
+}

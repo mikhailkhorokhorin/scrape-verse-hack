@@ -24,6 +24,10 @@ function agoOf(iso) {
   return Math.round(hours / 24) + "d ago";
 }
 
+function groupNum(n) {
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function clampPct(n) {
   const v = Number(n);
   if (!Number.isFinite(v)) return 0;

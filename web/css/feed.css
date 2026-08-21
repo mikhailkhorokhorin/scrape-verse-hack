@@ -63,3 +63,15 @@
 .strain--shifted .strain__tag{background:var(--reweaving);}
 .strain__gloss{color:var(--dim);font-size:.8125rem;line-height:1.4;max-width:52ch;}
 .incident p.strain{margin-bottom:var(--s2);}
+
+.blast{
+  margin:0 0 var(--s2);font-size:.875rem;line-height:1.5;color:var(--dim);
+  max-width:58ch;
+}
+.blast__n{
+  color:var(--critical);font-family:"IBM Plex Mono",monospace;
+  font-variant-numeric:tabular-nums;font-weight:600;
+}
+.blast code{
+  font-family:"IBM Plex Mono",monospace;font-size:.8125rem;color:var(--infected);
+}

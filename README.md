@@ -10,11 +10,38 @@ watches for that, shows it, and repairs it.
 
 **Specs, backlog and plan live in the [docs repository](https://gitlab.com/hackathons6943133/scrape-verse/docs).**
 
-## If you are an agent
+<!-- TODO before submitting: header screenshot of THE WATCH, taken with ?capture=1 at 1440px+ -->
+<!-- TODO before submitting: demo video link -->
 
-Read `docs/CLAUDE.md` first — it puts you in autonomous mode. Then `docs/PLAN.md` for what
-is being built, then take the first unchecked item in `docs/PROGRESS.md` and work down the
-queue. Do not ask what to do next; the queue is the answer.
+## It already caught a real one
+
+Not a staged break. This happened to us during the build, on a real site, and it is the
+short version of what the whole project is for.
+
+`KESTREL` scrapes the Hacker News front page. A scan came back with **30 rows and an
+Integrity of 0**. Rows were being found, so from the outside nothing looked broken — but
+the generated scraper had drifted onto its own invented keys, emitting `story_points` and
+`comment_count` instead of the fields we contracted for, with **every value `0`**. No
+titles, no authors. Thirty rows of confident nothing, and no error anywhere.
+
+One command repaired it — `bdata scraper heal --auto-approve --auto-save`, unattended,
+no human in the loop:
+
+| | Before | After |
+|---|---|---|
+| **Collector ID** | `c_mt2fnt3p2k4n644701` | `c_mt2fnt3p2k4n644701` — **identical** |
+| Integrity | 0 | 100 |
+| Status | `CRITICAL` | `HEALTHY` |
+| Rows | 30 | 30 |
+| Fields | all four `dead` | all four `live` |
+| Payload | `story_points` / `comment_count`, all `0` | real `title`, `points`, `author`, `comments` |
+
+The Collector ID is the row that matters. **It did not change.** The collector was
+repaired, not recreated — the same one that broke is the one that came back.
+
+Check it yourself: the broken and healed payloads are committed as `kestrel-probe.json`
+and `kestrel-after.json`, the scans are in `data/history.json` (`04:43:39Z` and
+`05:13:45Z` broken, `05:40:09Z` healed), and the heal is logged in `docs/COLLECTORS.md`.
 
 ## Layout
 
@@ -90,7 +117,7 @@ Three, already chosen and checked against `robots.txt`. See `collectors.json`.
 
 | Codename | Universe | Why |
 |---|---|---|
-| BODEGA | our own demo page | broken on purpose, so the demo is reproducible |
+| BODEGA | our own demo page | broken on purpose, so the demo is reproducible — **not yet created**, see below |
 | ATLAS | books.toscrape.com | no robots.txt, built for scraping, server-rendered |
 | KESTREL | news.ycombinator.com | real site; robots allows the front page, `Crawl-delay: 30` |
 
@@ -111,8 +138,25 @@ creation dates and the full heal log is in
 
 **These IDs do not change when a collector heals.** That is the point of the self-healing
 loop and the thing worth checking: the same collector that broke is the one that came
-back, repaired rather than replaced. Every heal is logged against its ID in
-`docs/COLLECTORS.md` and recorded in `data/incidents.json`.
+back, repaired rather than replaced. The KESTREL heal at the top of this file is the
+worked example — same `c_mt2fnt3p2k4n644701` before and after. Every heal is logged
+against its ID in `docs/COLLECTORS.md`.
+
+### What is not finished
+
+Stated plainly rather than left for you to find:
+
+- **BODEGA is not created.** It targets our own demo page and needs that page's public
+  URL first. Two collectors exist, not three
+- **`data/incidents.json` is empty.** The KESTREL heal above was run manually, before the
+  automated incident loop was wired in, so it is logged in `docs/COLLECTORS.md` rather
+  than as an incident record. Incident Replay and MTTR therefore render empty on the live
+  route — use `?mock=1` to see them
+- **The automated repair path is untested end to end.** `scripts/repair.js` is written and
+  wired into CI, but the heal that actually happened was invoked by hand
+- **ATLAS sits at 90%, not 100%.** Its `price` comes back as
+  `{value, currency, symbol}` rather than a scalar and reads `infected`. Real extraction
+  is imperfect; the number on screen is the honest one
 
 ## The data
 
@@ -191,6 +235,15 @@ rows, and the rows go quietly wrong.
 
 A 2-hour cooldown per collector prevents a heal loop against a site that is simply down.
 
+### The one that actually ran
+
+Steps 4 through 6 above are not theory. On KESTREL, `heal` ran the full chain unattended
+— `planner → code_fixer → step_preview_runner → request_fulfillment_validator →
+css_selector_extractor → user_approval → save_new_template` — in roughly **9 minutes**,
+with `--auto-approve --auto-save` and nobody watching. A verification run afterwards
+returned 30 rows carrying real titles, points, comments and authors where every field had
+been `null`, on the same Collector ID. Full log in `docs/COLLECTORS.md`.
+
 ## Roadmap
 
 **None of the following is built.** They are listed because they are the honest next
@@ -205,6 +258,12 @@ steps, not because they exist.
 - **Pre-emptive healing** — fingerprint the target's DOM and detect drift before fields
   start failing
 - **Cost per clean row** — what one correct row actually costs, counting runs and heals
+
+## If you are an agent
+
+Read `docs/CLAUDE.md` first — it puts you in autonomous mode. Then `docs/PLAN.md` for what
+is being built, then take the first unchecked item in `docs/PROGRESS.md` and work down the
+queue. Do not ask what to do next; the queue is the answer.
 
 ## Rules
 
