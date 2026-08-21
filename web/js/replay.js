@@ -55,8 +55,10 @@ function paintLedger(model, slots, stageIndex) {
       setTimeout(() => row.classList.remove("is-flip"), 400);
     }
     row.querySelector('[data-slot="state"]').textContent = GLYPH[state] + " " + state;
-    row.querySelector('[data-slot="value"]').innerHTML =
-      replayValue(fieldValueAt(model, field, stageIndex));
+    const valueSlot = row.querySelector('[data-slot="value"]');
+    const rawValue = fieldValueAt(model, field, stageIndex);
+    valueSlot.innerHTML = replayValue(rawValue);
+    valueSlot.title = valueLiteral(rawValue);
   });
 }
 

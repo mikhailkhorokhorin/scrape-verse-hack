@@ -7,6 +7,7 @@ function esc(value) {
 }
 
 function clockOf(iso) {
+  if (iso === null || iso === undefined || iso === "") return "--:--:--Z";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "--:--:--Z";
   const p = (n) => String(n).padStart(2, "0");

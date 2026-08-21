@@ -61,8 +61,17 @@ function sparkline(values, color, scars) {
   const area = "0," + H + " " + line + " " + W + "," + H;
   const last = pts[pts.length - 1];
 
+  const floor = Math.max(0, Math.round(min));
+  const axis =
+    '<line x1="0" y1="' + (H - P) + '" x2="' + W + '" y2="' + (H - P) +
+      '" stroke="' + color + '" stroke-width="1" opacity="0.35"/>' +
+    (wide ? "" :
+      '<text x="2" y="' + (H - P - 2) + '" font-size="7" fill="' + color +
+        '" opacity="0.7" font-family="IBM Plex Mono,monospace">' + floor + "</text>");
+
   return (
     '<svg class="spark" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+    axis +
     '<polygon points="' + area + '" fill="' + color + '" opacity="0.16"/>' +
     scarSVG(scars || [], W, H, P) +
     climbSVG(points, pts) +

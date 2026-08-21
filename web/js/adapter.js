@@ -100,7 +100,8 @@ function adaptHistory(history) {
       streak: cleanStreak(runs),
       best: bestStreak(runs),
       reweaving: latest.status === "REWEAVING",
-      unwatched: Date.now() - Date.parse(latest.ts) > UNWATCHED_MS,
+      unwatched: !Number.isFinite(Date.parse(latest.ts)) ||
+        Date.now() - Date.parse(latest.ts) > UNWATCHED_MS,
     });
   }
 
@@ -116,9 +117,10 @@ function blastRadius(history, inc) {
   if (!Number.isFinite(closed)) return null;
 
   const runs = history.filter((run) => {
-    if (!run || run.spider !== inc.spider) return null;
+    if (!run || run.spider !== inc.spider) return false;
     const ts = Date.parse(run.ts);
-    return Number.isFinite(ts) && ts >= opened && ts <= closed;
+    if (!Number.isFinite(ts) || ts < opened || ts > closed) return false;
+    return (run.fields_infected || []).length + (run.fields_dead || []).length > 0;
   });
 
   const rows = runs.reduce((total, run) => {

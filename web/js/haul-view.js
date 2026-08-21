@@ -99,7 +99,7 @@ function haulMovementHTML(h) {
       '<span class="move__tag">Watched through time</span>' +
       '<p class="move__id">' + esc(truncateMiddle(mv.id, 84)) + "</p>" +
       '<p class="move__note">Same record, ' + mv.scans + " scans, " +
-        esc(clockOf(mv.firstTs)) + " to " + esc(clockOf(mv.lastTs)) +
+        '<span class="mono">' + esc(clockOf(mv.firstTs)) + '</span> to <span class="mono">' + esc(clockOf(mv.lastTs)) + '</span>' +
         ". One scrape is a row; a watch is a series.</p>" +
       mv.metrics.map(haulMetricHTML).join("") +
     "</div>"

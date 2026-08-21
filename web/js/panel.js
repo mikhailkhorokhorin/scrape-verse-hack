@@ -47,7 +47,7 @@ function panelHTML(sp, idx) {
       '<div class="chips">' + chips + "</div>" +
       '<div class="lastscan">' +
         '<span class="label">Last scan</span>' +
-        '<span class="mono" style="font-size:.8125rem">' + scanText + "</span>" +
+        '<span class="mono mono--small">' + scanText + "</span>" +
       "</div>";
 
   const rest = compact ? restHTML(sp, st) : "";

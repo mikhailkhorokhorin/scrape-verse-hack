@@ -9,14 +9,16 @@ function replayDuration(span) {
 }
 
 function replayValue(raw) {
-  if (raw === null || raw === undefined) return "null";
+  if (raw === null) return "null";
+  if (raw === undefined) return "missing";
   if (typeof raw === "object") {
     const flat = JSON.stringify(raw);
     return esc(flat.length > 34 ? flat.slice(0, 33) + "…" : flat);
   }
   if (typeof raw === "number" || typeof raw === "boolean") return esc(String(raw));
-  const text = String(raw);
-  return '"' + esc(text.length > 34 ? text.slice(0, 33) + "…" : text) + '"';
+  const text = valueText(raw);
+  const clipped = text.length > 34 ? text.slice(0, 33) + "…" : text;
+  return POISON_WORDS.includes(String(raw).trim()) ? esc(clipped) : '"' + esc(clipped) + '"';
 }
 
 function ledgerRowHTML(field) {

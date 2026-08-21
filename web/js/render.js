@@ -24,6 +24,7 @@ function renderGrid() {
     setReadout("lastscan", "--", null);
     setReadout("mttr", "--", null);
     setCount("fleetcount", 0, "spider");
+    renderWatch(0);
     renderPulse(RAW_HISTORY);
     return;
   }
@@ -35,9 +36,12 @@ function renderGrid() {
 
   markTallCells(grid);
 
-  setFleetSpread(avg);
-  setReadout("fleet", avg + "%", COLOR[gradeOf(avg)]);
-  setDelta("fleet", fleetTrend(avg));
+  const allStale = SPIDERS.every((sp) => sp.unwatched);
+  setFleetSpread(allStale ? null : avg);
+  setReadout("fleet", avg + "%", allStale ? COLOR.unwatched : COLOR[gradeOf(avg)]);
+  setDelta("fleet", allStale ? null : fleetTrend(avg));
+  setSample("fleet", 0);
+  if (allStale) setStaleNote("fleet", SPIDERS[0].ts);
   setCount("fleetcount", SPIDERS.length, "spider");
   renderPulse(RAW_HISTORY);
 
@@ -57,6 +61,7 @@ function renderGrid() {
 
   const newest = SPIDERS.reduce((max, s) => Math.max(max, Date.parse(s.ts) || 0), 0);
   setReadout("lastscan", newest ? clockOf(new Date(newest).toISOString()) : "--", null);
+  renderWatch(newest);
   renderMttr();
 }
 
@@ -65,18 +70,6 @@ function setFleetSpread(avg) {
   if (!el) return;
   const lost = avg === null ? 0 : Math.max(0, (100 - clampPct(avg)) / 100);
   el.style.setProperty("--fleet", lost.toFixed(2));
-}
-
-function renderMttr() {
-  const spans = INCIDENTS.map((inc) => inc.mttrMs).filter((ms) => typeof ms === "number" && ms > 0);
-  if (spans.length === 0) {
-    setReadout("mttr", "--", null);
-    return;
-  }
-  const mean = spans.reduce((a, b) => a + b, 0) / spans.length;
-  const mins = Math.floor(mean / 60000);
-  const secs = Math.round((mean % 60000) / 1000);
-  setReadout("mttr", mins + "m " + secs + "s", COLOR.reweaving);
 }
 
 function renderFeed() {
@@ -112,7 +105,7 @@ function renderFeed() {
       '<div class="incident__top">' +
         '<span class="incident__who">' + esc(inc.who) + "</span>" +
         '<span class="label mono">' + esc(inc.id) + " · " + esc(inc.opened) + "</span>" +
-        '<span class="incident__delta"><b>' + esc(inc.before) + "% → " + esc(inc.after) + "%</b></span>" +
+        '<span class="incident__delta"><b>' + integrityArrow(inc.before, inc.after) + "</b></span>" +
       "</div>" +
       strainHTML(inc.strain) +
       "<p>" + esc(inc.what) + "</p>" +
@@ -126,6 +119,12 @@ function renderFeed() {
     "</article>"
   ).join("");
   renderMttr();
+}
+
+function integrityArrow(before, after) {
+  const from = Number.isFinite(Number(before)) && before !== null ? esc(before) + "%" : "—";
+  if (!Number.isFinite(Number(after)) || after === null) return from + " → still open";
+  return from + " → " + esc(after) + "%";
 }
 
 function blastFieldList(fields) {
@@ -143,7 +142,8 @@ function incidentBlastHTML(inc) {
       blastFieldList(inc.anomalies || []) + " while this Spider stays infected.</p>";
   }
   return '<p class="blast"><b class="blast__n" data-rows="' + blast.rows + '">' +
-    groupNum(blast.rows) + " rows</b> shipped with " + blastFieldList(inc.anomalies || []) +
+    groupNum(blast.rows) + (blast.rows === 1 ? " row" : " rows") +
+    "</b> shipped with " + blastFieldList(inc.anomalies || []) +
     " across " + blast.runs + " scan" + (blast.runs === 1 ? "" : "s") +
     " before the re-weave landed.</p>";
 }
@@ -183,37 +183,7 @@ function markTallCells(grid) {
 function fleetTrend(avg) {
   const previous = LAST_FLEET;
   LAST_FLEET = avg;
-  if (previous === null) {
-    const deltas = SPIDERS.map((sp) => {
-      const series = sp.series || [];
-      if (series.length < 4) return null;
-      return series[series.length - 1] - series[series.length - 4];
-    }).filter((d) => d !== null);
-    if (!deltas.length) return null;
-    return Math.round(deltas.reduce((a, b) => a + b, 0) / deltas.length);
-  }
-  return avg - previous;
+  if (previous === null) return null;
+  return { value: avg - previous, why: "change since the previous refresh a minute ago" };
 }
 
-function setDelta(id, delta) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const old = el.querySelector(".readout__delta");
-  if (old) old.remove();
-  if (delta === null || !Number.isFinite(delta) || delta === 0) return;
-  const dir = delta > 0 ? "up" : delta < 0 ? "down" : "flat";
-  const glyph = delta > 0 ? "↑" : delta < 0 ? "↓" : "→";
-  const span = document.createElement("span");
-  span.className = "readout__delta readout__delta--" + dir;
-  span.textContent = glyph + (delta === 0 ? "" : Math.abs(delta));
-  span.title = "change over the last three scans";
-  el.appendChild(span);
-}
-
-function setCount(id, n, noun) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (!n) { el.hidden = true; return; }
-  el.hidden = false;
-  el.textContent = n + " " + noun + (n === 1 ? "" : "s");
-}

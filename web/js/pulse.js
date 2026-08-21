@@ -77,8 +77,8 @@ function renderPulse(history) {
   host.className = "pulseline" + (flat ? " pulseline--flat" : "");
   host.innerHTML =
     '<span class="pulseline__tag">Fleet pulse</span>' +
-    '<span class="pulseline__read">' + beats.length + " beats · " +
-      (flat ? "arrhythmic" : "steady") + "</span>" +
+    '<span class="pulseline__read" title="one beat per minute in which at least one scan landed">' +
+      beats.length + " beats · " + (flat ? "arrhythmic" : "steady") + "</span>" +
     '<svg class="pulseline__svg" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" role="img" ' +
       'aria-label="Fleet pulse: ' + beats.length + " scans, mean integrity " + avg + " percent, " +
       (flat ? "arrhythmic" : "steady") + '">' +

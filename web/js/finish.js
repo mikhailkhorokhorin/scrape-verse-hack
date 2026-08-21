@@ -26,7 +26,8 @@ function syncTitle() {
     return st === "critical" || st === "reweaving";
   }).length;
 
-  document.title = open ? "(" + open + ") " + BASE_TITLE + " — attention" : BASE_TITLE;
+  const base = (MOCK ? "[MOCK] " : "") + BASE_TITLE;
+  document.title = open ? "(" + open + ") " + base + " — attention" : base;
 
   let link = document.querySelector('link[rel="icon"]');
   if (!link) {

@@ -15,8 +15,25 @@ async function fetchJson(path) {
   }
 }
 
+let LAST_FINGERPRINT = "";
+
+function fingerprintOf(history, incidents) {
+  const lastRun = history.rows[history.rows.length - 1] || {};
+  const lastInc = incidents.rows[incidents.rows.length - 1] || {};
+  return [history.ok, incidents.ok, history.rows.length, incidents.rows.length,
+    lastRun.ts, lastInc.id, lastInc.closed_at].join("|");
+}
+
 async function loadLive() {
   const [history, incidents] = await Promise.all([fetchJson(DATA.history), fetchJson(DATA.incidents)]);
+
+  const fingerprint = fingerprintOf(history, incidents);
+  if (fingerprint === LAST_FINGERPRINT) {
+    const newest = SPIDERS.reduce((top, sp) => Math.max(top, Date.parse(sp.ts) || 0), 0);
+    renderWatch(newest);
+    return;
+  }
+  LAST_FINGERPRINT = fingerprint;
 
   ERRORS.history = history.ok ? null : { file: DATA.history, why: history.error };
   ERRORS.incidents = incidents.ok ? null : { file: DATA.incidents, why: incidents.error };
