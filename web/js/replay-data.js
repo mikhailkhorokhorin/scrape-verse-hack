@@ -73,6 +73,8 @@ function stageIntegrity(name, before, after) {
 
 function buildReplay(incident, history) {
   if (!incident) return null;
+  if (!incident.closed_at || incident.integrity_after === null ||
+      !Number.isFinite(Number(incident.integrity_after))) return null;
 
   const raw = (incident.stages || [])
     .filter((st) => st && st.ts && Number.isFinite(Date.parse(st.ts)))

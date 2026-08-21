@@ -40,7 +40,7 @@ function sampleColumn(run, verdicts, fields) {
     const val = esc(valueLiteral(raw));
     return '<div class="diffrow diffrow--' + verdicts[f] + '">' +
       '<span class="diffrow__key">' + esc(f) + "</span>" +
-      '<span class="diffrow__val">' + val + "</span>" +
+      '<span class="diffrow__val" title="' + val.replace(/"/g, "&quot;") + '">' + val + "</span>" +
     "</div>";
   }).join("");
 

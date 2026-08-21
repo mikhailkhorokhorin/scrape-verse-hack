@@ -60,10 +60,15 @@ function unwrapScalar(raw) {
   return undefined;
 }
 
+const POISON_WORDS = ["undefined", "null", "NaN", "[object Object]", "Invalid Date"];
+
 function valueText(raw) {
   if (raw === null) return "null";
   if (raw === undefined) return "missing";
-  if (typeof raw === "string") return demojibake(raw);
+  if (typeof raw === "string") {
+    const text = demojibake(raw);
+    return POISON_WORDS.includes(text.trim()) ? text.trim() + " ⟵ literal text" : text;
+  }
   if (typeof raw === "number" || typeof raw === "boolean") return String(raw);
   if (Array.isArray(raw)) return raw.length === 0 ? "[]" : "[" + raw.map(valueText).join(", ") + "]";
   if (isPlainObject(raw)) {
@@ -82,7 +87,8 @@ function isQuoted(raw) {
 }
 
 function valueLiteral(raw) {
-  if (raw === null || raw === undefined) return "null";
+  if (raw === null) return "null";
+  if (raw === undefined) return "missing";
   const text = valueText(raw);
   return isQuoted(raw) ? '"' + text + '"' : text;
 }
