@@ -60,6 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -73,8 +75,15 @@ jobs:
             tail -20 tap.txt >&2
             exit 1
           fi
-          printf '{\n  "tests": %s,\n  "sha": "%s",\n  "generated_at": "%s"\n}\n' \
-            "$count" "$GITHUB_SHA" "$(date -u +%FT%TZ)" > data/meta.json
+          human=$(TZ=UTC git log -1 --date=iso-strict-local --format=%cd \
+            --perl-regexp --author='^(?!thwip watch)' || true)
+          if [ -n "$human" ]; then
+            printf '{\n  "tests": %s,\n  "sha": "%s",\n  "generated_at": "%s",\n  "last_human_ts": "%s"\n}\n' \
+              "$count" "$GITHUB_SHA" "$(date -u +%FT%TZ)" "$human" > data/meta.json
+          else
+            printf '{\n  "tests": %s,\n  "sha": "%s",\n  "generated_at": "%s"\n}\n' \
+              "$count" "$GITHUB_SHA" "$(date -u +%FT%TZ)" > data/meta.json
+          fi
           cat data/meta.json
       - name: Assemble the site
         run: |
