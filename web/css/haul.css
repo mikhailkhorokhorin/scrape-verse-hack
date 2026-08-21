@@ -55,8 +55,8 @@
 }
 .haulcard__none{margin:0;font-size:.875rem;color:var(--dim);max-width:62ch;}
 
-.haulcard__body{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:var(--s3);align-items:start;}
-@media(max-width:900px){.haulcard__body{grid-template-columns:minmax(0,1fr);}}
+.haulcard__body{display:grid;grid-template-columns:minmax(0,1fr) 304px;gap:var(--s3);align-items:start;}
+@media(max-width:980px){.haulcard__body{grid-template-columns:minmax(0,1fr);}}
 
 .haul__record{
   position:relative;border:3px solid var(--ink);background:var(--void);
@@ -116,8 +116,11 @@
 .stamp__line{
   display:flex;flex-direction:column;min-width:0;
   font-family:"IBM Plex Mono",monospace;font-size:.6875rem;color:var(--paper);
-  overflow-wrap:anywhere;line-height:1.35;
+  overflow-wrap:anywhere;line-height:1.35;letter-spacing:-.02em;
 }
+.stamp__line--cid{display:block;font-size:.625rem;color:var(--cyan);overflow-wrap:normal;}
+.stamp__line--cid i{display:block;}
+.stamp__cid{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .stamp__line i{
   font-style:normal;font-size:.5rem;font-weight:700;letter-spacing:.14em;
   text-transform:uppercase;color:var(--dimmer);margin-bottom:2px;

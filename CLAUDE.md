@@ -11,6 +11,10 @@ it into this directory if it is missing:
 [ -d docs ] || git clone git@gitlab.com:hackathons6943133/scrape-verse/docs.git docs
 ```
 
+The docs repository still lives on GitLab. The **code** repository moved to GitHub —
+https://github.com/mikhailkhorokhorin/scrape-verse-hack — and that is where CI, the cron
+and Pages run. Do not confuse the two.
+
 Then read `docs/CLAUDE.md` — it is the real operating manual and it supersedes nothing
 here, it completes it.
 
