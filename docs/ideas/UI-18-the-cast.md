@@ -2,7 +2,7 @@
 
 > Each collector gets a character, and the character is not a mascot beside the data — it is the readout.
 
-**SHIPPED — all six sub-ideas.** `web/js/rig.js`, `web/js/rig-parts.js`, `web/js/rig-react.js`, `web/js/symbiote.js`, `web/js/sheet-rig.js` and `web/css/rig.css`, `rig-slot.css`, `rig-react.css`, `symbiote-face.css`, `sheet-rig.css`; covered by `test/web-rig.test.js` and `test/web-rig-react.test.js`. Nothing in the cut order (18a → 18b → 18c → 18e → 18d → 18f) had to be cut.
+**SHIPPED — all six sub-ideas, one of them in part.** `web/js/rig.js`, `web/js/rig-parts.js`, `web/js/rig-react.js`, `web/js/symbiote.js`, `web/js/sheet-rig.js` and `web/css/rig.css`, `rig-slot.css`, `rig-react.css`, `symbiote-teeth.css`, `sheet-rig.css`; covered by `test/web-rig.test.js` and `test/web-rig-react.test.js`. Nothing in the cut order (18a → 18b → 18c → 18e → 18d → 18f) had to be cut for time; 18d shipped its teeth and lost its eyes on looks.
 
 **Status:** ACCEPTED · **Cost:** medium overall — the single largest piece of work on the list · **Depends on:** nothing (this is the foundation everything else in the cast, and several other ideas, build on)
 **Touches:** new `web/js/rig.js`; `web/js/panel.js`; `web/css/panel.css` and a new rig stylesheet
