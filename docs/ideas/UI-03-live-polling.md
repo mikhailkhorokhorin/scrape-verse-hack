@@ -3,6 +3,7 @@
 > The console already re-fetches every 60 seconds; it should show the moment a new scan lands, not just re-render silently.
 
 **Status:** OPEN · **Cost:** small · **Depends on:** nothing (UI-18f rides on top of this once the cast exists)
+**Decision (Aug 21):** the previous-render diff is one shared module, `web/js/delta.js`, built by whichever of UI-03 / UI-18f / UI-21 enters work first — see the diff-module decision in `docs/TASKS.md`.
 **Touches:** `web/js/adapter.js`, `web/js/app.js`, `web/js/panel.js`
 
 ## What it is

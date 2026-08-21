@@ -1259,7 +1259,7 @@ design lives below the fold.
 | UI-18e | Idle life | ACCEPTED | small | `docs/ideas/UI-18e-idle-life.md` |
 | UI-18f | The scan lands on screen | ACCEPTED | small | `docs/ideas/UI-18f-scan-lands.md` |
 | UI-19 | The crawler | OPEN | small | `docs/ideas/UI-19-crawler.md` |
-| UI-20 | Cover character in the masthead | OPEN | medium | `docs/ideas/UI-20-cover-character.md` |
+| UI-20 | Cover character in the masthead | REJECTED — Aug 21, UI-04 keeps the slot | medium | `docs/ideas/UI-20-cover-character.md` |
 | UI-21 | The character speaks | OPEN | medium | `docs/ideas/UI-21-character-speaks.md` |
 | UI-22 | Mask favicon | OPEN | trivial | `docs/ideas/UI-22-mask-favicon.md` |
 | UI-23 | The cast in the detail sheet | OPEN | small | `docs/ideas/UI-23-cast-in-detail-sheet.md` |
@@ -1271,6 +1271,15 @@ with reasons in `docs/UI-IDEAS.md`. Ids are never reused.
 **Build order.** UI-04 → UI-06 → UI-05 → UI-18a → UI-18b → UI-18c → UI-18e → UI-10 →
 UI-01 → UI-02. UI-09 runs twice: once when the rig lands, once before submitting, and it is
 the only item that can reject work already done.
+
+**Diff-module decision (Aug 21).** The previous-render diff that UI-03, UI-18f and UI-21
+all need is **one shared module, `web/js/delta.js`** — never three ad-hoc diffs. It is
+adapter-layer code, not rig code: a pure function fed inside `loadLive()` with the old
+`SPIDERS` array before the new one overwrites it, returning per-collector
+`{ code, newRun, afterHeal, fields: [{name, from, to}] }`. Whichever of the three
+consumers enters work first builds it — with full per-field granularity from day one (the
+field loop is the same loop; UI-03's coarse "which collector changed" is a projection of
+it) and with its own `node:test` file, since a pure diff is free Best-Clean-Code evidence.
 
 ---
 

@@ -2,7 +2,8 @@
 
 > A tailed speech bubble, one line, issued by the character: `"price is gone."` on a field going dead, `"I'm back."` on a verified heal, `"...still here."` on a long clean streak.
 
-**Status:** OPEN *(absorbs UI-07 — speech bubbles)* · **Cost:** small only after the diff module exists; medium counted honestly from today · **Depends on:** UI-18a (a bubble needs a mouth); a new per-field diff module (unbuilt)
+**Status:** OPEN *(absorbs UI-07 — speech bubbles)* · **Cost:** small only after the diff module exists; medium counted honestly from today · **Depends on:** UI-18a (a bubble needs a mouth); the shared per-field diff module (unbuilt)
+**Decision (Aug 21):** that diff module is the shared `web/js/delta.js`, built once with full per-field granularity by whichever of UI-03 / UI-18f / UI-21 enters work first — see the diff-module decision in `docs/TASKS.md`.
 **Touches:** `web/js/rig.js`, a new small diff-state module, `web/js/panel.js`, `web/css/panel.css`
 
 ## What it is
