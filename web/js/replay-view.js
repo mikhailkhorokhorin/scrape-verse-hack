@@ -189,8 +189,13 @@ function replayHTML(model) {
         replayStageHTML(model) +
         replayTransportHTML(model) +
       "</div>" +
-    "</div>"
+    "</div>" +
+    receiptHTML(incidentOf(model.id))
   );
+}
+
+function incidentOf(id) {
+  return (RAW_INCIDENTS || []).find((inc) => inc && inc.id === id) || null;
 }
 
 function replayEmptyHTML() {

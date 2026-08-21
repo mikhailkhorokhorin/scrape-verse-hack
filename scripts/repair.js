@@ -2,6 +2,7 @@
 'use strict';
 
 const lib = require('./lib.js');
+const { verification } = require('./verify.js');
 
 const BROKEN_BELOW = lib.DEGRADED_MIN;
 const RESOLVED_AT = lib.HEALTHY_MIN;
@@ -196,6 +197,7 @@ function main() {
       integrity_after: after === null ? null : after.integrity,
       anomalies: [...run.fields_dead, ...run.fields_infected],
       recovered_fields: recovered,
+      verification: verification(run, after),
       summary: describe(run, after, recovered),
       rows_per_run: collector.rows_per_run,
       strain: strain,
