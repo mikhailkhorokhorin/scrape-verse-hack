@@ -28,16 +28,17 @@ function stageIndexAt(model, ms) {
   return index;
 }
 
-function fieldStateAt(field, stageIndex) {
-  if (stageIndex <= 0) return field.before;
-  if (stageIndex >= 3) return field.after;
-  return field.broken;
+function isFinalStage(model, stageIndex) {
+  return model.stages[stageIndex].name === "VERIFIED";
 }
 
-function fieldValueAt(field, stageIndex) {
-  if (stageIndex >= 3) return field.recovered ? field.cleanValue : field.dirtyValue;
-  if (stageIndex <= 0) return field.cleanValue;
-  return field.dirtyValue;
+function fieldStateAt(model, field, stageIndex) {
+  return isFinalStage(model, stageIndex) ? field.after : field.broken;
+}
+
+function fieldValueAt(model, field, stageIndex) {
+  if (!isFinalStage(model, stageIndex)) return field.dirtyValue;
+  return field.recovered ? field.cleanValue : field.dirtyValue;
 }
 
 function paintLedger(model, slots, stageIndex) {
@@ -45,7 +46,7 @@ function paintLedger(model, slots, stageIndex) {
   model.fields.forEach((field, i) => {
     const row = rows[i];
     if (!row) return;
-    const state = fieldStateAt(field, stageIndex);
+    const state = fieldStateAt(model, field, stageIndex);
     const was = row.dataset.state;
     row.dataset.state = state;
     row.className = "rledger__row rledger__row--" + state;
@@ -54,7 +55,8 @@ function paintLedger(model, slots, stageIndex) {
       setTimeout(() => row.classList.remove("is-flip"), 400);
     }
     row.querySelector('[data-slot="state"]').textContent = GLYPH[state] + " " + state;
-    row.querySelector('[data-slot="value"]').innerHTML = replayValue(fieldValueAt(field, stageIndex));
+    row.querySelector('[data-slot="value"]').innerHTML =
+      replayValue(fieldValueAt(model, field, stageIndex));
   });
 }
 
@@ -63,8 +65,9 @@ function paintStage(model, slots, stageIndex) {
   const integ = stage.integrity;
   const grade = stage.panelState;
 
+  const wordColor = COLOR[stage.color] || FIELD_COLOR[stage.color] || COLOR.critical;
   slots.word.textContent = stage.word;
-  slots.word.style.color = COLOR[stage.color] || FIELD_COLOR.infected;
+  slots.word.style.color = wordColor;
   slots.clock.textContent = stage.clock;
   slots.index.textContent = stageIndex + 1 + " of " + model.stages.length;
   slots.name.textContent = stage.name;
@@ -88,7 +91,9 @@ function paintStage(model, slots, stageIndex) {
   paintLedger(model, slots, stageIndex);
 
   if (stageIndex !== REPLAY.stage) {
-    if (REPLAY.stage !== -1 && !reducedMotion()) burst(panel, stage.word, COLOR[stage.color]);
+    if (REPLAY.playing && REPLAY.stage !== -1 && !reducedMotion()) {
+      burst(panel, stage.word, wordColor);
+    }
     REPLAY.stage = stageIndex;
   }
 

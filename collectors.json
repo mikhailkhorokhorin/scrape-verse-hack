@@ -50,13 +50,14 @@
           "max": 5,
           "words": true
         },
-        "image": {
+        "image_url": {
           "type": "url"
         },
         "availability": {
           "type": "string",
           "min": 2,
-          "max": 60
+          "max": 20,
+          "pattern": "^(In stock|Out of stock)$"
         }
       }
     },
@@ -66,7 +67,7 @@
       "url": "https://news.ycombinator.com/",
       "collector_id": "c_mt2fnt3p2k4n644701",
       "rows_per_run": 30,
-      "note": "real site. robots.txt allows the front page, Crawl-delay 30s — a 30-minute scan is well inside it",
+      "note": "real site. robots.txt allows the front page, Crawl-delay 30s — a 30-minute scan is well inside it. front-page stories always have >=1 point, so points.min=1 catches an all-zero extraction",
       "fields": {
         "title": {
           "type": "string",
@@ -75,7 +76,7 @@
         },
         "points": {
           "type": "number",
-          "min": 0
+          "min": 1
         },
         "comments": {
           "type": "number",

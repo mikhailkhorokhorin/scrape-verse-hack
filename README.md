@@ -27,13 +27,46 @@ collectors.json targets and per-field validators
 .gitlab-ci.yml  scan every 30 min, publish Pages
 ```
 
-## Setup
+## Look at it first
+
+The console is the product. Seeing it needs no account, no key and no credit:
+
+```bash
+git clone <this repo> && cd thwip
+python3 -m http.server 8000          # any static server will do
+```
+
+Then open:
+
+- **<http://localhost:8000/web/?mock=1>** — the full console with three Spiders and 48
+  hours of synthetic history, including a break and a completed re-weave. Start here
+- **<http://localhost:8000/web/>** — the real console, reading `data/*.json`. It shows
+  honest empty states until the cron has committed a scan; it never falls back to
+  synthetic data
+
+It must be served over HTTP. Opening `web/index.html` from the filesystem shows an error
+plate instead of the console — the page fetches its two JSON files, and browsers block
+`fetch` on `file://` origins.
+
+`?mock=1` also mounts a small control bar that can break a Spider and re-weave it on
+demand, which is the fastest way to see the three field states and the symbiote move.
+Add `?capture=1` to hide every control for a clean screenshot.
+
+## Running it for real
+
+Only needed to produce new data. This calls Bright Data and costs credit:
 
 ```bash
 npm i -g @brightdata/cli
 bdata login                      # opens a browser, needs a human
-node scripts/health-check.js
+node scripts/health-check.js     # one scan of every collector with an ID
+node scripts/repair.js           # heals anything below 60% on two consecutive scans
 ```
+
+`health-check.js` skips collectors that have no `collector_id` and exits 0, so it is safe
+to run before anything is created. `repair.js` does nothing unless a collector has been
+failing for two consecutive scans and is outside its 2-hour cooldown; force one with
+`HEAL_COLLECTOR=c_xxx node scripts/repair.js`.
 
 CI needs two masked variables under **Settings → CI/CD → Variables**:
 
@@ -63,6 +96,35 @@ Three, already chosen and checked against `robots.txt`. See `collectors.json`.
 
 Do not substitute a target. Each was verified as public, login-free and outside Bright
 Data's pre-built scraper library — swapping one silently breaks a hackathon rule.
+
+## Collector IDs
+
+Real Scraper Studio collectors, created with `bdata scraper create`. The registry with
+creation dates and the full heal log is in
+[`docs/COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs).
+
+| Codename | Collector ID |
+|---|---|
+| ATLAS | `c_mt2fnqqngikv29od5` |
+| KESTREL | `c_mt2fnt3p2k4n644701` |
+| BODEGA | _pending — created last, against the demo page_ |
+
+**These IDs do not change when a collector heals.** That is the point of the self-healing
+loop and the thing worth checking: the same collector that broke is the one that came
+back, repaired rather than replaced. Every heal is logged against its ID in
+`docs/COLLECTORS.md` and recorded in `data/incidents.json`.
+
+## The data
+
+Two committed JSON files, no database:
+
+| File | What is in it |
+|---|---|
+| `data/history.json` | One record per collector per scan: field states, Integrity, status, row count and the first row as a sample. Capped at 2000 records |
+| `data/incidents.json` | One record per heal: what broke, the strain, the prompt sent to Scraper Studio, what came back, and the four stage timestamps |
+
+Both are written by the scheduled pipeline and read directly by the console. The full
+field-by-field contract is in `docs/CLAUDE.md`.
 
 ## Architecture
 
@@ -105,8 +167,21 @@ rows, and the rows go quietly wrong.
 1. A scan drops below 60% Integrity. One bad scan is not enough — a single failure is
    usually transient, and healing on it burns credit for nothing
 2. A second consecutive bad scan opens an incident, stamped `DETECTED`
-3. `repair.js` builds a heal prompt from the fields that actually broke — never from
-   scraped content, which would be an injection into the healer
+3. `repair.js` classifies the **strain** of the break from the field states, then builds a
+   heal prompt from the fields that actually broke — never from scraped content, which
+   would be an injection into the healer
+
+   | Strain | What it means |
+   |---|---|
+   | `THROTTLED` | every field came back empty — the request was blocked or redirected |
+   | `RENAMED` | a selector moved; the rest of the page still extracts |
+   | `DRIFTED` | values keep arriving and keep being wrong — the selectors match the wrong nodes |
+   | `SHIFTED` | the columns slid — a field returned a value belonging to its neighbour |
+
+   The strain goes into the prompt with a one-line rationale, because _"a selector moved
+   and the rest of the page still extracts correctly"_ gets a better fix out of Scraper
+   Studio than _"price is null"_. It is also printed on the incident card, so the
+   diagnosis is visible rather than buried in a log
 4. `bdata scraper heal --auto-approve --auto-save` re-derives the selectors. The Collector
    ID does not change, which is the point: the same collector survives the break
 5. The result is **verified with a fresh run**, not trusted. A heal that reports success

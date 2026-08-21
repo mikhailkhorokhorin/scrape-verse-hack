@@ -23,11 +23,11 @@ const MOCK_SPIDERS = [
 ];
 
 const MOCK_INCIDENTS = [
-  { id:"inc_014", who:"BODEGA", opened:"Aug 20 · 09:12Z", before:98, after:42, verified:true,
+  { id:"inc_014", who:"BODEGA", opened:"Aug 20 · 09:12Z", before:98, after:42, verified:true, strain:"RENAMED",
     openedAt:new Date(Date.now() - 26 * 3600 * 1000).toISOString(),
     what:"Target renamed .product-price to .price-tag and moved rating into a data attribute. Extraction kept succeeding — it returned rows with a null price and the literal string \"undefined\" for rating.",
     stages:[["DETECTED","09:12:04"],["DIAGNOSED","09:12:31"],["REWEAVING","09:13:02"],["VERIFIED","09:26:48"]] },
-  { id:"inc_013", who:"KESTREL", opened:"Aug 19 · 22:40Z", before:96, after:78, verified:true,
+  { id:"inc_013", who:"KESTREL", opened:"Aug 19 · 22:40Z", before:96, after:78, verified:true, strain:"DRIFTED",
     openedAt:new Date(Date.now() - 12 * 3600 * 1000).toISOString(),
     what:"Lazy-loaded images began resolving to a placeholder SVG. The image field stayed populated the whole time — it just stopped being true.",
     stages:[["DETECTED","22:40:11"],["DIAGNOSED","22:40:39"],["REWEAVING","22:41:07"],["VERIFIED","22:52:19"]] }

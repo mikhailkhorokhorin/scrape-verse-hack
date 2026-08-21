@@ -67,7 +67,7 @@ function replayFieldsOf(incident, pair) {
 
 function stageIntegrity(name, before, after) {
   if (name === "VERIFIED") return after;
-  if (name === "REWEAVING") return Math.round(before + (after - before) * 0.25);
+  if (name === "REWEAVING") return Math.round(before + (after - before) * 0.2);
   return before;
 }
 
@@ -85,8 +85,15 @@ function buildReplay(incident, history) {
   if (!(span > 0)) return null;
 
   const pair = findInfectionPair(Array.isArray(history) ? history : [], incident);
-  const before = clampPct(incident.integrity_before);
   const after = clampPct(incident.integrity_after);
+  const stated = clampPct(incident.integrity_before);
+  const measured = pair && typeof pair.dirty.integrity === "number"
+    ? clampPct(pair.dirty.integrity)
+    : null;
+  const before = measured !== null && stated >= after ? measured : stated;
+  const healthy = pair && typeof pair.clean.integrity === "number"
+    ? clampPct(pair.clean.integrity)
+    : after;
 
   const stages = raw.map((st, i) => {
     const name = String(st.stage).toUpperCase();
@@ -121,6 +128,7 @@ function buildReplay(incident, history) {
     spanText: elapsedOf(span),
     before: before,
     after: after,
+    healthy: healthy,
     stages: stages,
     fields: replayFieldsOf(incident, pair),
     pair: pair,

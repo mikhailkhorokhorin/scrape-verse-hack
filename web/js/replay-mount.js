@@ -2,14 +2,14 @@
 
 function bindReplayKeys(root) {
   root.addEventListener("keydown", (e) => {
-    if (e.target.matches("input,textarea")) {
-      if (e.key !== " ") return;
-    }
+    const onControl = e.target.closest("button,input");
     if (e.key === " " || e.key === "k") {
+      if (onControl && e.key === " ") return;
       e.preventDefault();
       replayToggle();
       return;
     }
+    if (e.target.matches("input")) return;
     if (e.key === "ArrowRight") { e.preventDefault(); replayStep(1); return; }
     if (e.key === "ArrowLeft") { e.preventDefault(); replayStep(-1); return; }
     if (e.key === "Home") { e.preventDefault(); replayPause(); replaySeek(0); return; }

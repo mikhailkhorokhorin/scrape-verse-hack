@@ -65,10 +65,26 @@ const appendIncident = (record) => {
 };
 
 const WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5 };
+const SCALAR_KEYS = ['value', 'amount', 'price', 'text', 'url', 'src', 'href'];
 
-function classify(value, rule) {
+function unwrap(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return value;
+  for (const key of SCALAR_KEYS) {
+    if (has(value, key)) {
+      const inner = value[key];
+      if (inner === null || typeof inner !== 'object') return inner;
+    }
+  }
+  return value;
+}
+
+function classify(raw, rule) {
+  const value = unwrap(raw);
+
   if (value === null || value === undefined || value === '' ||
       (Array.isArray(value) && value.length === 0)) return 'dead';
+
+  if (typeof value === 'object') return 'infected';
 
   const s = String(value).trim();
   if (!s || /^(null|undefined|NaN)$/i.test(s)) return 'infected';
@@ -95,6 +111,7 @@ function classify(value, rule) {
     default: {
       if (rule.min !== undefined && s.length < rule.min) return 'infected';
       if (rule.max !== undefined && s.length > rule.max) return 'infected';
+      if (rule.pattern !== undefined && !new RegExp(rule.pattern).test(s)) return 'infected';
       return 'live';
     }
   }

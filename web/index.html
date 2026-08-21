@@ -22,6 +22,7 @@
 <link rel="stylesheet" href="css/scars.css">
 <link rel="stylesheet" href="css/infection.css">
 <link rel="stylesheet" href="css/legend.css">
+<link rel="stylesheet" href="css/replay.css">
 <link rel="stylesheet" href="css/mock.css">
 <link rel="stylesheet" href="css/capture.css">
 </head>
@@ -116,6 +117,9 @@
   </aside>
 
 
+  <div class="sechead"><h2>Incident Replay</h2><span class="sechead__count" id="replayhead" hidden></span><span class="rule"></span></div>
+  <section class="replay" id="replay" tabindex="0" aria-label="Incident replay. Space plays and pauses, arrow keys step between stages."></section>
+
   <div class="sechead"><h2>Incident Feed</h2><span class="sechead__count" id="feedcount" hidden></span><span class="rule"></span></div>
   <div class="feed" id="feed"></div>
 
@@ -140,7 +144,12 @@
 <script src="js/infection.js"></script>
 <script src="js/finish.js"></script>
 <script src="js/adapter.js"></script>
+<script src="js/replay-data.js"></script>
+<script src="js/replay-view.js"></script>
+<script src="js/replay.js"></script>
+<script src="js/replay-mount.js"></script>
 <script src="js/fixtures.js"></script>
+<script src="js/replay-fixtures.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
