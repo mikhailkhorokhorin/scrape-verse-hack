@@ -32,7 +32,7 @@ Asking again wastes a turn and the answer is already in a file.
 |---|---|---|
 | Which target sites? | Chosen and checked against robots.txt | `collectors.json` |
 | Which collector IDs exist? | All three, created and pinned: BODEGA, ATLAS, KESTREL | `COLLECTORS.md` |
-| Which CI runs? | **GitHub Actions**, `.github/workflows/watch.yml`. GitLab runners never came up; that project is a mirror | `docs/runbooks/GITHUB-SETUP.md` |
+| Which CI runs? | **GitHub Actions**, `.github/workflows/watch.yml`. GitLab runners never came up and there is no GitLab remote | `docs/runbooks/GITHUB-SETUP.md` |
 | What are the field validators? | Per collector, already declared | `collectors.json` |
 | What order do I work in? | The queue | `PROGRESS.md` |
 | Which tasks are cut? | The cut list | `PLAN.md` |

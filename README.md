@@ -13,7 +13,7 @@ nulls and wrong values, and the pipeline stays green while the data quietly rots
 watches for that, shows it, and repairs it.
 
 **Source repository → https://github.com/mikhailkhorokhorin/scrape-verse-hack**
-(branches `main` and `develop`; the GitLab project is a mirror.)
+(branches `main` and `develop`.)
 
 <!-- TODO before submitting: demo video link -->
 
@@ -165,7 +165,7 @@ and [`kestrel-after.json`](docs/evidence/kestrel-after.json), the scans are in
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       821 tests, node:test, no dependencies
+test/                       826 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the Chaos Lab — three variants of the same shop page
 collectors.json             targets and per-field validators
@@ -320,7 +320,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-821 tests, `node:test`, no dependencies and no test framework to install:
+826 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
