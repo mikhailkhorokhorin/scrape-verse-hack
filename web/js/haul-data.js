@@ -111,7 +111,8 @@ function haulUnitOf(runs, key) {
   for (const run of runs) {
     const raw = (run.sample || {})[key];
     if (!isPlainObject(raw)) continue;
-    if (typeof raw.symbol === "string" && raw.symbol) return { prefix: raw.symbol, suffix: "" };
+    if (typeof raw.symbol === "string" && raw.symbol) return { prefix: demojibake(raw.symbol), suffix: "" };
+
     if (typeof raw.currency === "string" && raw.currency) return { prefix: "", suffix: " " + raw.currency };
   }
   return { prefix: "", suffix: "" };
