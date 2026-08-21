@@ -1,6 +1,8 @@
 "use strict";
 
 const DATA = { history: "data/history.json", incidents: "data/incidents.json" };
+const HEAL_ENDPOINT = "";
+const HEAL_COOLDOWN_MS = 2 * 60 * 60 * 1000;
 const REFRESH_MS = 60000;
 const UNWATCHED_MS = 3 * 60 * 60 * 1000;
 const FULL_SERIES = 6;

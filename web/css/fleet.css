@@ -1,0 +1,20 @@
+.fleet-symbiote{
+  position:fixed;inset:-20px;z-index:0;pointer-events:none;
+  filter:url(#symbiote-turbulence) drop-shadow(0 0 30px var(--symbiote-edge));
+  opacity:.72;
+}
+.fleet-symbiote__body{
+  position:absolute;inset:0;background:var(--symbiote);
+  -webkit-mask-image:radial-gradient(155% 120% at 50% 118%,
+    #000 calc(var(--fleet,0) * 96%), transparent calc(var(--fleet,0) * 96% + 16%));
+  mask-image:radial-gradient(155% 120% at 50% 118%,
+    #000 calc(var(--fleet,0) * 96%), transparent calc(var(--fleet,0) * 96% + 16%));
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  transition:-webkit-mask-image 1100ms cubic-bezier(.22,1,.36,1),
+             mask-image 1100ms cubic-bezier(.22,1,.36,1);
+  animation:symbiote-breathe 14s ease-in-out infinite;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fleet-symbiote__body{animation:none;transition:none;}
+}

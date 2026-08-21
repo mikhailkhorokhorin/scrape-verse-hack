@@ -329,5 +329,71 @@
       "comments": 20,
       "author": "TheP1000"
     }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T06:13:52.441Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url"
+    ],
+    "fields_infected": [
+      "availability"
+    ],
+    "fields_dead": [],
+    "integrity": 90,
+    "status": "HEALTHY",
+    "rows": 20,
+    "sample": {
+      "title": "Scott Pilgrim's Precious Little Life (Scott Pilgrim #1)",
+      "price": {
+        "value": 52.29,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Five",
+      "image_url": "https://books.toscrape.com/media/cache/97/27/97275841c81e66d53bf9313cba06f23e.jpg",
+      "availability": "In stock (19 available) In stock In stock In stock In stock In stock In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T06:14:01.045Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "sample": {
+      "title": "Codex on AWS bedrock bug causing 10x charges",
+      "points": 78,
+      "comments": 21,
+      "author": "TheP1000"
+    }
   }
 ]

@@ -89,6 +89,7 @@ function openSheet(idx) {
         '<span class="label">Integrity · ' + st + "</span></div>" +
     "</div>" +
     factsHTML(sp, integ) +
+    healButtonHTML(sp) +
     spiderBlastHTML(sp) +
     '<div class="sechead sheet__sec"><h2>Field diagnosis</h2><span class="rule"></span></div>' +
     '<p class="sheet__lede">One cell per run, oldest on the left. Lime returned and validated, ' +
@@ -102,6 +103,7 @@ function openSheet(idx) {
     '<pre class="sample">' + jsonHTML(sp.sample, sp.fields) + "</pre>";
 
   document.getElementById("modal").hidden = false;
+  bindHeal(document.getElementById("sheet-body"));
   document.getElementById("sheet-close").focus();
 }
 
