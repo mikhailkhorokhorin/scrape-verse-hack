@@ -9,8 +9,10 @@ one finished.
 
 - `docs/UI-IDEAS-WAVE-2.md` — UI-24 to UI-48. **Culled the same day. Only UI-29 survives**,
   and the file records why the other twenty-four do not.
-- `docs/UI-IDEAS-WAVE-3.md` — UI-49 onward, written against the one test wave two passed:
-  a page of the comic that happens to be true, not a widget in a costume.
+- `docs/UI-IDEAS-WAVE-3.md` — UI-49 to UI-68, written against the one test wave two
+  passed: a page of the comic that happens to be true, not a widget in a costume.
+- `docs/UI-IDEAS-WAVE-4-MOTION.md` — UI-69 onward, motion only. The spec's motion table is
+  built; this is what it never covered.
 
 This file is the argument: what is in, what is out, and why. **The working briefs live one
 per file in `docs/ideas/`** — mechanism, risks and a done-when checklist for each idea,
