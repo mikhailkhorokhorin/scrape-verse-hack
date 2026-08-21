@@ -64,7 +64,7 @@ Four tools read recorded data. They are instant and free.
 | `fleet_status` | How is every Spider doing right now? Integrity, status, which fields are live / infected / dead, how stale the scan is. |
 | `spider_history` | How has one Spider behaved over time? Takes `spider`, optional `limit`. Post-heal runs are marked. |
 | `incident_log` | What has broken, and did the repair hold? Ids, strain, integrity before and after, stages, resolution. Optional `spider` filter. |
-| `heal_receipt` | Prove one repair. Takes `incident_id`. Every phase with timestamps and gaps, plus the `collector_id` — unchanged across the repair. |
+| `heal_receipt` | Prove one repair. Takes `incident_id`. Every phase with timestamps and gaps, the `collector_id` — unchanged across the repair — and a per-field check of the run taken after the heal, naming the value that arrived on each side. |
 
 Two tools drive Bright Data for real.
 
