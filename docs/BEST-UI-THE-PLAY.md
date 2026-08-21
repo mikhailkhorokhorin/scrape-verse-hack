@@ -8,6 +8,11 @@ This file is the product decision. It names one spine, one image, one interactio
 six moves. `UI-IDEAS-INDEX.md` carries every id and its fate; everything in
 `UI-IDEAS*.md` is either folded into a move here or dead.
 
+**The moves are scheduled in `SECOND-PUSH.md`** — that file is the execution pipeline:
+which move runs when, in which lane, with what done-when, and the twelve-audit battery
+that checks the result. This file decides *what*; that file decides *how and in what
+order*.
+
 ---
 
 ## 1 · What actually wins this track

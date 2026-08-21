@@ -1,5 +1,10 @@
 # UPGRADE PLAN — the final push
 
+> **This is push one, and it is largely done.** The remaining pipeline — the leftover
+> work here, the six moves from `BEST-UI-THE-PLAY.md`, and a twelve-audit battery — is
+> **`SECOND-PUSH.md`**. Read that for what happens next; read this for what was decided
+> and what was already verified.
+
 Written Aug 21, evening. Deadline Aug 23. Goal: win every category. This plan covers
 the last visual push, five sequential part-by-part audits, a final scored audit, and a
 repository cleanup. Nothing here starts until the plan is approved; each phase gates on
@@ -143,6 +148,16 @@ pushes in a safe window.
 
 ## Phase 2 — Five sequential audits, one part each
 
+**Status, morning of 22 Aug:** Audits 1 and 2 are done and committed (masthead hole,
+diptych alignment, scroll-padding for every anchor, grid fill rules, rig watermark,
+36 state-by-width combinations measured). Audit 4's core ran early under the lead:
+the routing matrix (3 real ids, garbage, empty), the sheet's focus trap and focus
+return, and the print defect — an open incident now prints on one page. Audit 3 was
+interrupted mid-fix by an API error; its work-in-progress sits in **`stash@{0}`**
+("audit3 wip: replay + receipt, one test red") and is closed out as step S0 of the
+second push below. Audit 5 never started — it is folded into the second push's
+battery, which supersedes this phase for everything still open.
+
 One agent at a time, in this order. Every audit has the same mandate: **screenshot
 everything in its territory** (1440, 768, 375 — plus states only it can reach), find
 every flaw, **fix what it finds**, verify the fix in the browser, keep tests+lint
@@ -208,6 +223,9 @@ the spot; P2/P3 get logged in this file's appendix with an honest keep/cut call.
 This is also UI-09 pass 2 (the phone gate): 375px, real frame-rate measurement, no
 horizontal scroll — recorded in `docs/ideas/UI-09-phone-pass.md` as the brief demands.
 
+**Status:** not run. Rescheduled as the final gate of the second push (S5), where it
+belongs — after the moves land, not before.
+
 ---
 
 ## Phase 4 — Repository cleanup (lead — file moves touch judge-facing paths)
@@ -251,7 +269,7 @@ Untracked at root: `create-*.json` (×3), `nul`, `assets/`, `public/`, `.impecca
 | `create-*.json` | **track** (secret-scanned already: clean — id/name/status/view_url/created_at only) and drop the `create-*.json` ignore rule | README states they are committed; today that claim is false — same failure the probe files had |
 | `atlas-probe.json`, `kestrel-probe.json`, `kestrel-after.json`, `create-*.json` | move → `docs/evidence/` | evidence belongs beside the docs that cite it; root stays: README, LICENSE, CLAUDE.md, configs |
 | every reference to moved files | update | `README.md`, `docs/SUBMISSION.md`, `docs/VIDEO-SCRIPT.md`, `docs/COLLECTORS.md` — grep for each filename, fix every path |
-| `assets/the-watch.png` | **keep and retake** with `?capture=1` after Phase 3 | it is the README hero and it is tracked, but it predates THE HAUL, the characters and everything this push adds — the first thing a judge sees must show the finished page |
+| `assets/the-watch.png` | **keep and retake** — and the retake is now specified: the **mid-scratch frame** from MOVE 2 of `BEST-UI-THE-PLAY.md` §3 | the README hero, the video thumbnail and the submission screenshot are one image, and the play names it: the substance torn open under a cursor, the concatenated availability string legible in the gap |
 | `public/` | leave (gitignored build output) | CI artifact shape |
 | `.impeccable/`, `.playwright-mcp/` | add to `.gitignore` | tool state, never committed |
 | `docs/UPGRADE-PLAN.md` (this file) | keep, with phases marked done | it is the record of the push |
