@@ -4,7 +4,9 @@
 credentials.json
 config.json
 create-*.json
-*-probe.json
+kestrel-before.json
+atlas-before.json
+bodega-before.json
 node_modules/
 .DS_Store
 nul
