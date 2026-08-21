@@ -4,6 +4,10 @@ A self-healing watch console for web scrapers. Built for
 [Into the Scrape-Verse](https://www.wemakedevs.org/hackathons/scrape-verse)
 (WeMakeDevs × Bright Data).
 
+**Live console → https://mikhailkhorokhorin.github.io/scrape-verse-hack/**
+
+![THE WATCH — three Spiders, live Integrity, and a healed incident](assets/the-watch.png)
+
 Scrapers do not crash. They decay — a target site changes, extraction starts returning
 nulls and wrong values, and the pipeline stays green while the data quietly rots. THWIP
 watches for that, shows it, and repairs it.
