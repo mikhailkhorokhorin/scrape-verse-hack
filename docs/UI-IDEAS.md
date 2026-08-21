@@ -8,55 +8,95 @@ turns out to be a day gets re-labelled, not quietly attempted.
 
 ---
 
-## The problem to solve first
+## Correction to an earlier reading
 
-**The console is entirely green, so the best part of the design is invisible.**
+An earlier version of this file claimed the broken states were unreachable. That was
+wrong, and the correction changes what needs building:
 
-Three Spiders, all 100%. No symbiote, no glitch, no critical panel, no infected chip. A
-judge opening the live URL sees a healthy fleet and a legend describing states they never
-witness. Everything we built the art direction around — the black climbing a panel,
-covering exactly what was lost — is currently unreachable from the front page.
+- **`?mock=1` already works.** Title becomes `[MOCK] THWIP Watch`, a pink warning band
+  appears, BODEGA sits at 63% with the symbiote climbing its panel, and the break/heal
+  controls mount. Honestly labelled.
+- **Incident Replay on the front page runs on real data** — `inc_003`, BODEGA at 0%,
+  `SNAP!`, all four fields dead, the four stages, the blast radius.
+- **The incident feed** carries three real cards with strain badges.
 
-Every idea below is ranked against that.
+So the states exist and are honest. The actual problem is narrower:
+
+**The first screen is all green, and the strongest thing in the design lives below the
+fold and behind a URL parameter nobody knows about.**
+
+A Best UI judge decides in five seconds. Right now those five seconds show three healthy
+panels and a legend describing states that are not on screen.
 
 ---
 
-## Strong
+## DECIDED — the opening sequence
 
-### 1. Let the judge see it break
-Nothing beats this. Options, cheapest first:
+**On first load, the console demonstrates its own mechanic before settling into the
+present.** Roughly six seconds, on real recorded data, then the page is exactly what a
+plain load would have shown.
 
-- **`?state=critical` on the live URL.** Loads recorded history from a past incident
-  instead of the present. Not a mock — real data from a real incident, just not the
-  latest. One line in the loader, honest, and reversible.
-- **A "show me a break" control in the legend.** The legend already explains the states;
-  let it demonstrate them. Hovering a state in the legend previews it on a real panel.
-- **T-12 itself.** The autonomous break puts a genuinely critical BODEGA on screen for an
-  hour or two. Best evidence, but it is a window, not a permanent state — and the judge
-  may look outside it.
+### The sequence
 
-Best combination: run T-12 **and** ship `?state=` so the break is reachable afterwards.
+Driven by `inc_003` — BODEGA, a real incident that went 0% and recovered.
 
-Cost: small. Impact: decides the prize.
+| Time | What happens |
+|---|---|
+| 0.0s | Panel healthy, 100%, clean. Holds long enough to register as the normal state |
+| 0.8s | Integrity drops hard, `SNAP!` fires, fields start striking through |
+| 1.6s | The symbiote climbs. `CRACK!`. Panel desaturates, chromatic offset goes hard |
+| 2.6s | Holds at the bottom. This is the beat that has to land — the judge needs a moment to read the black as *loss* |
+| 3.4s | `WEAVE...`, cyan pulse on the border, stages tick |
+| 4.6s | `PURGE!` — the substance retracts downward, faster than it crept |
+| 5.4s | `THWIP!`, colour floods back, integrity overshoots and settles |
+| 6.0s | Dissolves into the live console at its real current state |
 
-### 2. Live polling
-Re-read `data/*.json` every 30s. If a scan lands while the judge is on the page, the
-console moves on its own — the pulse advances, the timestamp updates, a panel changes.
+The hold at 2.6s matters more than the motion around it. Infection has to feel slow and
+removal violent — that asymmetry is the whole emotional argument of the product.
 
-Turns a screenshot into a live instrument. We keep declining this one; it is still the
-best ratio on the board after idea 1.
+### When it plays
 
-Cost: small.
+| Situation | Behaviour |
+|---|---|
+| First visit in a tab | Plays |
+| `cmd+R` | Does not play — `sessionStorage` remembers |
+| New tab, or a different judge | Plays |
+| `REPLAY INTRO` button in the masthead | Plays on demand |
+| `?intro=1` | Forces it, ignoring `sessionStorage` |
+| `prefers-reduced-motion: reduce` | Skipped entirely, straight to the live state |
 
-### 3. History scrubber
-A drag handle across the top spanning all recorded time. Pull it back and the whole
-console — panels, symbiote, haul, integrity — renders that moment. Release and it snaps
-to now.
+`sessionStorage`, not `localStorage`: one play per tab is the right grain. A judge who
+reloads should not sit through it twice; a judge who opens it fresh tomorrow should see it.
 
-Makes the 48 hours of real history explorable instead of summarized, and it reaches every
-past state including the broken ones, which also solves idea 1.
+**Note on hard refresh:** `cmd+shift+R` clears the resource cache but not Web Storage, and
+JavaScript cannot distinguish it from an ordinary reload — `navigation.type` reads
+`"reload"` for both. The button and `?intro=1` cover that need instead.
 
-Cost: medium. The replay engine already models time; this generalizes it.
+### Non-negotiable constraints
+
+- **Real data only.** Every value shown during the sequence comes from `inc_003`. No
+  invented panel, no illustrative numbers. On a project about data honesty a fabricated
+  hero is a failure of the argument, however well it renders
+- **Skippable at any point** — any click, key or scroll jumps to the end state
+- **Never blocks interaction.** The page stays usable throughout; skipping mid-sequence
+  must leave nothing half-animated
+- **Always ends in exactly the state a plain load produces.** If the two ever differ,
+  that is a bug, not a flourish
+- The `REPLAY INTRO` button is not hidden. A feature that cannot be repeated is a feature
+  the judge saw once and could not verify
+
+### Why this over the alternatives
+
+Two other openings were considered and are still worth having if time allows:
+
+- **Diptych** — a healthy panel and an infected one side by side above the grid, both from
+  real history. Cheaper, static, teaches the visual language in two seconds
+- **Evidence line** — `3 collectors · 4 incidents healed · 698 rows · 528 tests · c_a628…`
+  in the masthead. Cheapest of the three, and the only one that addresses the fact that
+  the first screen currently carries no proof at all
+
+The sequence wins because it is also the video's cold open, and because it shows the
+mechanic rather than describing it.
 
 ---
 
