@@ -84,7 +84,8 @@ better if you have one, but do not spend build time producing it.
 > scraper is, and it turned out to be the clearest way to draw it: you can read fleet
 > health across the whole page without reading a single number.
 >
-> Code: <REPO>
+> Live console: https://mikhailkhorokhorin.github.io/scrape-verse-hack/
+> Code: https://github.com/mikhailkhorokhorin/scrape-verse-hack
 > Demo: <VIDEO>
 >
 > Built for Into the Scrape-Verse by WeMakeDevs and Bright Data.
@@ -129,7 +130,7 @@ Use this if you would rather not have a "see more" fold before the KESTREL story
 > recreated. That's the whole difference between a self-healing system and a system that
 > quietly throws away the broken thing.
 >
-> Code: <REPO> · Demo: <VIDEO>
+> Code: https://github.com/mikhailkhorokhorin/scrape-verse-hack · Live: https://mikhailkhorokhorin.github.io/scrape-verse-hack/ · Demo: <VIDEO>
 >
 > Thanks to WeMakeDevs and Bright Data for the hackathon.
 >

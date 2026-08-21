@@ -24,6 +24,7 @@
   font-size:clamp(1rem,1.35vw,1.125rem);line-height:1.45;
 }
 .tagline b{color:var(--paper);font-weight:700;}
+@media(max-width:900px){.tagline{max-width:60ch;}}
 
 .readouts{
   display:flex;gap:0;flex-wrap:wrap;align-self:end;
@@ -32,6 +33,10 @@
 .readout{
   min-width:132px;padding:9px var(--s2) 10px;
   border-right:3px solid var(--ink);
+}
+@media(max-width:900px){
+  .readouts{width:100%;}
+  .readout{flex:1 1 132px;min-width:0;}
 }
 .readout:last-child{border-right:0;}
 .readout__value--word{font-size:1.05rem;}
