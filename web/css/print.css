@@ -1,7 +1,8 @@
 @media print{
-  @page{margin:14mm;}
+  @page{margin:10mm;size:A4 portrait;}
 
-  html,body{background:#fff;color:#000;overflow:visible;}
+  html,body{background:#fff;color:#000;overflow:visible;height:auto;min-height:0;}
+  body.has-issue,body.has-issue .wrap,body.has-issue main{height:auto;min-height:0;}
   body::before,.wrap::before,.wrap::after{display:none !important;}
   .fleet-ground,.fleet-symbiote,.modal,.mockflag,.demobar{display:none !important;}
   .intro-replay,.intro,.bubble,.wild-note,.evidence{display:none !important;}
