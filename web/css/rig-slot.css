@@ -1,0 +1,25 @@
+.rig-slot{
+  flex:1 1 auto;min-height:96px;
+  display:flex;align-items:center;justify-content:center;
+  pointer-events:none;
+}
+
+.panel > .rig-mark{
+  position:absolute;right:-6%;top:6%;bottom:auto;left:auto;z-index:0;
+  width:52%;max-width:230px;
+  display:flex;align-items:flex-start;justify-content:flex-end;
+  opacity:.3;pointer-events:none;
+}
+.panel > .rig-mark .rig{width:100%;}
+.panel > .rig-mark .rig__abdomen,
+.panel > .rig-mark .rig__head{fill:var(--ink);stroke-width:2;}
+.panel > .rig-mark .rig__plate,
+.panel > .rig-mark .rig__mark{display:none;}
+.panel > .rig-mark .rig__eye[data-lit="0"]{opacity:.4;}
+
+.panel--compact .rig-slot .rig{max-width:260px;max-height:136px;}
+
+@media(max-width:767px){
+  .rig-slot{min-height:84px;}
+  .panel--compact .rig-slot .rig{max-height:96px;}
+}

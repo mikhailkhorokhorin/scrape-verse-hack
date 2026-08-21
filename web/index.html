@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/pulse.css">
 <link rel="stylesheet" href="css/panel.css">
 <link rel="stylesheet" href="css/reveal.css">
+<link rel="stylesheet" href="css/sparkhover.css">
 <link rel="stylesheet" href="css/sizes.css">
 <link rel="stylesheet" href="css/states.css">
 <link rel="stylesheet" href="css/feed.css">
@@ -24,12 +25,21 @@
 <link rel="stylesheet" href="css/fleet.css">
 <link rel="stylesheet" href="css/empty.css">
 <link rel="stylesheet" href="css/scars.css">
+<link rel="stylesheet" href="css/landing.css">
+<link rel="stylesheet" href="css/symbiote-face.css">
+<link rel="stylesheet" href="css/rig.css">
+<link rel="stylesheet" href="css/rig-slot.css">
 <link rel="stylesheet" href="css/infection.css">
 <link rel="stylesheet" href="css/legend.css">
 <link rel="stylesheet" href="css/haul.css">
 <link rel="stylesheet" href="css/replay.css">
+<link rel="stylesheet" href="css/print-artefacts.css">
 <link rel="stylesheet" href="css/mock.css">
 <link rel="stylesheet" href="css/capture.css">
+<link rel="stylesheet" href="css/evidence.css">
+<link rel="stylesheet" href="css/caption.css">
+<link rel="stylesheet" href="css/ground.css">
+<link rel="stylesheet" href="css/diptych.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -38,6 +48,8 @@
     <feDisplacementMap in="SourceGraphic" in2="noise" scale="22" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 </svg>
+
+<div class="fleet-ground" id="fleet-ground" aria-hidden="true"></div>
 
 <div class="fleet-symbiote" id="fleet-sym" aria-hidden="true"><div class="fleet-symbiote__body"></div></div>
 
@@ -48,6 +60,7 @@
       <h1 class="wordmark">THWIP</h1>
       <p class="tagline">Scrapers don't crash. They <b>decay</b> — quietly, alone, at 3am, and
       nobody is watching. This is the watch.</p>
+      <p class="evidence mono" id="evidence" aria-live="polite" hidden></p>
     </div>
     <div class="readouts">
       <div class="readout">
@@ -75,7 +88,7 @@
     <div class="pulseline" id="pulse" hidden></div>
   </div>
 
-  <div class="sechead"><h2>The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
+  <div class="sechead"><h2 class="caption" id="watchhead">The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
 
   <div class="grid" id="grid" style="min-height:293px" aria-label="Spider fleet"></div>
 
@@ -128,13 +141,13 @@
   </aside>
 
 
-  <div class="sechead" id="haulhead"><h2>The Haul</h2><span class="sechead__count" id="haulcount" hidden></span><span class="rule"></span></div>
+  <div class="sechead" id="haulhead"><h2 class="caption" id="haulcaption">The Haul</h2><span class="sechead__count" id="haulcount" hidden></span><span class="rule"></span></div>
   <section class="haul" id="haul" aria-label="The data the fleet brought back"></section>
 
-  <div class="sechead"><h2>Incident Replay</h2><span class="sechead__count" id="replayhead" hidden></span><span class="rule"></span></div>
+  <div class="sechead"><h2 class="caption" id="replaycaption">Incident Replay</h2><span class="sechead__count" id="replayhead" hidden></span><span class="rule"></span></div>
   <section class="replay" id="replay" tabindex="0" aria-label="Incident replay. Space plays and pauses, arrow keys step between stages."></section>
 
-  <div class="sechead"><h2>Incident Feed</h2><span class="sechead__count" id="feedcount" hidden></span><span class="rule"></span></div>
+  <div class="sechead"><h2 class="caption" id="feedcaption">Incident Feed</h2><span class="sechead__count" id="feedcount" hidden></span><span class="rule"></span></div>
   <div class="feed" id="feed"></div>
 
   </main>
@@ -150,10 +163,14 @@
 
 <script src="js/config.js"></script>
 <script src="js/format.js"></script>
+<script src="js/sparkhover.js"></script>
 <script src="js/sparkline.js"></script>
 <script src="js/pulse.js"></script>
 <script src="js/value.js"></script>
 <script src="js/received.js"></script>
+<script src="js/symbiote.js"></script>
+<script src="js/rig-parts.js"></script>
+<script src="js/rig.js"></script>
 <script src="js/panel.js"></script>
 <script src="js/render.js"></script>
 <script src="js/masthead.js"></script>
@@ -163,6 +180,8 @@
 <script src="js/scars.js"></script>
 <script src="js/infection.js"></script>
 <script src="js/finish.js"></script>
+<script src="js/delta.js"></script>
+<script src="js/landing.js"></script>
 <script src="js/adapter.js"></script>
 <script src="js/haul-data.js"></script>
 <script src="js/haul-view.js"></script>
@@ -175,5 +194,7 @@
 <script src="js/replay-fixtures.js"></script>
 <script src="js/haul-fixtures.js"></script>
 <script src="js/app.js"></script>
+<script src="js/caption.js"></script>
+<script src="js/ground.js"></script>
 </body>
 </html>

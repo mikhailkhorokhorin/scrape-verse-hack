@@ -1,0 +1,72 @@
+.rig{display:block;width:100%;height:100%;overflow:visible;}
+
+.rig__leg{
+  fill:none;stroke:var(--paper);stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke 600ms ease,opacity 600ms ease;
+}
+.rig__leg[data-state="live"]{
+  stroke:var(--paper);
+  transform-box:fill-box;transform-origin:center;
+  animation:rig-plant var(--rig-sway,11s) ease-in-out infinite;
+  animation-delay:calc(var(--rig-delay,6s) * -1);
+}
+.rig__leg[data-state="infected"]{
+  stroke:var(--infected);
+  transform-box:fill-box;transform-origin:center;
+  animation:rig-twitch 2s steps(6,end) infinite;
+  animation-delay:calc(var(--rig-delay,6s) * -1);
+}
+.rig__leg[data-state="dead"]{stroke:var(--symbiote-edge);opacity:.9;}
+
+.rig__abdomen,.rig__head{fill:var(--ink);stroke:var(--paper);stroke-width:2.4;}
+.rig__plate{fill:currentColor;opacity:.22;}
+.rig__mark{fill:currentColor;opacity:.9;}
+
+.rig__eye{
+  fill:var(--unwatched);transition:fill 500ms ease;
+  transform-box:fill-box;transform-origin:center;
+}
+.rig__eye[data-lit="1"]{
+  fill:currentColor;
+  animation:rig-blink var(--rig-blink,6s) ease-in-out infinite;
+}
+
+.rig[data-status="healthy"]{color:var(--healthy);}
+.rig[data-status="degraded"]{color:var(--degraded);}
+.rig[data-status="critical"]{color:var(--critical);}
+.rig[data-status="reweaving"]{color:var(--reweaving);}
+.rig[data-status="unwatched"]{color:var(--unwatched);opacity:.55;}
+
+.rig__body{animation:rig-weight var(--rig-sway,11s) ease-in-out infinite;transform-origin:center;}
+
+.rig__label{
+  fill:var(--dim);font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:6px;letter-spacing:.04em;dominant-baseline:middle;
+}
+
+@keyframes rig-plant{
+  0%,100%{transform:translateY(0);}
+  46%{transform:translateY(-1.4px);}
+  54%{transform:translateY(0);}
+}
+
+@keyframes rig-twitch{
+  0%,72%,100%{transform:translate(0,0);}
+  76%{transform:translate(.8px,-1px);}
+  84%{transform:translate(-.6px,.6px);}
+  92%{transform:translate(.4px,0);}
+}
+
+@keyframes rig-blink{
+  0%,94%,100%{transform:scaleY(1);}
+  96%,98%{transform:scaleY(.12);}
+}
+
+@keyframes rig-weight{
+  0%,100%{transform:translateX(0) rotate(0deg);}
+  50%{transform:translateX(1px) rotate(.6deg);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .rig__leg,.rig__eye,.rig__body{animation:none;}
+}
