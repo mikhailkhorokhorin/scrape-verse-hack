@@ -103,7 +103,17 @@ function paintStage(model, slots, stageIndex) {
   });
 }
 
+function paintBlast(model, slots, ms) {
+  if (!slots.blast || !model.blastRows) return;
+  const verified = model.stages.find((st) => st.name === "VERIFIED");
+  const stop = verified ? verified.at : model.span;
+  const ratio = stop > 0 ? Math.min(1, ms / stop) : 1;
+  slots.blast.textContent = groupNum(model.blastRows * ratio);
+  slots.blast.classList.toggle("is-frozen", ratio >= 1);
+}
+
 function paintScrub(model, slots, ms) {
+  paintBlast(model, slots, ms);
   const ratio = model.span > 0 ? Math.min(1, ms / model.span) : 0;
   slots.done.style.width = (ratio * 100).toFixed(3) + "%";
   slots.head.style.left = (ratio * 100).toFixed(3) + "%";

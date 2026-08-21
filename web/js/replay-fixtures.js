@@ -15,6 +15,7 @@ const MOCK_RAW_INCIDENTS = [
     closed_at: mockStamp(884000),
     integrity_before: 62,
     integrity_after: 100,
+    rows_per_run: 12,
     anomalies: ["price", "rating"],
     recovered_fields: ["price", "rating"],
     strain: "RENAMED",
@@ -43,6 +44,7 @@ function mockIncidentRuns() {
     fields_dead: [],
     integrity: 98,
     status: "HEALTHY",
+    rows: 12,
     sample: {
       title: "Ceramic pour-over dripper",
       price: "$38.00",
@@ -61,6 +63,7 @@ function mockIncidentRuns() {
     fields_dead: ["price"],
     integrity: 62,
     status: "CRITICAL",
+    rows: 12,
     sample: {
       title: "Ceramic pour-over dripper",
       price: null,
@@ -68,5 +71,6 @@ function mockIncidentRuns() {
       image: "img/01.svg",
     },
   };
-  return [clean, dirty];
+  const during = { ...dirty, ts: mockStamp(600000) };
+  return [clean, dirty, during];
 }

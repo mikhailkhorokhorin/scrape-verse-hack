@@ -197,5 +197,137 @@
       "comments": 17,
       "author": "TheP1000"
     }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T05:50:43.796Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url"
+    ],
+    "fields_infected": [
+      "availability"
+    ],
+    "fields_dead": [],
+    "integrity": 90,
+    "status": "HEALTHY",
+    "rows": 20,
+    "sample": {
+      "title": "Our Band Could Be Your Life: Scenes from the American Indie Underground, 1981-1991",
+      "price": {
+        "value": 57.25,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Three",
+      "image_url": "https://books.toscrape.com/media/cache/ad/96/ad96e9c9f1664cbcb0e9627b007fb6f9.jpg",
+      "availability": "In stock (19 available) In stock In stock In stock In stock In stock In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T05:50:48.965Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "sample": {
+      "title": "Codex on AWS bedrock bug causing 10x charges",
+      "points": 69,
+      "comments": 18,
+      "author": "TheP1000"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T06:02:01.355Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url"
+    ],
+    "fields_infected": [
+      "availability"
+    ],
+    "fields_dead": [],
+    "integrity": 90,
+    "status": "HEALTHY",
+    "rows": 20,
+    "sample": {
+      "title": "Set Me Free",
+      "price": {
+        "value": 17.46,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Five",
+      "image_url": "https://books.toscrape.com/media/cache/b8/e9/b8e91bd2fc74c3954118999238abb4b8.jpg",
+      "availability": "In stock (19 available) In stock In stock In stock In stock In stock In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T06:02:07.250Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "sample": {
+      "title": "Codex on AWS bedrock bug causing 10x charges",
+      "points": 73,
+      "comments": 20,
+      "author": "TheP1000"
+    }
   }
 ]

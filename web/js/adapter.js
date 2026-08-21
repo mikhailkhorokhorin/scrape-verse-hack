@@ -29,6 +29,23 @@ function bestStreak(runs) {
   return best;
 }
 
+function blastOf(runs) {
+  let rows = 0;
+  let cells = 0;
+  let scans = 0;
+  const fields = new Set();
+  for (const run of runs) {
+    const broken = (run.fields_infected || []).concat(run.fields_dead || []);
+    if (broken.length === 0) continue;
+    const n = Number(run.rows) || 0;
+    rows += n;
+    cells += n * broken.length;
+    scans += 1;
+    broken.forEach((f) => fields.add(f));
+  }
+  return { rows: rows, cells: cells, scans: scans, fields: Array.from(fields) };
+}
+
 function fieldTrack(runs, field) {
   return runs.slice(-FIELD_TRACK_MAX).map((run) => stateWord(run, field));
 }
@@ -79,6 +96,7 @@ function adaptHistory(history) {
       sample: latest.sample || {},
       series: runs.slice(-SERIES_MAX_POINTS).map((run) => clampPct(run.integrity)),
       runs: runs.length,
+      blast: blastOf(runs),
       streak: cleanStreak(runs),
       best: bestStreak(runs),
       reweaving: latest.status === "REWEAVING",
@@ -88,6 +106,28 @@ function adaptHistory(history) {
 
   spiders.sort((a, b) => integrityOf(a) - integrityOf(b));
   return spiders;
+}
+
+function blastRadius(history, inc) {
+  const rowsPerRun = Number(inc.rows_per_run);
+  const opened = Date.parse(inc.opened_at);
+  if (!Number.isFinite(opened)) return null;
+  const closed = inc.closed_at ? Date.parse(inc.closed_at) : Date.now();
+  if (!Number.isFinite(closed)) return null;
+
+  const runs = history.filter((run) => {
+    if (!run || run.spider !== inc.spider) return null;
+    const ts = Date.parse(run.ts);
+    return Number.isFinite(ts) && ts >= opened && ts <= closed;
+  });
+
+  const rows = runs.reduce((total, run) => {
+    const seen = Number(run.rows);
+    return total + (Number.isFinite(seen) && seen > 0 ? seen : (rowsPerRun || 0));
+  }, 0);
+
+  if (!rows) return null;
+  return { rows: rows, runs: runs.length, open: !inc.closed_at };
 }
 
 function adaptIncidents(incidents) {
@@ -125,6 +165,8 @@ function adaptIncidents(incidents) {
         before: inc.integrity_before,
         after: inc.integrity_after,
         what: inc.summary || what,
+        anomalies: inc.anomalies || [],
+        blast: blastRadius(RAW_HISTORY, inc),
         mttrMs: mttrMs,
         stages: stages.map((st) => [st.stage, clockOf(st.ts)]),
       };

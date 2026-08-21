@@ -156,7 +156,24 @@ function replayNoteHTML(model) {
         "minutes, so it cannot be filmed live — this plays the real <b>" + esc(model.spanText) +
         "</b> back at a watchable pace.</p>" +
       prompt +
+      replayBlastHTML(model) +
     "</div>"
+  );
+}
+
+function replayBlastHTML(model) {
+  if (!model.blastRows) return "";
+  const fields = (model.anomalies || []).map((f) => "<code>" + esc(f) + "</code>");
+  const named = fields.length
+    ? (fields.length === 1 ? fields[0]
+      : fields.slice(0, -1).join(", ") + " and " + fields[fields.length - 1])
+    : "a broken field";
+  return (
+    '<p class="replay__blast">' +
+      '<b class="blast__n is-frozen" data-slot="blast" data-total="' + model.blastRows + '">' +
+        groupNum(model.blastRows) + "</b>" +
+      " rows shipped with " + named + " before this re-weave landed." +
+    "</p>"
   );
 }
 

@@ -45,6 +45,12 @@ function renderGrid() {
   }).length;
   grid.classList.toggle("grid--tight", bigs >= 2);
 
+  const calm = SPIDERS.every((sp) => {
+    const st = statusOf(sp);
+    return st === "healthy" || st === "unwatched";
+  });
+  grid.classList.toggle("grid--calm", calm);
+
   syncTitle();
 
   const newest = SPIDERS.reduce((max, s) => Math.max(max, Date.parse(s.ts) || 0), 0);
@@ -101,6 +107,7 @@ function renderFeed() {
       "</div>" +
       strainHTML(inc.strain) +
       "<p>" + esc(inc.what) + "</p>" +
+      incidentBlastHTML(inc) +
       (inc.infection || "") +
       '<div class="stages">' +
         inc.stages.map((s) =>
@@ -110,6 +117,26 @@ function renderFeed() {
     "</article>"
   ).join("");
   renderMttr();
+}
+
+function blastFieldList(fields) {
+  if (!fields.length) return "a broken field";
+  if (fields.length === 1) return "a broken <code>" + esc(fields[0]) + "</code>";
+  const marked = fields.map((f) => "<code>" + esc(f) + "</code>");
+  return "broken " + marked.slice(0, -1).join(", ") + " and " + marked[marked.length - 1];
+}
+
+function incidentBlastHTML(inc) {
+  const blast = inc.blast;
+  if (!blast) return "";
+  if (blast.open) {
+    return '<p class="blast"><b class="blast__n">counting…</b> rows have shipped with ' +
+      blastFieldList(inc.anomalies || []) + " while this Spider stays infected.</p>";
+  }
+  return '<p class="blast"><b class="blast__n" data-rows="' + blast.rows + '">' +
+    groupNum(blast.rows) + " rows</b> shipped with " + blastFieldList(inc.anomalies || []) +
+    " across " + blast.runs + " scan" + (blast.runs === 1 ? "" : "s") +
+    " before the re-weave landed.</p>";
 }
 
 function strainHTML(strain) {
