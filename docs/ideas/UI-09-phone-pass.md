@@ -62,7 +62,13 @@ window):
 
 ## Done when
 
-- [ ] Run once, immediately after UI-18a lands, against a real 375px viewport
+- [x] Run once, immediately after UI-18a lands, against a real 375px viewport — **pass 1 done
+      Aug 21**, Chromium at 375x812 against live data. No horizontal scroll
+      (`scrollWidth` 360 against a 375 viewport). Rig silhouettes render 148-260px wide and
+      read as spiders, not smudges. **76fps sustained** with six turbulence-filtered layers
+      and 82 animated rig parts on screen, so the audit's performance worry did not
+      materialise. The only elements extending past the viewport are `.fleet-symbiote` and
+      its body, which are deliberately `inset:-20px` and `pointer-events:none`.
 - [ ] Run again immediately before submission, against the final build
 - [ ] Every surface in the checklist above confirmed legible with no horizontal scroll
 - [ ] Frame rate at 375px with all animated symbiote layers active is acceptable (no

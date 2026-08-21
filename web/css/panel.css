@@ -53,6 +53,16 @@
 }
 .is-purging .symbiote__body{transition:-webkit-mask-image 900ms ease-out,mask-image 900ms ease-out;}
 
+.panel > .panel__no{
+  position:absolute;left:-3px;top:-3px;z-index:3;pointer-events:none;
+  font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
+  font-size:var(--t-tick);font-weight:600;line-height:1;letter-spacing:.06em;
+  color:var(--paper);background:var(--ink);
+  padding:3px 5px 2px;opacity:.55;
+}
+.panel--big > .panel__no{font-size:var(--t-micro);padding:4px 7px 3px;}
+.is-unwatched > .panel__no{opacity:.4;}
+
 .phead{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s2);flex-wrap:wrap;}
 .phead > div{min-width:0;flex:1 1 auto;}
 .codename{

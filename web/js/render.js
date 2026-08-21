@@ -24,6 +24,7 @@ function renderGrid() {
     setReadout("lastscan", "--", null);
     setReadout("mttr", "--", null);
     setCount("fleetcount", 0, "spider");
+    renderEvidence();
     renderWatch(0);
     renderPulse(RAW_HISTORY);
     return;
@@ -63,6 +64,7 @@ function renderGrid() {
   setReadout("lastscan", newest ? clockOf(new Date(newest).toISOString()) : "--", null);
   renderWatch(newest);
   renderMttr();
+  renderEvidence();
 }
 
 function setFleetSpread(avg) {
@@ -101,30 +103,22 @@ function renderFeed() {
   feed.classList.toggle("feed--many", INCIDENTS.length > 1);
   feed.classList.toggle("feed--one", INCIDENTS.length === 1);
   feed.innerHTML = INCIDENTS.map((inc) =>
-    '<article class="incident">' +
-      '<div class="incident__top">' +
-        '<span class="incident__who">' + esc(inc.who) + "</span>" +
-        '<span class="label mono">' + esc(inc.id) + " · " + esc(inc.opened) + "</span>" +
-        '<span class="incident__delta"><b>' + integrityArrow(inc.before, inc.after) + "</b></span>" +
-      "</div>" +
-      strainHTML(inc.strain) +
-      "<p>" + esc(inc.what) + "</p>" +
-      incidentBlastHTML(inc) +
-      (inc.infection || "") +
-      '<div class="stages">' +
-        inc.stages.map((s) =>
-          '<div class="stage"><div class="stage__name">' + esc(s[0]) + '</div><div class="stage__ts">' + esc(s[1]) + "</div></div>"
-        ).join("") +
+    '<article class="incident issue" data-inc="' + esc(inc.id) + '">' +
+      issueCoverHTML(inc, RAW_HISTORY) +
+      '<div class="issue__body">' +
+        "<p>" + esc(inc.what) + "</p>" +
+        incidentBlastHTML(inc) +
+        (inc.infection || "") +
+        '<div class="stages">' +
+          inc.stages.map((s) =>
+            '<div class="stage"><div class="stage__name">' + esc(s[0]) + '</div><div class="stage__ts">' + esc(s[1]) + "</div></div>"
+          ).join("") +
+        "</div>" +
       "</div>" +
     "</article>"
   ).join("");
   renderMttr();
-}
-
-function integrityArrow(before, after) {
-  const from = Number.isFinite(Number(before)) && before !== null ? esc(before) + "%" : "—";
-  if (!Number.isFinite(Number(after)) || after === null) return from + " → still open";
-  return from + " → " + esc(after) + "%";
+  if (typeof routeRefresh === "function") routeRefresh();
 }
 
 function blastFieldList(fields) {
@@ -146,16 +140,6 @@ function incidentBlastHTML(inc) {
     "</b> shipped with " + blastFieldList(inc.anomalies || []) +
     " across " + blast.runs + " scan" + (blast.runs === 1 ? "" : "s") +
     " before the re-weave landed.</p>";
-}
-
-function strainHTML(strain) {
-  if (!strain || !STRAIN_GLOSS[strain]) return "";
-  return (
-    '<p class="strain strain--' + esc(strain.toLowerCase()) + '">' +
-      '<span class="strain__tag">' + esc(strain) + "</span>" +
-      '<span class="strain__gloss">' + esc(STRAIN_GLOSS[strain]) + "</span>" +
-    "</p>"
-  );
 }
 
 function markTallCells(grid) {

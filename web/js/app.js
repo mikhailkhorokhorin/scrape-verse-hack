@@ -15,19 +15,35 @@ async function fetchJson(path) {
   }
 }
 
+async function fetchMeta(path) {
+  try {
+    const response = await fetch(path + "?t=" + Date.now(), { cache: "no-store" });
+    if (!response.ok) return null;
+    const parsed = await response.json();
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return null;
+    return parsed;
+  } catch (error) {
+    return null;
+  }
+}
+
 let LAST_FINGERPRINT = "";
 
-function fingerprintOf(history, incidents) {
+function fingerprintOf(history, incidents, meta) {
   const lastRun = history.rows[history.rows.length - 1] || {};
   const lastInc = incidents.rows[incidents.rows.length - 1] || {};
   return [history.ok, incidents.ok, history.rows.length, incidents.rows.length,
-    lastRun.ts, lastInc.id, lastInc.closed_at].join("|");
+    lastRun.ts, lastInc.id, lastInc.closed_at, meta ? meta.tests : null].join("|");
 }
 
 async function loadLive() {
-  const [history, incidents] = await Promise.all([fetchJson(DATA.history), fetchJson(DATA.incidents)]);
+  const [history, incidents, meta] = await Promise.all([
+    fetchJson(DATA.history),
+    fetchJson(DATA.incidents),
+    fetchMeta(DATA.meta),
+  ]);
 
-  const fingerprint = fingerprintOf(history, incidents);
+  const fingerprint = fingerprintOf(history, incidents, meta);
   if (fingerprint === LAST_FINGERPRINT) {
     const newest = SPIDERS.reduce((top, sp) => Math.max(top, Date.parse(sp.ts) || 0), 0);
     renderWatch(newest);
@@ -38,6 +54,7 @@ async function loadLive() {
   ERRORS.history = history.ok ? null : { file: DATA.history, why: history.error };
   ERRORS.incidents = incidents.ok ? null : { file: DATA.incidents, why: incidents.error };
 
+  META = meta;
   RAW_HISTORY = history.rows;
   RAW_INCIDENTS = incidents.rows;
   SPIDERS = adaptHistory(history.rows);
@@ -45,9 +62,12 @@ async function loadLive() {
   attachScars(SPIDERS);
   FIELDS = SPIDERS.length ? SPIDERS[0].fieldOrder : [];
   renderGrid();
+  renderDiptych();
+  announceLandings(SPIDERS);
   renderFeed();
   renderHaul();
   renderReplay();
+  introMaybePlay();
 }
 
 function loadMock() {
@@ -61,6 +81,7 @@ function loadMock() {
     seed: sp.seed,
     ts: new Date().toISOString(),
     series: mockHistory(sp.seed, integrityOf(sp)),
+    seriesTs: mockSeriesTs(MOCK_RUNS),
     fieldOrder: sp.order || MOCK_FIELDS,
     runs: MOCK_RUNS,
   }));
@@ -76,6 +97,7 @@ function loadMock() {
   attachScars(SPIDERS);
 
   renderGrid();
+  renderDiptych();
   renderFeed();
   renderHaul();
   renderReplay();
@@ -98,11 +120,26 @@ applyCapture();
 
 const grid = document.getElementById("grid");
 bindReveals(grid);
+bindSparkHover(grid);
 grid.addEventListener("click", (e) => {
   if (e.target.closest(".chip--reveals")) return;
   const p = e.target.closest(".panel");
   if (p) openSheet(Number(p.dataset.idx));
 });
+grid.addEventListener("keydown", (e) => {
+  if (e.target.closest(".chip--reveals")) return;
+  const panel = e.target.closest(".panel");
+  if (!panel || e.target !== panel) return;
+  if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+    if (sparkStep(panel, e.key === "ArrowRight" ? 1 : -1)) e.preventDefault();
+    return;
+  }
+  if (e.key === "Escape") {
+    const frame = panel.querySelector(".sparkframe");
+    if (frame) sparkHide(frame);
+  }
+});
+mountIntroControl();
 document.getElementById("sheet-close").addEventListener("click", closeSheet);
 document.getElementById("modal").addEventListener("click", (e) => {
   if (e.target.id === "modal") closeSheet();
@@ -118,6 +155,7 @@ window.addEventListener("resize", () => {
   resizeTimer = setTimeout(() => {
     markTallCells(document.getElementById("grid"));
     renderPulse(RAW_HISTORY);
+    renderEvidence();
   }, 120);
 });
 

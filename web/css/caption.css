@@ -1,0 +1,27 @@
+.sechead h2.caption{
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:0 8px;
+  padding:6px 14px 5px;box-shadow:4px 4px 0 var(--ink);
+  border-radius:2px;max-width:100%;
+}
+
+.caption__title{
+  font-size:.8125rem;letter-spacing:.14em;color:var(--purple);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;
+  flex:0 0 100%;line-height:1.1;
+}
+
+.caption__num{
+  font-size:1.5rem;line-height:1;color:var(--ink);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
+}
+
+.caption__lede{
+  font-size:var(--t-section);line-height:1.1;color:var(--ink);
+}
+
+.sechead h2.caption--quiet .caption__lede{color:var(--purple);}
+
+@media(max-width:520px){
+  .caption__num{font-size:1.25rem;}
+  .caption__lede{font-size:1.0625rem;}
+}

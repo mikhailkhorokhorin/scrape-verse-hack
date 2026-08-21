@@ -60,6 +60,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Count the tests
+        run: |
+          set -euo pipefail
+          node --test --test-reporter=tap test/*.test.js > tap.txt
+          count=$(sed -n 's/^# pass \([0-9][0-9]*\)$/\1/p' tap.txt | head -1)
+          if [ -z "$count" ] || [ "$count" -le 0 ]; then
+            echo "could not read a pass count out of the TAP output" >&2
+            tail -20 tap.txt >&2
+            exit 1
+          fi
+          printf '{\n  "tests": %s,\n  "sha": "%s",\n  "generated_at": "%s"\n}\n' \
+            "$count" "$GITHUB_SHA" "$(date -u +%FT%TZ)" > data/meta.json
+          cat data/meta.json
       - name: Assemble the site
         run: |
           mkdir -p public

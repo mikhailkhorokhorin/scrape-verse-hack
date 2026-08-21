@@ -37,6 +37,62 @@ function renderWatch(newest) {
     UNWATCHED_MS / 3600000 + "h watch window";
 }
 
+function shortCid(cid) {
+  const text = String(cid || "");
+  if (text.length <= CID_SHORT_LEN) return text;
+  return text.slice(0, CID_SHORT_LEN) + "…";
+}
+
+function newestCid(spiders) {
+  let best = null;
+  let top = -Infinity;
+  for (const sp of spiders) {
+    if (!sp || !sp.cid) continue;
+    const ts = Date.parse(sp.ts);
+    const at = Number.isFinite(ts) ? ts : -Infinity;
+    if (best === null || at >= top) { top = at; best = sp.cid; }
+  }
+  return best;
+}
+
+function evidenceParts(spiders, incidents, history, meta, terse) {
+  const parts = [];
+  parts.push(spiders.length + (terse ? " coll" : " collector" + (spiders.length === 1 ? "" : "s")));
+
+  const healed = incidents.filter((inc) => inc.verified).length;
+  parts.push(healed + (terse ? " healed" : " incident" + (healed === 1 ? "" : "s") + " healed"));
+
+  const rows = history.reduce((total, run) => {
+    const n = Number(run && run.rows);
+    return total + (Number.isFinite(n) && n > 0 ? n : 0);
+  }, 0);
+  parts.push(groupNum(rows) + " row" + (rows === 1 ? "" : "s"));
+
+  const tests = meta && Number(meta.tests);
+  if (Number.isFinite(tests) && tests > 0) {
+    parts.push(groupNum(tests) + " test" + (tests === 1 ? "" : "s"));
+  }
+
+  const cid = newestCid(spiders);
+  if (cid) parts.push(shortCid(cid));
+
+  return parts;
+}
+
+function renderEvidence() {
+  const el = document.getElementById("evidence");
+  if (!el) return;
+  if (SPIDERS.length === 0) { el.hidden = true; return; }
+  const terse = window.innerWidth <= EVIDENCE_TERSE_PX;
+  const parts = evidenceParts(SPIDERS, INCIDENTS, RAW_HISTORY, META, terse);
+  el.hidden = false;
+  el.textContent = parts.join(" · ");
+  el.title = META && Number(META.tests) > 0
+    ? "every number is read from data/history.json, data/incidents.json and data/meta.json"
+    : "every number is read from data/history.json and data/incidents.json — " +
+      "the test count is missing because data/meta.json could not be read";
+}
+
 function setSample(id, n) {
   const el = document.getElementById(id);
   if (!el) return;

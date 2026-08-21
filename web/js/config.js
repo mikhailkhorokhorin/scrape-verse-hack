@@ -1,6 +1,12 @@
 "use strict";
 
-const DATA = { history: "data/history.json", incidents: "data/incidents.json" };
+const DATA = {
+  history: "data/history.json",
+  incidents: "data/incidents.json",
+  meta: "data/meta.json",
+};
+const CID_SHORT_LEN = 6;
+const EVIDENCE_TERSE_PX = 480;
 const HEAL_ENDPOINT = "";
 const HEAL_COOLDOWN_MS = 2 * 60 * 60 * 1000;
 const REFRESH_MS = 60000;
@@ -12,6 +18,7 @@ const FIELD_TRACK_MAX = 40;
 const MIN_STREAK = 5;
 const ABSOLUTE_SCALE_SPAN = 25;
 const RECOVERY_MIN_GAIN = 25;
+const LANDED_MS = 2400;
 
 const HEALTHY_MIN = 90;
 const DEGRADED_MIN = 60;
@@ -56,6 +63,7 @@ let INCIDENTS = [];
 let FIELDS = [];
 let RAW_HISTORY = [];
 let RAW_INCIDENTS = [];
+let META = null;
 let LAST_FLEET = null;
 const ERRORS = { history: null, incidents: null };
 const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])';
