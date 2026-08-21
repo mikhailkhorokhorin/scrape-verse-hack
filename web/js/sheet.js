@@ -88,6 +88,7 @@ function openSheet(idx) {
       '<div class="sheet__score"><b style="color:' + COLOR[st] + '">' + integ + "%</b>" +
         '<span class="label">Integrity · ' + st + "</span></div>" +
     "</div>" +
+    sheetRigHTML(sp, st) +
     factsHTML(sp, integ) +
     healButtonHTML(sp) +
     spiderBlastHTML(sp) +

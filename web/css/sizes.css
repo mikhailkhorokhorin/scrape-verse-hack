@@ -1,5 +1,6 @@
-.panel:not(.panel--compact) .spark{flex:1 1 auto;min-height:38px;height:auto;}
-.panel:not(.panel--compact) > *:not(.spark):not(.symbiote){flex-shrink:0;}
+.panel:not(.panel--compact) .sparkframe{flex:1 1 auto;min-height:38px;}
+.panel:not(.panel--compact) .sparkframe .spark{height:auto;min-height:38px;}
+.panel:not(.panel--compact) > *:not(.sparkframe):not(.symbiote){flex-shrink:0;}
 
 .panel--compact{
   padding:var(--s2) var(--s3);gap:10px;justify-content:space-between;

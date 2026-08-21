@@ -1,0 +1,22 @@
+.sparkframe{position:relative;display:flex;flex-direction:column;min-width:0;}
+.sparkframe > .spark{flex:1 1 auto;}
+
+.spark__hit{cursor:crosshair;}
+
+.spark__cursor{visibility:hidden;}
+.spark__cursor.is-on{visibility:visible;}
+
+.spark__tip{
+  position:absolute;bottom:calc(100% + 9px);left:0;z-index:60;
+  transform:translateX(-50%);pointer-events:none;
+}
+.spark__tip[hidden]{display:none;}
+.spark__tip .reveal{display:flex;position:static;transform:none;}
+.reveal--spark .reveal__key{flex:0 0 4.5rem;}
+
+.cell:has(.spark__tip:not([hidden])){z-index:50;}
+
+.vis-hidden{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
+}

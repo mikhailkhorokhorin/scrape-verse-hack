@@ -95,11 +95,13 @@ function adaptHistory(history) {
       scars: [],
       sample: latest.sample || {},
       series: runs.slice(-SERIES_MAX_POINTS).map((run) => clampPct(run.integrity)),
+      seriesTs: runs.slice(-SERIES_MAX_POINTS).map((run) => run.ts),
       runs: runs.length,
       blast: blastOf(runs),
       streak: cleanStreak(runs),
       best: bestStreak(runs),
       reweaving: latest.status === "REWEAVING",
+      afterHeal: latest.after_heal === true,
       unwatched: !Number.isFinite(Date.parse(latest.ts)) ||
         Date.now() - Date.parse(latest.ts) > UNWATCHED_MS,
     });

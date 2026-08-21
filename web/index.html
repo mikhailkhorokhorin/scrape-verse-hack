@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="css/sizes.css">
 <link rel="stylesheet" href="css/states.css">
 <link rel="stylesheet" href="css/feed.css">
+<link rel="stylesheet" href="css/issue.css">
 <link rel="stylesheet" href="css/sheet.css">
 <link rel="stylesheet" href="css/track.css">
 <link rel="stylesheet" href="css/heat.css">
@@ -29,6 +30,7 @@
 <link rel="stylesheet" href="css/symbiote-face.css">
 <link rel="stylesheet" href="css/rig.css">
 <link rel="stylesheet" href="css/rig-slot.css">
+<link rel="stylesheet" href="css/sheet-rig.css">
 <link rel="stylesheet" href="css/infection.css">
 <link rel="stylesheet" href="css/legend.css">
 <link rel="stylesheet" href="css/haul.css">
@@ -40,6 +42,8 @@
 <link rel="stylesheet" href="css/caption.css">
 <link rel="stylesheet" href="css/ground.css">
 <link rel="stylesheet" href="css/diptych.css">
+<link rel="stylesheet" href="css/intro.css">
+<link rel="stylesheet" href="css/print.css">
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -61,6 +65,7 @@
       <p class="tagline">Scrapers don't crash. They <b>decay</b> — quietly, alone, at 3am, and
       nobody is watching. This is the watch.</p>
       <p class="evidence mono" id="evidence" aria-live="polite" hidden></p>
+      <button class="intro-replay" id="intro-replay" type="button">REPLAY INTRO</button>
     </div>
     <div class="readouts">
       <div class="readout">
@@ -87,6 +92,14 @@
   <div class="pulse-slot" style="min-height:66px">
     <div class="pulseline" id="pulse" hidden></div>
   </div>
+
+  <section class="diptych" id="diptych" aria-label="Two records from the archive" hidden>
+    <div class="dip__head">
+      <h2 class="dip__title">From the archive</h2>
+      <p class="dip__note">Recorded runs &mdash; not the fleet as it stands now</p>
+    </div>
+    <div id="diptych-body"></div>
+  </section>
 
   <div class="sechead"><h2 class="caption" id="watchhead">The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
 
@@ -172,10 +185,12 @@
 <script src="js/rig-parts.js"></script>
 <script src="js/rig.js"></script>
 <script src="js/panel.js"></script>
+<script src="js/issue.js"></script>
 <script src="js/render.js"></script>
 <script src="js/masthead.js"></script>
 <script src="js/heatmap.js"></script>
 <script src="js/heal.js"></script>
+<script src="js/sheet-rig.js"></script>
 <script src="js/sheet.js"></script>
 <script src="js/scars.js"></script>
 <script src="js/infection.js"></script>
@@ -183,6 +198,8 @@
 <script src="js/delta.js"></script>
 <script src="js/landing.js"></script>
 <script src="js/adapter.js"></script>
+<script src="js/from-record.js"></script>
+<script src="js/diptych.js"></script>
 <script src="js/haul-data.js"></script>
 <script src="js/haul-view.js"></script>
 <script src="js/haul.js"></script>
@@ -193,6 +210,9 @@
 <script src="js/fixtures.js"></script>
 <script src="js/replay-fixtures.js"></script>
 <script src="js/haul-fixtures.js"></script>
+<script src="js/issue-route.js"></script>
+<script src="js/intro-plan.js"></script>
+<script src="js/intro.js"></script>
 <script src="js/app.js"></script>
 <script src="js/caption.js"></script>
 <script src="js/ground.js"></script>

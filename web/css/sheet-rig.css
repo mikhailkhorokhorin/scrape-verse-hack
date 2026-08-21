@@ -1,0 +1,33 @@
+.sheet-rig{
+  display:grid;grid-template-columns:minmax(140px,200px) 1fr;
+  gap:var(--s3);align-items:center;
+  margin:var(--s3) 0;padding:var(--s2) 0;
+  border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);
+}
+
+.sheet-rig__art{display:flex;align-items:center;justify-content:center;}
+.sheet-rig__art .rig{max-height:180px;}
+
+.sheet-rig__lede{margin:0 0 var(--s2);color:var(--dim);font-size:var(--t-body);}
+
+.sheet-rig__keys{
+  list-style:none;margin:0;padding:0;
+  display:flex;flex-wrap:wrap;gap:var(--s1);
+}
+
+.sheet-rig__key{
+  display:flex;align-items:baseline;gap:6px;
+  padding:3px 8px;border:2px solid var(--ink);
+  background:var(--void);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:var(--t-micro);
+}
+.sheet-rig__field{color:var(--paper);}
+.sheet-rig__state{letter-spacing:.06em;text-transform:uppercase;}
+.sheet-rig__key--live .sheet-rig__state{color:var(--healthy);}
+.sheet-rig__key--infected .sheet-rig__state{color:var(--infected);}
+.sheet-rig__key--dead .sheet-rig__state{color:var(--critical);}
+
+@media(max-width:640px){
+  .sheet-rig{grid-template-columns:1fr;gap:var(--s2);}
+  .sheet-rig__art .rig{max-height:140px;}
+}

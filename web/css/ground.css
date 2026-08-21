@@ -1,0 +1,15 @@
+.fleet-ground{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:#05020A;
+  opacity:var(--fleet-dim,0);
+  transition:opacity 1100ms cubic-bezier(.22,1,.36,1);
+}
+
+body::before{
+  background-size:var(--fleet-dot,4px) var(--fleet-dot,4px);
+  transition:background-size 1100ms cubic-bezier(.22,1,.36,1);
+}
+
+@media(prefers-reduced-motion:reduce){
+  .fleet-ground,body::before{transition:none;}
+}

@@ -1,0 +1,83 @@
+@media print{
+  @page{margin:14mm;}
+
+  html,body{background:#fff;color:#000;overflow:visible;}
+  body::before,.wrap::before,.wrap::after{display:none !important;}
+  .fleet-ground,.fleet-symbiote,.modal,.mockbar{display:none !important;}
+
+  .masthead .readouts,
+  .masthead .tagline,
+  .masthead .evidence,
+  .pulse-slot,
+  .diptych,
+  .grid,
+  .legend,
+  .haul,
+  #haulhead,
+  #watchhead,
+  #replaycaption,
+  #feedcaption,
+  .sechead,
+  .replay__controls,
+  .rscrub,
+  .rticks,
+  #replay-toggle{display:none !important;}
+
+  .wordmark{color:#000;font-size:2rem;letter-spacing:.04em;margin:0 0 4mm;}
+  .masthead{display:block;border:0;padding:0;margin:0 0 4mm;}
+  .wrap{max-width:none;padding:0;margin:0;}
+  main{display:block;}
+
+  .replay{display:none !important;}
+
+  .feed{display:block;}
+  .incident{display:none !important;}
+
+  body.has-issue .issue.is-open{
+    display:block !important;
+    page-break-inside:avoid;break-inside:avoid;
+    border:2pt solid #000;box-shadow:none;transform:none;
+    background:#fff;color:#000;padding:0 0 6mm;margin:0;
+  }
+  body.has-issue .issue.is-open::before{display:none;}
+
+  body:not(.has-issue) .issue{
+    display:block !important;
+    page-break-after:always;break-after:page;
+    border:2pt solid #000;box-shadow:none;transform:none;
+    background:#fff;color:#000;padding:0 0 6mm;margin:0 0 6mm;
+  }
+  body:not(.has-issue) .issue:last-child{page-break-after:auto;break-after:auto;}
+  body:not(.has-issue) .issue::before{display:none;}
+
+  .issue__cover{
+    margin:0;padding:6mm 6mm 5mm;background:#fff;
+    border-bottom:1.5pt solid #000;
+  }
+  .issue__no{background:#fff;color:#000;border:1.5pt solid #000;transform:none;}
+  .issue__who{color:#000;text-shadow:none;font-size:30pt;}
+  .issue__sub{color:#000;max-width:40ch;}
+  .issue__at,.issue__when{color:#333;}
+  .issue__strain{background:#fff;color:#000;border:1pt solid #000;}
+  .issue__delta{background:#fff;border:1pt solid #000;}
+  .issue__from,.issue__to,.issue__arrow{color:#000;}
+  .issue__link{color:#000;border-bottom:1pt dotted #000;}
+
+  .issue__rig{width:48%;}
+  .issue__rig .rig{max-height:60mm;}
+  .rig__leg,.rig__eye,.rig__body{animation:none !important;}
+  .rig__abdomen,.rig__head{fill:#fff;stroke:#000;}
+  .rig__leg{stroke:#000;}
+  .rig__leg[data-state="dead"]{stroke:#999;}
+  .rig__eye{fill:#000;}
+
+  .issue__body{padding:0 6mm;}
+  .issue__body p,.blast{color:#000;max-width:none;}
+  .blast__n,.blast code{color:#000;}
+  .stage{border-color:#000;background:#fff;}
+  .stage:last-child{background:#fff;}
+  .stage__name{color:#000;}
+  .stage__ts{color:#333;}
+  .diffcol,.diffrow{background:#fff;color:#000;}
+  .infection{border-color:#000;}
+}

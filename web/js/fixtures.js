@@ -149,6 +149,16 @@ function mountMockControls(api) {
   });
 }
 
+function mockSeriesTs(count) {
+  const step = 30 * 60 * 1000;
+  const now = Date.now();
+  const out = [];
+  for (let i = 0; i < count; i += 1) {
+    out.push(new Date(now - (count - 1 - i) * step).toISOString());
+  }
+  return out;
+}
+
 function mockRawHistory(spiders) {
   const rows = [];
   const step = 30 * 60 * 1000;

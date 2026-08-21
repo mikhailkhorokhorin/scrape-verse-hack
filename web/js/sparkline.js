@@ -70,6 +70,7 @@ function sparkline(values, color, scars) {
         '" opacity="0.7" font-family="IBM Plex Mono,monospace">' + floor + "</text>");
 
   return (
+    '<span class="sparkframe">' +
     '<svg class="spark" viewBox="0 0 ' + W + " " + H + '" preserveAspectRatio="none" aria-hidden="true">' +
     axis +
     '<polygon points="' + area + '" fill="' + color + '" opacity="0.16"/>' +
@@ -82,7 +83,12 @@ function sparkline(values, color, scars) {
       ? pts.map((pp) => '<circle cx="' + pp[0].toFixed(1) + '" cy="' + pp[1].toFixed(1) + '" r="2.5" fill="' + color + '"/>').join("")
       : "") +
     '<circle cx="' + last[0].toFixed(1) + '" cy="' + last[1].toFixed(1) + '" r="3" fill="' + color + '"/>' +
-    "</svg>"
+    sparkCursorSVG(pts, color, H) +
+    sparkHitsSVG(pts, W, H) +
+    "</svg>" +
+    '<span class="spark__tip" hidden></span>' +
+    '<span class="spark__say vis-hidden" aria-live="polite"></span>' +
+    "</span>"
   );
 }
 

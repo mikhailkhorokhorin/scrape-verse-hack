@@ -40,7 +40,7 @@ function bindReplay(root, model) {
   bindReplayKeys(root);
 }
 
-function renderReplay() {
+function mountReplay(model) {
   const root = document.getElementById("replay");
   const head = document.getElementById("replayhead");
   if (!root) return;
@@ -49,9 +49,6 @@ function renderReplay() {
   REPLAY.model = null;
   REPLAY.stage = -1;
   REPLAY.elapsed = 0;
-
-  const source = MOCK ? MOCK_RAW_INCIDENTS : RAW_INCIDENTS;
-  const model = pickReplay(source, RAW_HISTORY);
 
   if (!model) {
     root.innerHTML = replayEmptyHTML();
@@ -71,4 +68,9 @@ function renderReplay() {
 
   bindReplay(root, model);
   replaySeek(0);
+}
+
+function renderReplay() {
+  const source = MOCK ? MOCK_RAW_INCIDENTS : RAW_INCIDENTS;
+  mountReplay(pickReplay(source, RAW_HISTORY));
 }
