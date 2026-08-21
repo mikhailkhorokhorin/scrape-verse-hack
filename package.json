@@ -1,0 +1,15 @@
+{
+  "name": "thwip",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Self-healing scraper fleet monitor",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\"",
+    "health": "node scripts/health-check.js",
+    "repair": "node scripts/repair.js"
+  }
+}

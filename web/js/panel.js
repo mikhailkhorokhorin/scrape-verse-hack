@@ -54,7 +54,8 @@ function panelHTML(sp, idx) {
 
   return (
     '<div class="cell cell--' + st + '">' +
-    '<button class="panel' + (compact ? " panel--compact" : big ? " panel--big" : "") + ' is-' + st + '" data-idx="' + idx +
+    '<button class="panel' + (compact ? " panel--compact" : big ? " panel--big" : "") + ' is-' + st +
+      '" aria-label="' + esc(panelLabel(sp, st, readout)) + '" data-idx="' + idx +
       '"' + (sp.healed ? ' data-healed="' + (sp.healed > 9 ? "9+" : sp.healed) + '"' : "") +
       ' style="--spread:' + (sp.unwatched ? 0 : spread) + '"' + (!sp.unwatched && Number(spread) > PAPER_SPREAD ? ' data-drowned="1"' : '') + '>' +
       (showSymbiote ? '<div class="symbiote" style="--spread:' + (sp.unwatched ? 0 : shown) + '"><div class="symbiote__body"></div></div>' : "") +
@@ -64,6 +65,12 @@ function panelHTML(sp, idx) {
     rest +
     "</div>"
   );
+}
+
+function panelLabel(sp, st, readout) {
+  const score = readout === "--" ? "no current reading" : "integrity " + readout;
+  return sp.code + ", " + sp.universe + " — " + st + ", " + score +
+    ". Open the full diagnosis.";
 }
 
 function streakHTML(sp, st) {

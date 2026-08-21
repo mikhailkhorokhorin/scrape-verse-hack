@@ -71,7 +71,7 @@
 }
 .badge--healthy{background:var(--healthy);}
 .badge--degraded{background:var(--degraded);}
-.badge--critical{background:var(--critical);color:var(--paper);}
+.badge--critical{background:var(--critical);color:var(--ink);}
 .badge--reweaving{background:var(--reweaving);}
 .badge--unwatched{background:var(--unwatched);color:#8E85A3;}
 
@@ -99,12 +99,12 @@
 .chips{display:flex;flex-wrap:wrap;gap:6px;}
 .chip{
   font-family:"IBM Plex Mono",monospace;font-size:.75rem;
-  padding:3px 8px;border:2px solid var(--ink);background:var(--void);
+  padding:7px 8px;border:2px solid var(--ink);background:var(--void);
   display:inline-flex;align-items:center;gap:5px;
 }
 .chip--live{color:var(--healthy);}
 .chip--infected{color:var(--infected);border-color:var(--infected);animation:chip-pulse 2s ease-in-out infinite;}
-.chip--dead{color:#6E6383;text-decoration:line-through;text-decoration-thickness:2px;}
+.chip--dead{color:var(--dimmer);text-decoration:line-through;text-decoration-thickness:2px;}
 @keyframes chip-pulse{0%,100%{opacity:1}50%{opacity:.45}}
 
 .lastscan{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s2);}

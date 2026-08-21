@@ -1,0 +1,98 @@
+const styles = `
+  :root { color-scheme: light; --ink:#1c1a18; --mut:#6b625a; --line:#e4ddd2; --bg:#faf7f2; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:0 0 4rem; font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); }
+  .wrap { max-width:1100px; margin:0 auto; padding:0 1.5rem; }
+  .lab { background:#1c1a18; color:#f5efe6; padding:1.25rem 0 1.35rem; border-bottom:3px solid #C9573F; }
+  .lab-tag { display:inline-block; font:600 .6875rem/1 ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:.14em; text-transform:uppercase; color:#C9573F; border:1px solid #C9573F; border-radius:3px; padding:.35rem .5rem; margin-bottom:.6rem; }
+  .lab h2 { margin:0 0 .3rem; font-size:1.0625rem; letter-spacing:-.01em; }
+  .lab p { margin:0; color:#b8ada0; font-size:.875rem; max-width:62ch; }
+  .switch { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; }
+  .switch a { text-decoration:none; border:1px solid #4a443d; border-radius:5px; padding:.5rem .85rem; color:#e6ded3; font-size:.875rem; font-weight:600; background:#26231f; transition:border-color .12s,background .12s; }
+  .switch a:hover { border-color:#C9573F; background:#302c27; }
+  .switch a[aria-current="true"] { background:#C9573F; border-color:#C9573F; color:#fff; }
+  .switch a small { display:block; font-weight:400; font-size:.75rem; opacity:.78; margin-top:.1rem; }
+  .state { margin-top:1rem; max-width:72ch; border-left:3px solid #C9573F; padding:.6rem .9rem .6rem .85rem; background:#26231f; border-radius:0 5px 5px 0; }
+  .state b { font-size:.8125rem; letter-spacing:.06em; text-transform:uppercase; color:#C9573F; }
+  .state p { margin:.2rem 0 0; color:#d8cfc3; font-size:.875rem; }
+  .state code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8125rem; color:#f0c9b8; background:#332e29; padding:.1rem .3rem; border-radius:3px; }
+  header.shop { padding:2rem 0 1.5rem; }
+  header.shop h1 { margin:0 0 .25rem; font-size:1.75rem; letter-spacing:-.01em; }
+  .sub { margin:0; color:var(--mut); }
+  .product-list { margin:0; padding:0; list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.5rem; }
+  .product-card { background:#fff; border:1px solid var(--line); border-radius:6px; padding:1rem; display:flex; flex-direction:column; gap:.35rem; }
+  .product-image, .thumb { width:100%; height:auto; border-radius:4px; display:block; }
+  .product-title { margin:.5rem 0 0; font-size:1rem; font-weight:600; }
+  .product-price, .price-tag { margin:0; font-size:1.125rem; font-weight:700; color:var(--ink); }
+  .product-rating, .product-stock { margin:0; font-size:.875rem; color:var(--mut); }
+  .product-card[data-rating]::after { content:"rating in data-rating"; font-size:.75rem; color:#a89b8c; font-style:italic; }
+  footer { margin-top:3rem; color:var(--mut); font-size:.875rem; border-top:1px solid var(--line); padding-top:1rem; }
+  footer code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.8125rem; }
+  @media (max-width:520px) { .product-list { grid-template-columns:1fr 1fr; gap:1rem; } .lab h2 { font-size:1rem; } .switch a { flex:1 1 100%; } }
+`.trim();
+
+const redirect = `
+(function(){var v=new URLSearchParams(location.search).get("v");if(!v)return;var m={healthy:"index.html",renamed:"broken-renamed.html",drifted:"broken-drifted.html"};var f=m[v];if(!f)return;var here=location.pathname.split("/").pop()||"index.html";if(f!==here)location.replace(f);})();
+`.trim();
+
+function buildSwitch(variants, active) {
+  return Object.values(variants).map(v => {
+    const cur = v.param === active ? ' aria-current="true"' : '';
+    return `      <a href="${v.file}?v=${v.param}"${cur}>${v.label}<small>${v.effect}</small></a>`;
+  }).join('\n');
+}
+
+function buildPage(variants, key, products) {
+  const v = variants[key];
+  const cards = products.map(p => v.card(p)).join('\n');
+  return `<!doctype html>
+<html lang="en" class="v-${v.param}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bodega — ${v.label} — THWIP Chaos Lab</title>
+<meta name="thwip-variant" content="${v.param}">
+<style>
+${styles}
+</style>
+<script>${redirect}</script>
+</head>
+<body>
+  <section class="lab">
+    <div class="wrap">
+      <span class="lab-tag">THWIP Chaos Lab</span>
+      <h2>This shop is a controlled test target. Break it yourself.</h2>
+      <p>Each button below serves a different build of the same storefront, exactly the way a real site changes when a team ships a redesign or a backend starts returning bad data. The markup is static server-side HTML, so a scraper pointed at these URLs sees precisely what you see.</p>
+      <nav class="switch">
+${buildSwitch(variants, v.param)}
+      </nav>
+      <div class="state">
+        <b>Now serving: ${v.label}</b>
+        <p>${v.tagline} ${v.status}</p>
+        <p>Scrape this exact state: <code>?v=${v.param}</code></p>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <header class="shop">
+      <h1>Bodega</h1>
+      <p class="sub">Small-batch coffee gear. 12 products.</p>
+    </header>
+
+    <main>
+      <ul class="product-list">
+${cards}
+      </ul>
+    </main>
+
+    <footer>
+      <p>Demo target for THWIP. Public, static, no client-side rendering. Variant files: <code>index.html</code>, <code>broken-renamed.html</code>, <code>broken-drifted.html</code>.</p>
+    </footer>
+  </div>
+</body>
+</html>
+`;
+}
+
+module.exports = { buildPage };

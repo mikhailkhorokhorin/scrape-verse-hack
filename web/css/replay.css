@@ -1,4 +1,5 @@
 .replay{position:relative;display:grid;gap:var(--s3);}
+.replay:focus-visible{outline:4px solid var(--cyan);outline-offset:6px;}
 .replay--live{
   background:var(--void-2);border:3px solid var(--ink);border-radius:2px;
   box-shadow:8px 8px 0 var(--ink);padding:var(--s3) var(--s4) var(--s4);
@@ -137,8 +138,12 @@
 @keyframes rhead{0%,60%{background:var(--pink);}61%,100%{background:var(--paper);}}
 
 .rtick{
-  position:absolute;top:-5px;transform:translateX(-50%);
+  position:absolute;top:-5px;transform:translateX(-50%);z-index:3;
   background:none;border:0;padding:0;cursor:pointer;color:inherit;
+}
+.rtick::before{
+  content:"";position:absolute;left:50%;top:50%;
+  width:44px;height:44px;transform:translate(-50%,-50%);
 }
 .rtick__pip{
   display:block;position:relative;width:11px;height:11px;
@@ -172,7 +177,7 @@
   font-family:"IBM Plex Mono",monospace;font-weight:600;letter-spacing:.08em;line-height:1.1;
 }
 .rtick__name{font-size:.5625rem;color:var(--dim);text-transform:uppercase;}
-.rtick__at{font-size:.5625rem;color:#6E6383;}
+.rtick__at{font-size:.5625rem;color:var(--dimmer);}
 .rtick.is-now .rtick__flag{border-color:var(--pink);}
 .rtick.is-now .rtick__name{color:var(--pink);}
 .rtick.is-now .rtick__at{color:var(--paper);}

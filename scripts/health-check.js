@@ -74,4 +74,6 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = { TRANSPORT_ERROR, firstLine, scan, summarise, main };

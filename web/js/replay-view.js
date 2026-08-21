@@ -92,7 +92,7 @@ function replayStageHTML(model) {
       "</div>" +
       '<div class="rstage__read">' +
         '<span class="label">Stage <b data-slot="index"></b></span>' +
-        '<h4 class="rstage__name" data-slot="name"></h4>' +
+        '<h3 class="rstage__name" data-slot="name"></h3>' +
         '<p class="rstage__line" data-slot="line"></p>' +
       "</div>" +
       '<div class="rstage__meter">' +
@@ -134,7 +134,7 @@ function replayPanelHTML(model) {
     '<div class="rpanel" data-slot="panel">' +
       '<div class="symbiote rpanel__symbiote" data-slot="symbiote"><div class="symbiote__body"></div></div>' +
       '<div class="rpanel__head">' +
-        '<h4 class="codename">' + esc(model.spider) + "</h4>" +
+        '<h3 class="codename">' + esc(model.spider) + "</h3>" +
         '<span class="badge" data-slot="badge"></span>' +
       "</div>" +
       '<span class="rpanel__pct mono" data-slot="panelpct"></span>' +

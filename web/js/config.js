@@ -25,7 +25,7 @@ const COLOR = {
   degraded: "#FFB800",
   critical: "#FF1E1E",
   reweaving: "#00E5FF",
-  unwatched: "#6E6383",
+  unwatched: "#8E82A8",
 };
 
 const FIELD_COLOR = { live: "#B6FF3C", infected: "#C24BFF", dead: "#FF1E1E" };
@@ -58,3 +58,5 @@ let RAW_HISTORY = [];
 let RAW_INCIDENTS = [];
 let LAST_FLEET = null;
 const ERRORS = { history: null, incidents: null };
+const FOCUSABLE = 'a[href],button:not([disabled]),input:not([disabled]),select,textarea,[tabindex]:not([tabindex="-1"])';
+let SHEET_OPENER = null;
