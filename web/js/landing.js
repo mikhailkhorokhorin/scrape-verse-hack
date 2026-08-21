@@ -23,6 +23,7 @@ function markLanded(change) {
     panel.classList.remove("panel--landed");
     delete panel.dataset.landed;
   }, LANDED_MS);
+  rigReact(panel, change);
   if (change.afterHeal) burst(panel, "THWIP!", COLOR.healthy);
 }
 
@@ -30,6 +31,7 @@ function announceLandings(spiders) {
   const delta = deltaBetween(LAST_SNAPSHOT, spiders);
   LAST_SNAPSHOT = delta.snapshot;
   if (!delta.changes.length) return delta;
+  speak(delta, spiders);
   if (prefersReducedMotion()) return delta;
   delta.changes.filter((change) => change.newRun).forEach(markLanded);
   return delta;

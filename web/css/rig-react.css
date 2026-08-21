@@ -1,0 +1,40 @@
+.rig__crown{transform-box:fill-box;transform-origin:center bottom;}
+
+.rig--reacts .rig__crown{
+  animation:rig-look 1100ms cubic-bezier(.22,1,.36,1) both;
+}
+
+.rig--reacts .rig__leg--steps{
+  animation:rig-step 1100ms cubic-bezier(.22,1,.36,1) both;
+}
+
+.rig--reacts .rig__body{
+  animation:rig-lean 1100ms cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes rig-look{
+  0%{transform:rotate(0deg) translate(0,0);}
+  28%{transform:rotate(var(--rig-turn,6deg)) translate(0,var(--rig-tilt,0px));}
+  74%{transform:rotate(var(--rig-turn,6deg)) translate(0,var(--rig-tilt,0px));}
+  100%{transform:rotate(0deg) translate(0,0);}
+}
+
+@keyframes rig-step{
+  0%{transform:translate(0,0);}
+  22%{transform:translate(0,-3.2px);}
+  46%{transform:translate(calc(var(--rig-side,1) * 2.4px),.6px);}
+  70%{transform:translate(0,0);}
+  100%{transform:translate(0,0);}
+}
+
+@keyframes rig-lean{
+  0%{transform:translateX(0) rotate(0deg);}
+  34%{transform:translateX(1.6px) rotate(1.2deg);}
+  100%{transform:translateX(0) rotate(0deg);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .rig--reacts .rig__crown,
+  .rig--reacts .rig__leg--steps,
+  .rig--reacts .rig__body{animation:none;}
+}

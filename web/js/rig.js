@@ -54,10 +54,12 @@ function rigSVG(sp, status) {
         '<ellipse class="rig__abdomen" cx="0" cy="' + build.body.cy + '" rx="' + build.body.rx +
           '" ry="' + build.body.ry + '"/>' +
         '<path class="rig__plate" d="' + build.plate + '"/>' +
-        '<ellipse class="rig__head" cx="0" cy="' + build.head.cy + '" rx="' + build.head.rx +
-          '" ry="' + build.head.ry + '"/>' +
-        '<path class="rig__mark" d="' + build.mark + '"/>' +
-        '<g class="rig__eyes">' + eyesSVG(build, status) + "</g>" +
+        '<g class="rig__crown">' +
+          '<ellipse class="rig__head" cx="0" cy="' + build.head.cy + '" rx="' + build.head.rx +
+            '" ry="' + build.head.ry + '"/>' +
+          '<path class="rig__mark" d="' + build.mark + '"/>' +
+          '<g class="rig__eyes">' + eyesSVG(build, status) + "</g>" +
+        "</g>" +
       "</g>" +
     "</svg>"
   );
