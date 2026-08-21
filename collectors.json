@@ -4,7 +4,7 @@
       "codename": "BODEGA",
       "universe": "mikhailkhorokhorin.github.io",
       "url": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/",
-      "collector_id": "",
+      "collector_id": "c_mt2lkwxa1bb5uz223s",
       "rows_per_run": 12,
       "note": "our own page, broken on purpose for the demo",
       "fields": {
