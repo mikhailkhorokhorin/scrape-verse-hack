@@ -1,0 +1,27 @@
+.wild{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:2px 8px;
+  border:2px solid var(--ink);
+  background:var(--cyan);color:var(--ink);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:var(--t-micro);font-weight:600;letter-spacing:.08em;
+  box-shadow:3px 3px 0 var(--ink);
+}
+
+.wild__dot{
+  width:6px;height:6px;background:var(--ink);
+  border-radius:50%;
+}
+
+.wild-note{
+  margin:0 0 var(--s3);padding:var(--s2) var(--s3);
+  border:3px solid var(--ink);
+  box-shadow:6px 6px 0 var(--ink);
+  background:var(--paper);
+  color:var(--ink);font-size:var(--t-body);
+}
+
+.wild-note__n{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:1.25rem;color:var(--purple);
+}
