@@ -72,6 +72,7 @@
   flex:0 1 calc((100% - 52px) / 3 * var(--u,1) + 26px * (var(--u,1) - 1) - 1.5px);
 }
 .cell > .panel{flex:0 0 auto;min-height:var(--band,168px);height:auto;}
+.cell--even > .panel{flex:1 1 auto;}
 .cell--critical,.cell--reweaving{--u:2;--band:358px;}
 .cell--degraded{--u:1;--band:358px;}
 .cell--healthy,.cell--unwatched{--u:1;--band:168px;}

@@ -160,7 +160,7 @@ function strainHTML(strain) {
 
 function markTallCells(grid) {
   const cells = Array.from(grid.children);
-  cells.forEach((cell) => cell.classList.remove("cell--tall"));
+  cells.forEach((cell) => cell.classList.remove("cell--tall", "cell--even"));
   if (window.innerWidth < 768) return;
 
   const rows = new Map();
@@ -172,11 +172,15 @@ function markTallCells(grid) {
   }
 
   for (const row of rows.values()) {
-    const tallest = Math.max(...row.map((c) => c.querySelector(".panel").offsetHeight));
+    if (row.length < 2) continue;
+    const heights = row.map((c) => c.querySelector(".panel").offsetHeight);
+    const tallest = Math.max(...heights);
+    const rag = tallest - Math.min(...heights);
     for (const cell of row) {
       const panel = cell.querySelector(".panel");
       if (tallest - panel.offsetHeight >= 120) cell.classList.add("cell--tall");
     }
+    if (rag > 0 && rag < 120) row.forEach((cell) => cell.classList.add("cell--even"));
   }
 }
 
