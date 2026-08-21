@@ -2,7 +2,17 @@
 
 > Teeth and eyes added to the existing black-spread mechanism, so infection reads as something arriving, not just a fill level.
 
-**SHIPPED** — `web/js/symbiote.js` (`symbioteHTML()`, called from `panelHTML()`) and `web/css/symbiote-face.css`.
+**SHIPPED IN PART — teeth only; the eyes were built twice and cut.** `web/js/symbiote.js`
+(`symbioteHTML()`, called from `panelHTML()`) and `web/css/symbiote-teeth.css`.
+
+The eyes shipped, were reshaped once, and were then removed. Two attempts: first centred
+in the panel and inside the turbulence filter, which smeared them into two soft smudges;
+then narrowed, angled inward and lifted out of the filtered layer, which fixed the shape
+but not the placement. The real problem was never the drawing. The eyes sit at the centre
+of the panel while the collector's own character sits in the top-right corner as a
+watermark, so a drowned panel showed two faces three hundred pixels apart and the
+symbiote's read as debris. One panel gets one face, and it belongs to the Spider.
+The teeth carry the "something arrived" reading on their own.
 
 **Status:** ACCEPTED (part of [UI-18 · The cast](UI-18-the-cast.md)) · **Cost:** small, now that the mechanism is known · **Depends on:** nothing (rides the existing symbiote mechanism, independent of the rig)
 **Touches:** `web/css/panel.css`, a small addition to `web/js/panel.js`
@@ -84,11 +94,11 @@ absent in the markup `panelHTML()` emits.
       `.symbiote`, which is where `filter:url(#symbiote-turbulence)` is applied, so it is
       inside the filtered region by construction. It is pinned with
       `bottom:calc(var(--spread) * 100%)` and rides the same 800ms curve as the body mask
-- [x] Eyes appear only when `data-drowned="1"` is present, with no new JS threshold
-      introduced beyond what `panel.js` already computes — one CSS rule,
-      `.panel[data-drowned] .symbiote__eyes{opacity:.92}`; `symbioteHTML()` always emits
-      the SVG and never branches on the threshold
-- [x] The whole substance — body, teeth, eyes — reads as one material under turbulence, not
-      two — all three are children of the single filtered `.symbiote` wrapper
+- [ ] ~~Eyes appear only when `data-drowned="1"` is present~~ — **cut.** They were built
+      against that exact attribute with no new threshold, and the mechanism was correct;
+      what failed was that a second face on a panel that already has a character reads as
+      debris. See the status note
+- [x] The whole substance reads as one material under turbulence, not two — body and teeth
+      are both children of the single filtered `.symbiote` wrapper
 - [x] Included in UI-09's performance pass — pass 1 measured 76fps at 375px with six
       turbulence-filtered layers on screen
