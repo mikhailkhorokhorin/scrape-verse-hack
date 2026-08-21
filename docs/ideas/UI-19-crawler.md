@@ -60,8 +60,10 @@ scars.js` lines 28-34).
   since nothing else in the cast depends on it.
 - A second small character walking across the chart, next to a rig that already has legs,
   eyes and idle motion (UI-18e), risks visual clutter on an already-busy compact panel —
-  worth checking against the "equal frames are the thing to avoid, not visual noise" spirit
-  of `docs/DESIGN-SPEC.md` section 7 before committing to it.
+  worth checking against the reasoning behind T-16 in `docs/TASKS.md` (line 694: "A real
+  comic page does not use equal frames") before committing to it — panel size is already
+  carrying meaning, and a second small character competing inside a compact panel works
+  against that.
 
 ## Done when
 

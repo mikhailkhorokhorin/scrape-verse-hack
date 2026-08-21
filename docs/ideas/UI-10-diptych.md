@@ -24,7 +24,7 @@ scans from `05:13Z` to `06:39Z`, and BODEGA at 0% across four scans from `07:02Z
 both are drawn straight from committed records.
 
 **With the cast, this becomes more than a fallback for UI-01 — it becomes the legend,
-drawn.** The existing `<aside class="legend">` in `web/index.html` (lines 55-99) already
+drawn.** The existing `<aside class="legend">` in `web/index.html` (lines 82-128) already
 explains the states in prose and colour swatches. Once UI-18a's rig exists, the diptych is
 the same explanation made physical: one creature standing, one creature failing, side by
 side, with no animation required to convey it. That also makes it the one idea on the list
