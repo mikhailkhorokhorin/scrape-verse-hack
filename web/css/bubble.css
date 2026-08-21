@@ -1,0 +1,60 @@
+.bubble{
+  position:absolute;left:52%;top:2%;z-index:62;pointer-events:none;
+  max-width:74%;padding:10px 16px 12px;
+  background:var(--paper);color:var(--ink);
+  border:3px solid var(--ink);border-radius:22px;
+  box-shadow:5px 5px 0 var(--ink);
+  text-align:center;
+  animation:bubble-in 260ms cubic-bezier(.34,1.8,.64,1) both;
+}
+
+.bubble::before,
+.bubble::after{
+  content:"";position:absolute;left:22%;top:100%;
+  width:0;height:0;border-style:solid;
+}
+.bubble::before{
+  border-width:20px 16px 0 0;
+  border-color:var(--ink) transparent transparent transparent;
+  margin-top:0;
+}
+.bubble::after{
+  border-width:14px 10px 0 0;
+  border-color:var(--paper) transparent transparent transparent;
+  margin-top:-3px;margin-left:3px;
+}
+
+.bubble--character{
+  font-family:Bangers,Impact,cursive;
+  font-size:clamp(1.25rem,2.6vw,1.85rem);
+  letter-spacing:.045em;line-height:1.12;
+  text-transform:uppercase;
+}
+
+.bubble--symbiote{
+  background:var(--symbiote);color:var(--paper);
+  border-color:var(--symbiote-edge);
+  box-shadow:5px 5px 0 var(--symbiote-edge);
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:var(--t-data);font-weight:400;
+  letter-spacing:.01em;line-height:1.4;
+  text-transform:lowercase;
+}
+.bubble--symbiote::before{border-top-color:var(--symbiote-edge);}
+.bubble--symbiote::after{border-top-color:var(--symbiote);}
+
+.cell.has-bubble{z-index:61;}
+
+@keyframes bubble-in{
+  from{opacity:0;transform:translateY(10px) scale(.86);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .bubble{animation:none;}
+}
+
+@media(max-width:767px){
+  .bubble{max-width:88%;left:50%;padding:8px 12px 10px;}
+  .bubble--character{font-size:1.15rem;}
+}
