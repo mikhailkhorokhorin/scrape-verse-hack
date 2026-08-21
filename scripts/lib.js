@@ -128,10 +128,22 @@ function integrityOf(states) {
 const statusOf = (integrity) =>
   integrity >= HEALTHY_MIN ? 'HEALTHY' : integrity >= DEGRADED_MIN ? 'DEGRADED' : 'CRITICAL';
 
+const FLATLINE_MIN_ROWS = 8;
+
+function isFlatlined(rows, field) {
+  if (rows.length < FLATLINE_MIN_ROWS) return false;
+  if (!has(rows[0] || {}, field)) return false;
+  const first = JSON.stringify(rows[0][field]);
+  if (first === undefined) return false;
+  return rows.every((row) => JSON.stringify(row?.[field]) === first);
+}
+
 function dominantState(rows, field, rule) {
   const tally = { live: 0, infected: 0, dead: 0 };
   for (const row of rows) tally[classify(row?.[field], rule)]++;
-  return Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
+  const dominant = Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
+  if (dominant === 'live' && isFlatlined(rows, field)) return 'infected';
+  return dominant;
 }
 
 function fieldStates(rows, fields) {

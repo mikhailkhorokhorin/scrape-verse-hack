@@ -30,14 +30,14 @@ function fieldVerdict(clean, dirty, field) {
   if (nowInfected) return "infected";
   const before = clean.sample ? clean.sample[field] : undefined;
   const after = dirty.sample ? dirty.sample[field] : undefined;
-  if (wasLive && String(before) !== String(after)) return "changed";
+  if (wasLive && valueText(before) !== valueText(after)) return "changed";
   return "same";
 }
 
 function sampleColumn(run, verdicts, fields) {
   const rows = fields.map((f) => {
     const raw = run.sample ? run.sample[f] : undefined;
-    const val = raw === null || raw === undefined ? "null" : '"' + esc(raw) + '"';
+    const val = esc(valueLiteral(raw));
     return '<div class="diffrow diffrow--' + verdicts[f] + '">' +
       '<span class="diffrow__key">' + esc(f) + "</span>" +
       '<span class="diffrow__val">' + val + "</span>" +

@@ -14,8 +14,8 @@ function receivedOf(sp, field) {
   const raw = has ? sp.sample[field] : undefined;
   if (raw === null) return "null";
   if (raw === undefined) return "missing";
-  if (typeof raw === "string") return '"' + truncateMiddle(raw, RECEIVED_MAX) + '"';
-  return truncateMiddle(String(raw), RECEIVED_MAX);
+  const text = truncateMiddle(valueText(raw), RECEIVED_MAX);
+  return typeof raw === "string" ? '"' + text + '"' : text;
 }
 
 function expectedOf(field) {

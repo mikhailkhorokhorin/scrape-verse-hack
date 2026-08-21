@@ -37,6 +37,7 @@ const EXPECTED = {
   price: "a currency amount",
   rating: "a number 0-5",
   image: "an absolute image URL",
+  image_url: "an absolute image URL",
   availability: "In stock or Out of stock",
   points: "a whole number, 0 or more",
   comments: "a whole number, 0 or more",

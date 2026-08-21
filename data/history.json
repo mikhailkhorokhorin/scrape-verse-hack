@@ -65,5 +65,137 @@
       "comments": null,
       "author": null
     }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T05:13:12.798Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url"
+    ],
+    "fields_infected": [
+      "availability"
+    ],
+    "fields_dead": [],
+    "integrity": 90,
+    "status": "HEALTHY",
+    "rows": 20,
+    "sample": {
+      "title": "Starving Hearts (Triangular Trade Trilogy, #1)",
+      "price": {
+        "value": 13.99,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Two",
+      "image_url": "https://books.toscrape.com/media/cache/a0/7e/a07ed8f1c23f7b4baf7102722680bd30.jpg",
+      "availability": "In stock (19 available) In stock In stock In stock In stock In stock In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T05:13:45.636Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 30,
+    "sample": {
+      "title": null,
+      "points": null,
+      "comments": null,
+      "author": null
+    }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T05:40:05.390Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url"
+    ],
+    "fields_infected": [
+      "availability"
+    ],
+    "fields_dead": [],
+    "integrity": 90,
+    "status": "HEALTHY",
+    "rows": 20,
+    "sample": {
+      "title": "Tipping the Velvet",
+      "price": {
+        "value": 53.74,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "One",
+      "image_url": "https://books.toscrape.com/media/cache/08/e9/08e94f3731d7d6b760dfbfbc02ca5c62.jpg",
+      "availability": "In stock (20 available) In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T05:40:09.733Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "sample": {
+      "title": "Codex on AWS bedrock bug causing 10x charges",
+      "points": 62,
+      "comments": 17,
+      "author": "TheP1000"
+    }
   }
 ]

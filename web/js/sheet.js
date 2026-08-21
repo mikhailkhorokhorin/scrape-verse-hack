@@ -4,8 +4,12 @@ function jsonHTML(sample, fields) {
   const rows = Object.entries(sample || {}).map(([k, v]) => {
     const state = Object.prototype.hasOwnProperty.call(fields || {}, k) ? fields[k] : undefined;
     const cls = state === "dead" ? "null" : state === "infected" ? "bad" : "s";
-    const val = v === null || v === undefined ? "null" : '"' + esc(v) + '"';
-    return '  <span class="k">"' + esc(k) + '"</span>: <span class="' + cls + '">' + val + "</span>";
+    const shape = shapeOf(v);
+    const note = shape === "object" || shape === "array"
+      ? ' <span class="shape">' + esc(shape) + "</span>"
+      : "";
+    return '  <span class="k">"' + esc(k) + '"</span>: <span class="' + cls + '">' +
+      esc(valueLiteral(v)) + "</span>" + note;
   }).join(",\n");
   return "{\n" + rows + "\n}";
 }
