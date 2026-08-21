@@ -111,12 +111,12 @@ is what the table never covered. Fourteen ideas.
 | | Count |
 |---|---|
 | Ideas written in waves two to four | 59 |
-| Alive, folded into the six moves | 13 |
-| Deferred — ride on a move not yet committed | 3 |
+| Alive, folded into the six moves | 17 |
+| Deferred — ride on MOVE 4's timeline | 2 |
 | Reclassified as a chore | 1 |
-| Killed with a reason | 42 |
+| Killed with a reason | 39 |
 
-Forty-two of fifty-nine died, and that is the point of the exercise. The three waves are
+Thirty-nine of fifty-nine died, and that is the point of the exercise. The three waves are
 kept in full because the reasoning is what stops the same ground being re-walked on the
 last day.
 
