@@ -35,7 +35,7 @@
 @media(max-width:600px){
   .panel--big{padding:var(--s3) var(--s2);}
   .panel--big .phead{flex-wrap:wrap;align-items:flex-start;}
-  .panel--big .badge{font-size:.6875rem;padding:5px 9px;}
+  .panel--big .badge{font-size:var(--t-micro);padding:5px 9px;}
   .panel--big .codename{font-size:1.75rem;}
   .panel--big .universe{font-size:.8125rem;}
   .panel--big .integrity__value{font-size:2.5rem;}

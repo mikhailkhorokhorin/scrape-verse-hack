@@ -26,7 +26,7 @@
 
 .pulseline__tag{
   position:absolute;z-index:3;top:0;left:0;
-  font-family:"IBM Plex Mono",monospace;font-size:.625rem;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;font-size:var(--t-tick);font-weight:600;
   letter-spacing:.14em;text-transform:uppercase;
   color:var(--ink);background:var(--cyan);
   border-right:3px solid var(--ink);border-bottom:3px solid var(--ink);
@@ -34,7 +34,7 @@
 }
 .pulseline__read{
   position:absolute;z-index:3;bottom:0;right:0;
-  font-family:"IBM Plex Mono",monospace;font-size:.625rem;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;font-size:var(--t-tick);font-weight:600;
   letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
   border-left:3px solid var(--ink);border-top:3px solid var(--ink);
   background:var(--void);padding:3px 9px 2px;

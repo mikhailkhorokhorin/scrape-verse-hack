@@ -19,8 +19,16 @@
   flex:1 1 0;min-width:3px;display:block;
 }
 .heat__cell[data-s="live"]{background:var(--healthy);}
-.heat__cell[data-s="infected"]{background:var(--infected);}
-.heat__cell[data-s="dead"]{background:var(--critical);}
+.heat__cell[data-s="infected"]{
+  background:var(--infected);
+  background-image:repeating-linear-gradient(
+    to bottom,transparent 0 3px,var(--ink) 3px 5px);
+}
+.heat__cell[data-s="dead"]{
+  background:var(--critical);
+  background-image:repeating-linear-gradient(
+    45deg,transparent 0 2px,var(--ink) 2px 4px);
+}
 .heat__cell--gap{
   background:repeating-linear-gradient(
     45deg,transparent,transparent 2px,var(--dimmer) 2px,var(--dimmer) 3px);
@@ -31,7 +39,7 @@
 .heat__scale{
   display:flex;justify-content:space-between;gap:var(--s2);
   margin:8px 0 0;font-family:"IBM Plex Mono",monospace;
-  font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dimmer);
+  font-size:var(--t-tick);letter-spacing:.1em;text-transform:uppercase;color:var(--dimmer);
 }
 
 @media(max-width:600px){

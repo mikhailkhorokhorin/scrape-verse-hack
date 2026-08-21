@@ -65,7 +65,7 @@
 .universe{font-family:"IBM Plex Mono",monospace;font-size:var(--t-data);color:#9E7BC7;margin:4px 0 0;overflow-wrap:anywhere;}
 
 .badge{
-  font-family:"IBM Plex Mono",monospace;font-size:.6875rem;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;font-size:var(--t-micro);font-weight:600;
   letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
   padding:5px 9px;border:2px solid var(--ink);color:var(--ink);flex:0 0 auto;
 }
@@ -73,7 +73,7 @@
 .badge--degraded{background:var(--degraded);}
 .badge--critical{background:var(--critical);color:var(--ink);}
 .badge--reweaving{background:var(--reweaving);}
-.badge--unwatched{background:var(--unwatched);color:#8E85A3;}
+.badge--unwatched{background:var(--unwatched);color:#9A90AF;}
 
 .integrity{text-align:center;margin-top:auto;}
 .integrity__value{
@@ -96,11 +96,12 @@
 .is-critical .bar__fill{background:var(--critical);}
 .is-reweaving .bar__fill{background:var(--reweaving);}
 
-.chips{display:flex;flex-wrap:wrap;gap:6px;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;min-width:0;}
 .chip{
   font-family:"IBM Plex Mono",monospace;font-size:.75rem;
   padding:7px 8px;border:2px solid var(--ink);background:var(--void);
   display:inline-flex;align-items:center;gap:5px;
+  min-width:0;max-width:100%;overflow-wrap:anywhere;
 }
 .chip--live{color:var(--healthy);}
 .chip--infected{color:var(--infected);border-color:var(--infected);animation:chip-pulse 2s ease-in-out infinite;}

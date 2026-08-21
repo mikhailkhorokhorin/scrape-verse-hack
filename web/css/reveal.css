@@ -11,7 +11,7 @@
   border:3px solid var(--ink);border-radius:2px;
   box-shadow:4px 4px 0 var(--purple);
   font-family:"IBM Plex Mono",ui-monospace,monospace;
-  font-size:.6875rem;line-height:1.45;letter-spacing:0;
+  font-size:var(--t-micro);line-height:1.45;letter-spacing:0;
   text-align:left;text-decoration:none;white-space:normal;
   cursor:default;
 }

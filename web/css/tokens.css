@@ -13,6 +13,8 @@
   --t-label:0.75rem;
   --t-data-xl:clamp(2.25rem,4.5vw,3.25rem);
   --t-data:0.875rem;
+  --t-micro:0.6875rem;
+  --t-tick:0.625rem;
 
   --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:72px;
 }
@@ -45,3 +47,6 @@ body::before{
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;}
 }
+
+.readout__n{display:block;font-size:var(--t-tick);letter-spacing:.04em;opacity:.72;font-weight:400;}
+.mono--small{font-size:.8125rem;}
