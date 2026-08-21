@@ -23,16 +23,111 @@ watches for that, shows it, and repairs it.
 |---|---|---|
 | **How was the scraper designed?** | Three Bright Data Scraper Studio collectors, created with `bdata scraper create` from a plain-English field description; per-field validators live in `collectors.json` | [The collectors](#the-collectors) |
 | **How is it driven from an agent?** | An MCP server with six tools — status, history, incidents, heal receipts, and two that scan and heal for real | [MCP server](#mcp-server--the-fleet-in-your-agent) |
-| **What happened when the site changed?** | KESTREL returned 30 rows of zeroes and no error. One `heal` command repaired it unattended, on the same Collector ID | [It already caught a real one](#it-already-caught-a-real-one) |
+| **What happened when the site changed?** | Three real breaks, two of them on sites we do not control. Each was healed on the same Collector ID, and each carries a per-field receipt of the value before and after | [It already caught a real one](#it-already-caught-a-real-one) |
 | **What did the output actually give you?** | Real rows on screen, each stamped with the collector, the scan time, and the Integrity the Spider was at when the row was captured | [THE HAUL](#the-haul--the-data-itself) |
 
 Full specs, the collector registry with every heal logged, and the eighteen-audit
 checklist are in **[`docs/`](docs/README.md)**.
 
+## The four questions, answered at length
+
+The short answers are in the table above. These are the long ones.
+
+### How the scraper was designed
+
+Three collectors, built in Bright Data's **Scraper Studio** with `bdata scraper create` —
+each one a target URL plus a plain-English description of the wanted fields. No selectors
+were written by hand, and none was taken from Bright Data's pre-built library:
+
+| Codename | Target | Collector ID | Fields |
+|---|---|---|---|
+| BODEGA | our own demo page | `c_mt2lkwxa1bb5uz223s` | title, price, rating, image |
+| ATLAS | books.toscrape.com | `c_mt2fnqqngikv29od5` | title, price, rating, image, availability |
+| KESTREL | news.ycombinator.com | `c_mt2fnt3p2k4n644701` | title, points, comments, author |
+
+The `create` envelope for each is committed (`create-bodega.json`, `create-atlas.json`,
+`create-kestrel.json`), and the registry with creation dates and every heal since is
+[`docs/COLLECTORS.md`](docs/COLLECTORS.md).
+
+Scraper Studio decides *how* to extract. What counts as a **correct** value is ours, and it
+is declared per field in `collectors.json` — `price` must parse as a number, `image` must be
+an absolute URL, `rating` must fall in range. That split is what makes the rest of the
+project possible: a field can be present, non-null, and still be reported broken.
+
+### How it is driven from a coding agent
+
+`mcp/` is an MCP server speaking JSON-RPC 2.0 over stdio, written straight against the
+spec — **no SDK, no dependencies**. Six tools. Four read the committed data and are free:
+`fleet_status`, `spider_history`, `incident_log`, `heal_receipt`. Two call Bright Data and
+spend credit, and say so in the descriptions the agent reads: `scan_fleet` and
+`heal_spider`.
+
+```bash
+claude mcp add thwip -- node mcp/server.js
+```
+
+The whole loop — *is anything broken? what broke? fix it. prove it* — runs as a
+conversation. `heal_receipt` exists specifically for the last step: it prints every heal
+phase with its timestamps beside the `collector_id` that did not change, and the per-field
+before/after values, so the claim is one tool call rather than a file to go and read. Setup
+and a worked transcript are in [`mcp/README.md`](mcp/README.md).
+
+### What it did when the site changed under it
+
+**Three breaks, all healed, all on the original Collector ID.** Two of them happened on
+sites we do not control, which is the distinction that matters — a fixture page we can edit
+proves nothing about a scraper surviving the real web:
+
+| Incident | Spider | Site | Ours? | Strain | Integrity |
+|---|---|---|---|---|---|
+| `inc_001` | KESTREL | news.ycombinator.com | **no** | `RENAMED` | 0 → 100 |
+| `inc_002` | ATLAS | books.toscrape.com | **no** | `DRIFTED` | 90 → 100 |
+| `inc_003` | BODEGA | our demo page | yes | `THROTTLED` | 0 → 100 |
+
+The console marks the first two **IN THE WILD** (`web/js/wild.js`) and says so on the page:
+nobody staged them.
+
+Each incident carries a per-field `verification` block naming the value received **before**
+the heal and the value received **after** — not a pass/fail flag, the actual data:
+
+- `inc_001` KESTREL `title`: `null` → `"Codex on AWS bedrock bug causing 10x charges"`;
+  `points`: `null` → `62`; `author`: `null` → `"TheP1000"`
+- `inc_002` ATLAS `availability`:
+  `"In stock (19 available) In stock In stock In stock In stock In stock In stock"` →
+  `"In stock"` — the field was never null. It was populated the whole time and wrong, which
+  is the failure this project exists to catch
+- `inc_003` BODEGA `price`: `null` → `"£18.00"`
+
+That block is written by `scripts/verify.js` from a fresh run after the heal, not from the
+heal's own report — a heal that claims success and still returns nulls is exactly the
+silent failure being guarded against. It is rendered by `web/js/receipt.js` and returned by
+the `heal_receipt` MCP tool.
+
+`inc_003` is kept even though the diagnosis was wrong: `repair.js` opened it autonomously
+and called `THROTTLED`, but nothing on the target was broken — our own payload parser was.
+The record keeps the false diagnosis and says so.
+
+### What the structured output went on to power
+
+**THE HAUL** is the section that answers this directly: the real scraped rows on screen,
+card by card, each stamped with the collector that fetched it, the timestamp of the scan,
+and the Integrity that Spider was at when the row was captured. Provenance travels with the
+data. It is built from the `sample` on every record in `data/history.json` — committed
+pipeline output, not a fixture.
+
+The console itself is the other answer. Everything on the page is derived from the same two
+JSON files: the Integrity scores, the 24h sparklines, the incident feed and its issue
+covers, the mean time to recovery, the field heatmap, and the per-collector characters whose
+legs are the expected fields and whose eyes are the Integrity band. There is no backend —
+the scheduled pipeline is the backend, and the structured output is the database.
+
 ## It already caught a real one
 
-Not a staged break. This happened to us during the build, on a real site, and it is the
-short version of what the whole project is for.
+Not a staged break. **Three of them happened to us during the build, and two were on sites
+we do not control** — books.toscrape.com and news.ycombinator.com. All three are in
+`data/incidents.json` with a per-field receipt of the value before and after the heal; the
+long version is [above](#what-it-did-when-the-site-changed-under-it). This is the one worth
+reading first.
 
 `KESTREL` scrapes the Hacker News front page. A scan came back with **30 rows and an
 Integrity of 0**. Rows were being found, so from the outside nothing looked broken — but
@@ -66,7 +161,7 @@ and `kestrel-after.json`, the scans are in `data/history.json` (`04:43:39Z` and
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       238 tests, node:test, no dependencies
+test/                       821 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the Chaos Lab — three variants of the same shop page
 collectors.json             targets and per-field validators
@@ -99,6 +194,44 @@ plate instead of the console — the page fetches its two JSON files, and browse
 `?mock=1` also mounts a small control bar that can break a Spider and re-weave it on
 demand, which is the fastest way to see the three field states and the symbiote move.
 Add `?capture=1` to hide every control for a clean screenshot.
+
+### What is on the page
+
+The console is drawn as a comic page, and the drawing is the readout rather than decoration
+beside it:
+
+- **A character per collector.** One inline-SVG spider is authored once and parameterised
+  (`web/js/rig.js`, `rig-parts.js`). **Each expected field owns a mirrored pair of legs**, so
+  a Spider at half Integrity is standing on half its legs, and **eight eyes light by
+  Integrity band**. The same rig appears in the detail sheet with a named chip per field, so
+  the leg-to-field mapping is stated explicitly where a judge would go to check it
+- **It reacts to real events only.** The console re-fetches every 60s; one shared diff
+  (`web/js/delta.js`, pinned by its own test file) compares the previous render to the new
+  one. A Spider steps and turns when a record lands, `THWIP!` is reserved for records
+  carrying `after_heal`, and speech bubbles fire on genuine field transitions — nothing
+  speaks unless something changed
+- **An opening sequence built from a real incident.** On first load the console replays
+  `inc_003`, the BODEGA break, from the recorded data. `REPLAY INTRO` in the masthead runs
+  it again
+- **The incident feed is a shelf of comic-issue covers**, each with a hash permalink and a
+  print stylesheet, so one incident can be linked or printed on its own
+- **A diptych above the grid** — a healthy Spider and a taken one side by side, both picked
+  out of real `history.json` records rather than two poses of the same drawing
+- **An evidence line in the masthead** reading `data/meta.json`, whose test count is written
+  by CI from the real TAP pass count. The number on screen cannot drift from the suite
+- **THE HAUL** — the rows the fleet actually brought back, each stamped with its collector,
+  scan time and the Integrity at capture
+
+Smaller things that ship: sparkline hover with a keyboard route, caption-box section
+headers, panel numbers, the page ground darkening as fleet health drops, print artefacts, a
+favicon whose lit eye-band width is fleet Integrity, and an **IN THE WILD** note counting
+the incidents that happened on sites we do not control.
+
+Two ideas from that pass are not in the build and are listed so they stop being
+reconsidered: the sparkline **crawler** was built, looked wrong, and was cut before it was
+committed; the masthead **cover character** was rejected before any code, because the
+tagline block carries the product thesis. The full brief set, with each brief's own status
+line, is in [`docs/ideas/`](docs/ideas/).
 
 ## Chaos Lab — break the site yourself
 
@@ -183,7 +316,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-238 tests, `node:test`, no dependencies and no test framework to install:
+821 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
@@ -273,6 +406,10 @@ Stated plainly rather than left for you to find:
 - **`REWEAVING` is a state the console can render and nothing writes.** `repair.js` runs
   to completion inside one CI job, so no mid-heal record is ever persisted. The branch in
   `web/js/adapter.js` is reachable only from mock data
+- **The phone pass has not been run.** The responsive contract is specified in
+  `docs/DESIGN-SPEC.md` and the layout collapses to a single column, but nobody has walked
+  the console at 375px since the character rig landed. It is the one item on the UI list
+  that can reject work already done, and it is still open
 
 ## The data
 

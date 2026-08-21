@@ -1240,29 +1240,29 @@ design lives below the fold.
 
 | Id | Idea | Status | Cost | Brief |
 |---|---|---|---|---|
-| UI-01 | Opening sequence | ACCEPTED | medium | `docs/ideas/UI-01-opening-sequence.md` |
-| UI-02 | Every incident is an issue | ACCEPTED | medium | `docs/ideas/UI-02-issues.md` |
-| UI-03 | Live polling | OPEN | small | `docs/ideas/UI-03-live-polling.md` |
-| UI-04 | Evidence line in the masthead | ACCEPTED | trivial + CI | `docs/ideas/UI-04-evidence-line.md` |
-| UI-05 | Sparkline hover, and the keyboard path | OPEN | small | `docs/ideas/UI-05-sparkline-hover.md` |
-| UI-06 | Panel numbers | OPEN | trivial | `docs/ideas/UI-06-panel-numbers.md` |
-| UI-08 | Caption-box section headers | OPEN | small | `docs/ideas/UI-08-caption-headers.md` |
+| UI-01 | Opening sequence | SHIPPED | medium | `docs/ideas/UI-01-opening-sequence.md` |
+| UI-02 | Every incident is an issue | SHIPPED | medium | `docs/ideas/UI-02-issues.md` |
+| UI-03 | Live polling | SHIPPED | small | `docs/ideas/UI-03-live-polling.md` |
+| UI-04 | Evidence line in the masthead | SHIPPED | trivial + CI | `docs/ideas/UI-04-evidence-line.md` |
+| UI-05 | Sparkline hover, and the keyboard path | SHIPPED | small | `docs/ideas/UI-05-sparkline-hover.md` |
+| UI-06 | Panel numbers | SHIPPED | trivial | `docs/ideas/UI-06-panel-numbers.md` |
+| UI-08 | Caption-box section headers | SHIPPED | small | `docs/ideas/UI-08-caption-headers.md` |
 | UI-09 | Phone pass — a gate, not a feature | OPEN | small | `docs/ideas/UI-09-phone-pass.md` |
-| UI-10 | Diptych above the grid | ACCEPTED | small | `docs/ideas/UI-10-diptych.md` |
-| UI-13 | Print artefacts | OPEN | small | `docs/ideas/UI-13-print-artefacts.md` |
-| UI-16 | The page reacts to fleet health | OPEN | small | `docs/ideas/UI-16-page-reacts.md` |
-| UI-18 | **The cast** — parent brief | ACCEPTED | — | `docs/ideas/UI-18-the-cast.md` |
-| UI-18a | The rig | ACCEPTED | medium | `docs/ideas/UI-18a-the-rig.md` |
-| UI-18b | Legs are fields | ACCEPTED | medium | `docs/ideas/UI-18b-legs-are-fields.md` |
-| UI-18c | Eyes are integrity | ACCEPTED | small | `docs/ideas/UI-18c-eyes-are-integrity.md` |
-| UI-18d | The symbiote gets a face | ACCEPTED | small | `docs/ideas/UI-18d-symbiote-face.md` |
-| UI-18e | Idle life | ACCEPTED | small | `docs/ideas/UI-18e-idle-life.md` |
-| UI-18f | The scan lands on screen | ACCEPTED | small | `docs/ideas/UI-18f-scan-lands.md` |
-| UI-19 | The crawler | OPEN | small | `docs/ideas/UI-19-crawler.md` |
+| UI-10 | Diptych above the grid | SHIPPED | small | `docs/ideas/UI-10-diptych.md` |
+| UI-13 | Print artefacts | SHIPPED | small | `docs/ideas/UI-13-print-artefacts.md` |
+| UI-16 | The page reacts to fleet health | SHIPPED | small | `docs/ideas/UI-16-page-reacts.md` |
+| UI-18 | **The cast** — parent brief | SHIPPED — all six sub-ideas | — | `docs/ideas/UI-18-the-cast.md` |
+| UI-18a | The rig | SHIPPED | medium | `docs/ideas/UI-18a-the-rig.md` |
+| UI-18b | Legs are fields | SHIPPED | medium | `docs/ideas/UI-18b-legs-are-fields.md` |
+| UI-18c | Eyes are integrity | SHIPPED | small | `docs/ideas/UI-18c-eyes-are-integrity.md` |
+| UI-18d | The symbiote gets a face | SHIPPED | small | `docs/ideas/UI-18d-symbiote-face.md` |
+| UI-18e | Idle life | SHIPPED, one element short — no mask-plate highlight | small | `docs/ideas/UI-18e-idle-life.md` |
+| UI-18f | The scan lands on screen | SHIPPED | small | `docs/ideas/UI-18f-scan-lands.md` |
+| UI-19 | The crawler | CUT — Aug 21, built first, then cut on look | small | `docs/ideas/UI-19-crawler.md` |
 | UI-20 | Cover character in the masthead | REJECTED — Aug 21, UI-04 keeps the slot | medium | `docs/ideas/UI-20-cover-character.md` |
-| UI-21 | The character speaks | OPEN | medium | `docs/ideas/UI-21-character-speaks.md` |
-| UI-22 | Mask favicon | OPEN | trivial | `docs/ideas/UI-22-mask-favicon.md` |
-| UI-23 | The cast in the detail sheet | OPEN | small | `docs/ideas/UI-23-cast-in-detail-sheet.md` |
+| UI-21 | The character speaks | SHIPPED | medium | `docs/ideas/UI-21-character-speaks.md` |
+| UI-22 | Mask favicon | SHIPPED | trivial | `docs/ideas/UI-22-mask-favicon.md` |
+| UI-23 | The cast in the detail sheet | SHIPPED, as chips not leg labels | small | `docs/ideas/UI-23-cast-in-detail-sheet.md` |
 
 **Ids with no brief, deliberately.** UI-07 merged into UI-21, UI-11 into UI-05, UI-12 and
 UI-17 into UI-02. UI-14 (history scrubber) and UI-15 (side-by-side Spiders) are rejected

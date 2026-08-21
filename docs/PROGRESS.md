@@ -219,15 +219,18 @@ and they ship. Listed here so nobody re-cuts a feature that already exists.
 - [x] **T-11** Spider Detail — `web/js/sheet.js`. Per-field run tracks with fill rates,
       expectations, collector ID, streak, times healed and the last sample. Opens on
       panel click, closes on Escape or backdrop
-- [x] **Refactor into modules** — the single ported file became 19 JS modules and 17
-      stylesheets under `web/`, each small enough to read. No build step, no framework
-- [x] **Test suite** — **238 tests, `npm test`, `node:test`, zero dependencies.** Ten
-      files under `test/`: `classify` and its exact boundaries, integrity `scoring`,
-      `payload` shapes, strain `diagnosis`, the `heal` decision, `repair` gating (two
-      consecutive bad scans, 2h cooldown), atomic JSON `storage`, and three covering the
-      MCP server — `mcp` (protocol), `mcp-tools` (the four read tools) and `mcp-actions`
-      (the two credit-spending ones, against a mocked `lib.bdata`). No network and no real
-      `bdata` calls — the suite runs offline in well under a second and never spends
+- [x] **Refactor into modules** — the single ported file became 47 JS modules and 39
+      stylesheets under `web/`, each small enough to read. No build step, no framework.
+      The UI-ideas pass below is most of the growth from the original 19 and 17
+- [x] **Test suite** — **821 tests, `npm test`, `node:test`, zero dependencies.**
+      Thirty-seven files under `test/`: `classify` and its exact boundaries, integrity
+      `scoring`, `payload` shapes, strain `diagnosis`, the `heal` decision, `repair` gating
+      (two consecutive bad scans, 2h cooldown), atomic JSON `storage`, the MCP server —
+      `mcp` (protocol), `mcp-tools` (the four read tools), `mcp-actions` (the two
+      credit-spending ones, against a mocked `lib.bdata`), `mcp-handshake`, `mcp-injection`
+      and `mcp-receipt` — and the console's own pure modules, which the UI-ideas pass
+      brought under test: `web-rig`, `web-delta`, `web-speech`, `web-issue`, `web-intro`,
+      `web-diptych`, `web-wild` and the rest. No network and no real `bdata` calls — the suite runs offline in well under a second and never spends
       credit. This is the Best-Clean-Code evidence that the pipeline's rules are pinned
       rather than asserted
 - [x] **ESLint config** — `eslint.config.js`, flat config, explicit browser and node
@@ -249,6 +252,74 @@ and they ship. Listed here so nobody re-cuts a feature that already exists.
       `web/js/haul-data.js` resolves rows from the `sample` on every history record,
       `haul-view.js` renders, `haul.js` mounts. It answers the judged question of what the
       structured output went on to power, using the committed data rather than a fixture
+
+## UI ideas — Suit-Up track
+
+Twenty-three briefs in `docs/ideas/`, worked after the pipeline was proven. The problem
+they all serve: the first screen was all green, and the strongest thing in the design lived
+below the fold. Twenty shipped, one was cut after being built, one was rejected before it
+was, and one is a gate that has not been run. Each brief carries its own status line at the
+top; the table in `TASKS.md` is the index.
+
+- [x] **UI-18 · The cast** — all six sub-ideas, and the largest single piece on the list.
+      One inline-SVG spider is authored once and parameterised per collector
+      (`web/js/rig.js`, geometry in `rig-parts.js`), so BODEGA, ATLAS and KESTREL are a
+      cast rather than one sprite repeated. **The character is the readout, not a mascot
+      beside it:** every expected field owns a mirrored pair of legs, so a Spider at half
+      Integrity is standing on half its legs; eight eyes light by Integrity band, dimmed
+      rather than removed so the socket still reads. The symbiote spread got teeth and
+      eyes (`symbiote.js`, `css/symbiote-face.css`) so infection reads as something
+      arriving. Idle motion is seeded per panel so nothing syncs — **one element short**:
+      the mask-plate highlight in UI-18e was not built, and the brief says so. When a new
+      record lands the Spider reacts (`rig-react.js`), with `THWIP!` reserved for records
+      carrying `after_heal`. Covered by `test/web-rig.test.js` and
+      `test/web-rig-react.test.js`
+- [x] **One shared diff, not three** — `web/js/delta.js`, decided Aug 21 and held to.
+      UI-03, UI-18f and UI-21 all needed a previous-render diff; it was built once, as a
+      pure adapter-layer function with full per-field granularity, fed inside `loadLive()`
+      before the new `SPIDERS` overwrites the old. `test/web-delta.test.js` pins it
+- [x] **UI-03 · Live polling** — `landing.js` + `css/landing.css` mark the moment a new
+      scan lands instead of re-rendering silently
+- [x] **UI-21 · The character speaks** — `speech.js` picks the line, `bubble.js` mounts it
+      and enforces one bubble at a time. Bubbles fire on **real transitions only**, off
+      `delta.js`, so nothing speaks unless something actually changed
+- [x] **UI-01 · Opening sequence** — `intro.js` + `intro-plan.js` replay a real incident on
+      first load. `INTRO_INCIDENT_ID` is `inc_003`, the BODEGA break — recorded data, not a
+      scripted animation. `REPLAY INTRO` in the masthead runs it again
+- [x] **UI-02 · Every incident is an issue** — the feed became a shelf of comic-issue
+      covers (`issue.js`), each with a hash permalink (`issue-route.js`) and a print
+      stylesheet (`css/print.css`). Absorbs UI-12 (deep link) and UI-17 (print report)
+- [x] **UI-10 · Diptych above the grid** — `diptych.js` puts a healthy Spider and a taken
+      one side by side, **both picked out of real `history.json` records** via the shared
+      `from-record.js` helper. Not two poses of the same drawing
+- [x] **UI-04 · Evidence line in the masthead** — `evidenceParts()` / `renderEvidence()` in
+      `masthead.js`, reading `data/meta.json`. The test count in that file is written by
+      the `Count the tests` step in `.github/workflows/watch.yml`, which parses the real
+      TAP pass count and fails the job if it cannot read one — the number on screen cannot
+      drift from the suite
+- [x] **The small ones, all shipped** — sparkline hover with a keyboard route
+      (`sparkhover.js`, plus the grid `keydown` handler in `app.js`); caption-box section
+      headers (`caption.js`); panel numbers (`.panel__no` in `panel.js`); the page ground
+      darkening with fleet health (`ground.js`); print artefacts (`css/print-artefacts.css`);
+      the graded mask favicon whose lit eye-band width is fleet Integrity (`faviconFor()` in
+      `finish.js`)
+- [x] **UI-23 · The cast in the detail sheet** — `sheet-rig.js`, mounted above the field
+      diagnosis. **Shipped with one deliberate change of form:** the leg-to-field mapping
+      is stated as a named chip per field beside the character, not as labels drawn on each
+      leg. At the size the sheet renders the rig, 6px labels collided with each other and
+      with the legs they annotate. Same `fieldOrder`, same per-field state — stated, just
+      not as leader lines
+- [x] **"IN THE WILD"** — `wild.js` marks an incident that happened on a site we do not
+      control. Two of the three do: ATLAS on books.toscrape.com and KESTREL on
+      news.ycombinator.com. Only BODEGA is our own page. The note counts them and names the
+      sites, and it disappears entirely if every incident was on a page we own
+- [x] **UI-19 · The crawler — CUT.** Built first, against a real rendered sparkline, then
+      cut on look before it was committed. No crawler code and no partial implementation
+      is left in the repository
+- [x] **UI-20 · Cover character — REJECTED**, Aug 21, before any code. The tagline block
+      carries the product thesis and UI-04 wins the contested masthead slot
+- [ ] **UI-09 · Phone pass** — the one gate, and the only item that can reject work already
+      done. Not run
 
 ## Only if everything above is done
 
