@@ -1,9 +1,9 @@
 "use strict";
 
 const SYMBIOTE_EYES =
-  '<svg class="symbiote__eyes" viewBox="0 0 74 26" aria-hidden="true">' +
-    '<path d="M2 14 Q14 2 30 9 Q20 22 4 20 Z"/>' +
-    '<path d="M72 14 Q60 2 44 9 Q54 22 70 20 Z"/>' +
+  '<svg class="symbiote__eyes" viewBox="0 0 64 26" aria-hidden="true">' +
+    '<path d="M1 6 C10 2 24 6 29 15 C20 20 6 16 1 6 Z"/>' +
+    '<path d="M63 6 C54 2 40 6 35 15 C44 20 58 16 63 6 Z"/>' +
   "</svg>";
 
 function symbioteHTML(spread) {
@@ -11,7 +11,7 @@ function symbioteHTML(spread) {
     '<div class="symbiote" style="--spread:' + spread + '">' +
       '<div class="symbiote__body"></div>' +
       '<div class="symbiote__teeth"></div>' +
-      SYMBIOTE_EYES +
-    "</div>"
+    "</div>" +
+    '<div class="symbiote-face" style="--spread:' + spread + '">' + SYMBIOTE_EYES + "</div>"
   );
 }
