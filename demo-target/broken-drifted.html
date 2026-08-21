@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" class="v-healthy">
+<html lang="en" class="v-drifted">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bodega — Healthy — THWIP Chaos Lab</title>
-<meta name="thwip-variant" content="healthy">
+<title>Bodega — Drifted — THWIP Chaos Lab</title>
+<meta name="thwip-variant" content="drifted">
 <style>
 :root { color-scheme: light; --ink:#1c1a18; --mut:#6b625a; --line:#e4ddd2; --bg:#faf7f2; }
   * { box-sizing: border-box; }
@@ -46,14 +46,14 @@
       <h2>This shop is a controlled test target. Break it yourself.</h2>
       <p>Each button below serves a different build of the same storefront, exactly the way a real site changes when a team ships a redesign or a backend starts returning bad data. The markup is static server-side HTML, so a scraper pointed at these URLs sees precisely what you see.</p>
       <nav class="switch">
-      <a href="index.html?v=healthy" aria-current="true">Healthy<small>no damage</small></a>
+      <a href="index.html?v=healthy">Healthy<small>no damage</small></a>
       <a href="broken-renamed.html?v=renamed">Renamed<small>fields go DEAD</small></a>
-      <a href="broken-drifted.html?v=drifted">Drifted<small>fields stay full and LIE</small></a>
+      <a href="broken-drifted.html?v=drifted" aria-current="true">Drifted<small>fields stay full and LIE</small></a>
       </nav>
       <div class="state">
-        <b>Now serving: Healthy</b>
-        <p>Baseline markup. Every field extracts cleanly. All selectors resolve. This is the contract the collector was built against.</p>
-        <p>Scrape this exact state: <code>?v=healthy</code></p>
+        <b>Now serving: Drifted</b>
+        <p>Markup untouched. The values behind it rotted. Every selector still resolves. Price is an em dash, rating is the string "undefined", image is a placeholder.</p>
+        <p>Scrape this exact state: <code>?v=drifted</code></p>
       </div>
     </div>
   </section>
@@ -67,87 +67,87 @@
     <main>
       <ul class="product-list">
         <li class="product-card">
-          <img class="product-image" src="img/01.svg" alt="Ceramic pour-over dripper" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Ceramic pour-over dripper" width="240" height="180">
           <h2 class="product-title">Ceramic pour-over dripper</h2>
-          <p class="product-price">£18.00</p>
-          <p class="product-rating">4.4 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/02.svg" alt="Gooseneck kettle, 0.9L" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Gooseneck kettle, 0.9L" width="240" height="180">
           <h2 class="product-title">Gooseneck kettle, 0.9L</h2>
-          <p class="product-price">£54.50</p>
-          <p class="product-rating">4.8 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/03.svg" alt="Burr grinder, hand crank" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Burr grinder, hand crank" width="240" height="180">
           <h2 class="product-title">Burr grinder, hand crank</h2>
-          <p class="product-price">£72.00</p>
-          <p class="product-rating">4.1 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/04.svg" alt="Paper filters, 100 pack" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Paper filters, 100 pack" width="240" height="180">
           <h2 class="product-title">Paper filters, 100 pack</h2>
-          <p class="product-price">£6.25</p>
-          <p class="product-rating">4.6 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/05.svg" alt="Double-wall glass, 250ml" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Double-wall glass, 250ml" width="240" height="180">
           <h2 class="product-title">Double-wall glass, 250ml</h2>
-          <p class="product-price">£12.90</p>
-          <p class="product-rating">3.9 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/06.svg" alt="Scale with timer" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Scale with timer" width="240" height="180">
           <h2 class="product-title">Scale with timer</h2>
-          <p class="product-price">£39.00</p>
-          <p class="product-rating">4.5 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/07.svg" alt="Storage tin, 500g" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Storage tin, 500g" width="240" height="180">
           <h2 class="product-title">Storage tin, 500g</h2>
-          <p class="product-price">£15.75</p>
-          <p class="product-rating">4.2 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/08.svg" alt="Milk pitcher, 600ml" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Milk pitcher, 600ml" width="240" height="180">
           <h2 class="product-title">Milk pitcher, 600ml</h2>
-          <p class="product-price">£22.40</p>
-          <p class="product-rating">4.0 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/09.svg" alt="Espresso tamper, 58mm" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Espresso tamper, 58mm" width="240" height="180">
           <h2 class="product-title">Espresso tamper, 58mm</h2>
-          <p class="product-price">£31.00</p>
-          <p class="product-rating">4.7 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/10.svg" alt="Cleaning brush set" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Cleaning brush set" width="240" height="180">
           <h2 class="product-title">Cleaning brush set</h2>
-          <p class="product-price">£9.80</p>
-          <p class="product-rating">3.7 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/11.svg" alt="Insulated carafe, 1L" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Insulated carafe, 1L" width="240" height="180">
           <h2 class="product-title">Insulated carafe, 1L</h2>
-          <p class="product-price">£48.00</p>
-          <p class="product-rating">4.3 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
         <li class="product-card">
-          <img class="product-image" src="img/12.svg" alt="Cupping spoon, steel" width="240" height="180">
+          <img class="product-image" src="placeholder.svg" alt="Cupping spoon, steel" width="240" height="180">
           <h2 class="product-title">Cupping spoon, steel</h2>
-          <p class="product-price">£11.20</p>
-          <p class="product-rating">4.9 out of 5</p>
+          <p class="product-price">—</p>
+          <p class="product-rating">undefined</p>
           <p class="product-stock">In stock</p>
         </li>
       </ul>

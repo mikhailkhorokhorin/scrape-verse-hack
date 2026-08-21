@@ -102,11 +102,38 @@ function openSheet(idx) {
     '<div class="sechead sheet__sec"><h2>Last sample</h2><span class="rule"></span></div>' +
     '<pre class="sample">' + jsonHTML(sp.sample, sp.fields) + "</pre>";
 
+  SHEET_OPENER = document.activeElement;
   document.getElementById("modal").hidden = false;
+  document.querySelector(".wrap").setAttribute("inert", "");
+  document.body.style.overflow = "hidden";
   bindHeal(document.getElementById("sheet-body"));
   document.getElementById("sheet-close").focus();
 }
 
 function closeSheet() {
-  document.getElementById("modal").hidden = true;
+  const modal = document.getElementById("modal");
+  if (modal.hidden) return;
+  modal.hidden = true;
+  document.querySelector(".wrap").removeAttribute("inert");
+  document.body.style.overflow = "";
+  if (SHEET_OPENER && document.contains(SHEET_OPENER)) SHEET_OPENER.focus();
+  SHEET_OPENER = null;
+}
+
+function trapSheetFocus(e) {
+  if (e.key !== "Tab") return;
+  const modal = document.getElementById("modal");
+  if (modal.hidden) return;
+  const items = [...modal.querySelectorAll(FOCUSABLE)]
+    .filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0);
+  if (!items.length) return;
+  const first = items[0];
+  const last = items[items.length - 1];
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault();
+    first.focus();
+  }
 }

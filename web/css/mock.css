@@ -13,7 +13,7 @@
 .btn:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--pink);}
 .btn:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;}
 .btn[disabled]{opacity:.4;cursor:not-allowed;}
-.btn--go{background:var(--critical);color:var(--paper);}
+.btn--go{background:var(--critical);color:var(--ink);}
 .btn--fix{background:var(--cyan);}
 
 .note{color:#8E82A6;font-size:var(--t-label);max-width:70ch;margin:var(--s3) 0 0;}

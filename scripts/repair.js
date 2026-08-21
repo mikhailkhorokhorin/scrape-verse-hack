@@ -217,4 +217,10 @@ function main() {
   }
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = {
+  BROKEN_BELOW, RESOLVED_AT, COOLDOWN_MS, CONSECUTIVE_BAD_RUNS,
+  runsFor, lastHealAt, clause, isNarrow, shiftedPairs, strainOf,
+  buildPrompt, heal, recoveredFields, describe, isBroken, main
+};

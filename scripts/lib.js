@@ -78,6 +78,14 @@ function unwrap(value) {
   return value;
 }
 
+const NUMERIC = /-?\d+(?:[\s,]\d{3})*(?:\.\d+)?/;
+
+function numberIn(text) {
+  const match = NUMERIC.exec(text.replace(/(\d)[  ](\d)/g, '$1 $2'));
+  if (!match) return NaN;
+  return Number(match[0].replace(/[\s,]/g, ''));
+}
+
 function classify(raw, rule) {
   const value = unwrap(raw);
 
@@ -93,7 +101,7 @@ function classify(raw, rule) {
     case 'number': {
       const n = rule.words && WORDS[s.split(/\s+/).pop().toLowerCase()] !== undefined
         ? WORDS[s.split(/\s+/).pop().toLowerCase()]
-        : Number(s.replace(/[^0-9.\-]/g, ''));
+        : numberIn(s);
       if (!Number.isFinite(n)) return 'infected';
       if (rule.min !== undefined && n < rule.min) return 'infected';
       if (rule.max !== undefined && n > rule.max) return 'infected';
@@ -196,9 +204,22 @@ function bdata(args, { timeout = 20 * 60 * 1000 } = {}) {
 
 const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
 
+function nestedRows(row) {
+  if (!row || typeof row !== 'object' || Array.isArray(row)) return null;
+  const arrays = Object.values(row)
+    .filter((v) => Array.isArray(v) && v.length && v.every((e) => e && typeof e === 'object' && !Array.isArray(e)));
+  return arrays.length === 1 ? arrays[0] : null;
+}
+
 function rowsOf(payload) {
   const cap = (a) => a.slice(0, MAX_ROWS);
-  if (Array.isArray(payload)) return cap(payload);
+  if (Array.isArray(payload)) {
+    if (payload.length === 1) {
+      const inner = nestedRows(payload[0]);
+      if (inner) return cap(inner);
+    }
+    return cap(payload);
+  }
   if (payload && typeof payload === 'object') {
     for (const key of ['data', 'records', 'results', 'items', 'rows', 'output']) {
       if (has(payload, key) && Array.isArray(payload[key])) return cap(payload[key]);
@@ -230,7 +251,8 @@ function parsePayload(raw) {
 
 module.exports = {
   ROOT, HISTORY, INCIDENTS, CONFIG,
-  HEALTHY_MIN, DEGRADED_MIN,
+  HEALTHY_MIN, DEGRADED_MIN, MAX_ROWS, MAX_HISTORY, MAX_PAYLOAD_BYTES,
+  unwrap, dominantState, isFlatlined, nextIncidentId,
   readJSON, writeJSON, collectors, history, incidents,
   appendHistory, appendIncident,
   classify, integrityOf, statusOf,
