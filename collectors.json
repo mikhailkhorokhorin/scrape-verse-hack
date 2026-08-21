@@ -57,7 +57,8 @@
           "type": "string",
           "min": 2,
           "max": 20,
-          "pattern": "^(In stock|Out of stock)$"
+          "pattern": "^(In stock|Out of stock)$",
+          "enumerated": true
         }
       }
     },

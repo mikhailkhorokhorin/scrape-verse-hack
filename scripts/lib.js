@@ -143,7 +143,7 @@ function dominantState(rows, field, rule) {
   const tally = { live: 0, infected: 0, dead: 0 };
   for (const row of rows) tally[classify(row?.[field], rule)]++;
   const dominant = Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
-  if (dominant === 'live' && isFlatlined(rows, field)) return 'infected';
+  if (dominant === 'live' && !rule.enumerated && isFlatlined(rows, field)) return 'infected';
   return dominant;
 }
 
