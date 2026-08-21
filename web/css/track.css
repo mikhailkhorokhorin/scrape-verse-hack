@@ -15,7 +15,7 @@
 }
 .track__expect{
   grid-column:1;grid-row:2;align-self:start;
-  font-size:.625rem;color:var(--dimmer);
+  font-size:var(--t-tick);color:var(--dimmer);
   letter-spacing:.03em;line-height:1.25;
 }
 
@@ -26,21 +26,29 @@
 }
 .track__cell{flex:1 1 0;min-width:2px;}
 .track__cell--live{background:var(--healthy);}
-.track__cell--infected{background:var(--infected);}
-.track__cell--dead{background:var(--critical);}
+.track__cell--infected{
+  background:var(--infected);
+  background-image:repeating-linear-gradient(
+    to bottom,transparent 0 3px,var(--ink) 3px 5px);
+}
+.track__cell--dead{
+  background:var(--critical);
+  background-image:repeating-linear-gradient(
+    45deg,transparent 0 2px,var(--ink) 2px 4px);
+}
 
 .track__rate{
   grid-column:3;grid-row:1/3;
   font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
   font-size:1rem;font-weight:600;text-align:right;
 }
-.track__rate small{display:block;font-size:.5625rem;letter-spacing:.1em;
+.track__rate small{display:block;font-size:var(--t-tick);letter-spacing:.1em;
   text-transform:uppercase;color:var(--dimmer);font-weight:700;}
 
 .track__scale{
   display:flex;justify-content:space-between;
   margin:6px 0 0;font-family:"IBM Plex Mono",monospace;
-  font-size:.5625rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dimmer);
+  font-size:var(--t-tick);letter-spacing:.1em;text-transform:uppercase;color:var(--dimmer);
 }
 
 @media(max-width:600px){

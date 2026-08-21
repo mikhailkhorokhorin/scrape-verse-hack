@@ -52,11 +52,11 @@
 .sheet__fact:last-child{border-right:0;}
 .sheet__fact b{
   display:block;font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
-  font-size:1.0625rem;font-weight:600;line-height:1.2;margin-top:2px;
+  font-size:1.125rem;font-weight:600;line-height:1.2;margin-top:2px;
   overflow-wrap:anywhere;
 }
 .cid{
-  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.6875rem;
+  display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:var(--t-micro);
   background:var(--pink);color:var(--ink);border:2px solid var(--ink);
   padding:2px 7px;font-weight:600;letter-spacing:-.02em;
   white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;

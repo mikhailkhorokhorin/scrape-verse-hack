@@ -4,7 +4,8 @@
   border:2px solid var(--ink);background:var(--void-2);
 }
 .heal__btn{
-  font-family:Bangers,Impact,cursive;font-size:1.125rem;letter-spacing:.06em;
+  font-family:Anton,Impact,sans-serif;font-size:.9375rem;letter-spacing:.05em;
+  text-transform:uppercase;
   color:var(--ink);background:var(--reweaving);
   border:2px solid var(--ink);padding:8px 18px 5px;
   cursor:pointer;box-shadow:4px 4px 0 var(--ink);

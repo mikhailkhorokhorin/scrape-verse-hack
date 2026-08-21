@@ -21,7 +21,7 @@
 }
 .tagline{
   max-width:44ch;margin:var(--s2) 0 0;color:#CFC2DE;
-  font-size:clamp(1rem,1.35vw,1.1875rem);line-height:1.45;
+  font-size:clamp(1rem,1.35vw,1.125rem);line-height:1.45;
 }
 .tagline b{color:var(--paper);font-weight:700;}
 
@@ -34,9 +34,10 @@
   border-right:3px solid var(--ink);
 }
 .readout:last-child{border-right:0;}
+.readout__value--word{font-size:1.05rem;}
 .readout__value{
   font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;
-  font-size:1.625rem;font-weight:600;line-height:1.15;display:block;margin-top:1px;
+  font-size:1.75rem;font-weight:600;line-height:1.15;display:block;margin-top:1px;
 }
 .readout__delta{font-size:.8125rem;font-weight:600;margin-left:6px;}
 .readout__delta--down{color:var(--critical);}
@@ -110,8 +111,8 @@
 }
 .rest > *{position:relative;z-index:1;}
 .rest__label{
-  font-family:Anton,Impact,sans-serif;font-size:1.0625rem;letter-spacing:.06em;
+  font-family:Anton,Impact,sans-serif;font-size:1.125rem;letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);line-height:1;
 }
 .rest__line{font-size:.8125rem;line-height:1.4;color:#2A2438;}
-.rest__runs{font-size:.6875rem;color:#4A4160;letter-spacing:.04em;}
+.rest__runs{font-size:var(--t-micro);color:#4A4160;letter-spacing:.04em;}

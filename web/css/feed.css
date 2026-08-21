@@ -46,7 +46,7 @@
 }
 .stage:last-child{border-right-width:2px;background:var(--void-2);}
 .stage:last-child .stage__name{color:var(--healthy);}
-.stage__name{font-family:"IBM Plex Mono",monospace;font-size:.625rem;font-weight:600;letter-spacing:.1em;color:var(--cyan);}
+.stage__name{font-family:"IBM Plex Mono",monospace;font-size:var(--t-tick);font-weight:600;letter-spacing:.1em;color:var(--cyan);}
 .stage__ts{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:.8125rem;color:var(--dim);}
 
 .strain{
@@ -54,7 +54,7 @@
   margin:0 0 var(--s2);
 }
 .strain__tag{
-  font-family:"IBM Plex Mono",monospace;font-size:.625rem;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;font-size:var(--t-tick);font-weight:600;
   letter-spacing:.14em;color:var(--ink);background:var(--infected);
   border:2px solid var(--ink);padding:3px 8px 2px;
 }
