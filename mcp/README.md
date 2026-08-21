@@ -97,57 +97,65 @@ to a plain uptime check; THWIP scores the *data*, so silent decay surfaces.
 Claude calls `fleet_status`:
 
 ```
-THWIP fleet — 3 spiders, 0 degraded, 1 critical
+THWIP fleet — 3 spiders, 0 degraded, 0 critical
 
 BODEGA (mikhailkhorokhorin.github.io)
-  integrity 50%  CRITICAL
-  scanned 4m ago at 2026-08-21T09:13:59.565Z
+  integrity 100%  HEALTHY
+  scanned 43m ago at 2026-08-21T09:13:59.565Z
   rows 12
   collector_id c_mt2lkwxa1bb5uz223s
-  live: title, rating
-  dead: price, image
+  live: title, price, rating, image
+
+ATLAS (books.toscrape.com)
+  integrity 100%  HEALTHY
+  scanned 35m ago at 2026-08-21T09:21:15.246Z
+  rows 20
+  collector_id c_mt2fnqqngikv29od5
+  live: title, price, rating, image_url, availability
+
+KESTREL (news.ycombinator.com)
+  integrity 100%  HEALTHY
+  scanned 35m ago at 2026-08-21T09:21:21.347Z
+  rows 30
+  collector_id c_mt2fnt3p2k4n644701
+  live: title, points, comments, author
 ```
 
-> **Claude:** BODEGA is critical at 50% — `price` and `image` stopped returning
-> values, while `title` and `rating` still extract fine. That pattern usually
-> means selectors moved rather than the page breaking. Want me to check when it
-> started?
+> **Claude:** All three Spiders are healthy right now — but BODEGA has a story.
+> Earlier today the cron caught it at 0% twice and opened an incident on its
+> own. Want the receipt?
 
-> **You:** Yes, and fix it.
+> **You:** Show me.
 
-Claude calls `spider_history` to find the last good run, then `heal_spider`:
-
-```
-BODEGA heal attempt recorded as inc_002.
-strain        RENAMED
-collector_id  c_mt2lkwxa1bb5uz223s (unchanged)
-integrity     50% -> 100%
-recovered     price, image
-```
-
-> **You:** Prove it actually got fixed.
-
-Claude calls `heal_receipt` with `inc_002`:
+Claude calls `heal_receipt` with `inc_003`:
 
 ```
-HEAL RECEIPT inc_002
+HEAL RECEIPT inc_003
 spider        BODEGA
 collector_id  c_mt2lkwxa1bb5uz223s
-strain        RENAMED
-integrity     50% -> 100%
+strain        THROTTLED
+integrity     0% -> 100%
 resolved      yes
 
 phases:
-  DETECTED   2026-08-21T09:13:59.565Z  --
-  DIAGNOSED  2026-08-21T09:15:02.000Z  +63s
-  REWEAVING  2026-08-21T09:15:20.000Z  +18s
-  VERIFIED   2026-08-21T09:41:11.000Z  +1551s
+  DETECTED   2026-08-21T07:39:39.524Z  --
+  DIAGNOSED  2026-08-21T07:48:20.779Z  +521s
+  REWEAVING  2026-08-21T07:48:20.782Z  +0s
+  VERIFIED   2026-08-21T09:13:59.565Z  +5139s
 
-total 1632s from detection to verification
+total 5660s from detection to verification
 
-The collector_id never changed: c_mt2lkwxa1bb5uz223s was re-woven in place,
-not replaced. Downstream consumers kept the same endpoint throughout.
+The collector_id never changed: c_mt2lkwxa1bb5uz223s was re-woven in place, not replaced. Downstream consumers kept the same endpoint throughout.
+
+heal prompt sent:
+  On mikhailkhorokhorin.github.io: 'title' and 'price' and 'rating' and 'image' return null after a layout change. Likely THROTTLED: every field came back empty, so the request itself is likely being blocked or served a different page. Fix the extraction for those fields.
 ```
+
+> **Claude:** Worth knowing: the heal itself did not fix this one. Nothing on
+> the target had broken — the watcher's own payload parser was scoring a
+> wrapped envelope instead of the rows. The parser was fixed, the next scan
+> read 12 rows at 100%, and the record keeps the false diagnosis the system
+> believed at the time. Every timestamp above is from the real incident log.
 
 That last paragraph is the point. The scraper was repaired **in place** — same
 collector id, same endpoint. Nothing downstream had to be reconfigured, and the

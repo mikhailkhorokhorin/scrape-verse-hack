@@ -14,7 +14,7 @@
     "recovered_fields": [
       "availability"
     ],
-    "summary": "The availability selector matched every p.instock.availability on the page and joined them, so each row carried \"In stock (19 available) In stock In stock…\" — populated on every scan and wrong on every scan. The re-weave scoped it to the current product card and the field returned exactly In stock.",
+    "summary": "The availability selector matched every p.instock.availability on the page and joined them, so each row carried \"In stock (19 available) In stock In stock…\" — populated on every scan and wrong on every scan. The re-weave scoped it to the current product card and the field returned exactly In stock. This record was reconstructed after the fact from the scan log: the heal was run by hand before the incident loop existed, and every timestamp here is a real scan timestamp from history.json.",
     "rows_per_run": 20,
     "heal_prompt": "On books.toscrape.com the 'availability' field is matching every p.instock.availability on the page and joining them into one string. It must match only the one inside the current article.product_pod row and return exactly 'In stock' or 'Out of stock' per book. Keep title, price, rating and image_url exactly as they are. Return 20 rows.",
     "resolved": true,
@@ -100,7 +100,7 @@
       "rating",
       "image"
     ],
-    "summary": "The cron detected BODEGA at 0% twice and ran a heal on its own — and the heal did not fix it, because nothing on the target had broken. The scraper was returning one wrapped row holding a products array, and the watcher's own payload parser scored the envelope instead of the rows. The fix landed in rowsOf, the next scan read 12 rows at 100%, and the diagnosis recorded here is the false alarm the system believed at the time.",
+    "summary": "The cron detected BODEGA at 0% twice and ran a heal on its own — and the heal did not fix it, because nothing on the target had broken. The scraper was returning one wrapped row holding a products array, and the watcher's own payload parser scored the envelope instead of the rows. The fix landed in rowsOf, the next scan read 12 rows at 100%, and the diagnosis recorded here is the false alarm the system believed at the time. The VERIFIED stage and closure were written from the recovery scan's timestamp after the parser fix landed; the detection, diagnosis and re-weave rows are repair.js's own autonomous writes.",
     "rows_per_run": 12,
     "strain": "THROTTLED",
     "heal_prompt": "On mikhailkhorokhorin.github.io: 'title' and 'price' and 'rating' and 'image' return null after a layout change. Likely THROTTLED: every field came back empty, so the request itself is likely being blocked or served a different page. Fix the extraction for those fields.",
