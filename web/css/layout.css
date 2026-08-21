@@ -89,15 +89,14 @@
 .cell.has-burst{z-index:40;}
 
 @media(min-width:768px){
-  .grid:not(.grid--calm) > .cell--critical,
-  .grid:not(.grid--calm) > .cell--reweaving,
-  .grid:not(.grid--calm) > .cell--degraded{flex-grow:1;}
+  .grid:not(.grid--calm) > .cell{flex-grow:1;}
 }
 
 .grid--calm .cell{flex:1 1 320px;}
 .grid--calm .cell > .panel{min-height:232px;}
 @media(min-width:768px){
   .grid--calm .cell{max-width:calc((100% - 26px) / 2);}
+  .grid--calm .cell:last-child:nth-child(odd){max-width:none;}
   .grid--calm .panel--compact .spark{height:74px;}
   .grid--calm .panel--compact .codename{font-size:1.75rem;}
 }

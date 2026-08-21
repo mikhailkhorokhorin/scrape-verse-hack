@@ -107,3 +107,14 @@ carry over. Dismissal is a `setTimeout` under 3000ms, matching the stated rule.
       from the character's Bangers voice — the infected line is issued as
       `voice: "symbiote"` and `.bubble--symbiote` renders it in mono, lowercase, regular
       weight on symbiote ink, against the character's uppercase Bangers on paper
+
+## Deviation from DESIGN-SPEC section 8, recorded on purpose
+
+`.bubble` carries `border-radius:22px`, and section 8 bans radii above 4px. The ban was
+written against rounded cards — the generic-dashboard default it exists to keep out — and
+predates this idea. A speech bubble with square corners is not a speech bubble; it is a
+plate with a tail stuck on it. The bubble keeps the rest of the contract that makes the
+ban meaningful: a 3px ink border and a `5px 5px 0` shadow with zero blur.
+
+Nothing else on the page rounds anything. If a future pass finds a rounded corner that is
+not this bubble, it is drift and should be removed.
