@@ -84,8 +84,12 @@
 .grid--calm .cell{flex:1 1 320px;}
 .grid--calm .cell > .panel{min-height:232px;}
 @media(min-width:768px){
+  .grid--calm .cell{max-width:calc((100% - 26px) / 2);}
   .grid--calm .panel--compact .spark{height:74px;}
   .grid--calm .panel--compact .codename{font-size:1.75rem;}
+}
+@media(min-width:1200px){
+  .grid--calm .cell{max-width:calc((100% - 52px) / 3);}
 }
 
 @media(max-width:1199px){
