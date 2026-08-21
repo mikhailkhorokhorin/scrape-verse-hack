@@ -222,7 +222,7 @@ and they ship. Listed here so nobody re-cuts a feature that already exists.
 - [x] **Refactor into modules** — the single ported file became 47 JS modules and 39
       stylesheets under `web/`, each small enough to read. No build step, no framework.
       The UI-ideas pass below is most of the growth from the original 19 and 17
-- [x] **Test suite** — **821 tests, `npm test`, `node:test`, zero dependencies.**
+- [x] **Test suite** — **826 tests, `npm test`, `node:test`, zero dependencies.**
       Thirty-seven files under `test/`: `classify` and its exact boundaries, integrity
       `scoring`, `payload` shapes, strain `diagnosis`, the `heal` decision, `repair` gating
       (two consecutive bad scans, 2h cooldown), atomic JSON `storage`, the MCP server —

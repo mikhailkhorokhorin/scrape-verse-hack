@@ -29,9 +29,9 @@ Everything below is on disk and checkable. Nothing is invented for camera.
 | Collector ID identical before and after, all three | same `c_*` in every record above |
 | A per-field `verification` object on every incident | `scripts/verify.js`, rendered by `web/js/receipt.js`, printed by `heal_receipt` |
 | **Two of the three breaks were on sites we do not control** | `web/js/wild.js` computes it; the note renders above the feed |
-| Seven cron commits authored by `thwip watch` | `git log --author="thwip watch"` |
+| Ten cron commits authored by `thwip watch` | `git log --author="thwip watch"` |
 | Six MCP tools over stdio JSON-RPC, no SDK | `mcp/registry.js` |
-| 821 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
+| 826 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
 
 **The strongest asset in this list is `inc_003`, and it is the one that failed.** The cron
 opened it alone, diagnosed THROTTLED, healed — and the heal did not work, because nothing

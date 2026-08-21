@@ -9,7 +9,7 @@ the whole story without leaving GitHub. Start with `docs/CLAUDE.md`; it is the r
 operating manual and it supersedes nothing here, it completes it.
 
 The code repository is https://github.com/mikhailkhorokhorin/scrape-verse-hack — CI,
-the cron and Pages all run there. GitLab remains as a mirror only.
+the cron and Pages all run there. It is the only remote.
 
 ## How you work
 
@@ -33,8 +33,8 @@ Commit each task separately. A single commit spanning six tasks cannot be review
 | Scripts language | Node |
 | Console framework | None. Vanilla, no build step |
 | Frontend starting point | Port `docs/prototype.html`. Never rewrite it from the spec |
-| CI | **GitHub Actions** — `.github/workflows/watch.yml`, `*/30` cron in the file. GitLab runners never came up; that project is a mirror and `.gitlab-ci.yml` is kept only as history |
-| Tests | `node:test`, no dependencies. `npm test` — 821 tests, must stay green |
+| CI | **GitHub Actions** — `.github/workflows/watch.yml`, `*/30` cron in the file. GitLab was abandoned early; there is no GitLab remote |
+| Tests | `node:test`, no dependencies. `npm test` — 826 tests, must stay green |
 | MCP server | `mcp/`, stdio JSON-RPC, no SDK. Six tools. See `mcp/README.md` |
 
 ## Two hard stops — the only reasons to come back to a human
