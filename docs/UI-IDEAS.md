@@ -3,9 +3,14 @@
 Every idea has a stable id. Reference them by id in commits and prompts. Ids are never
 reused: a merged idea keeps its number and points at where it went.
 
-A **second wave** was written on 21 Aug, after this one was built and the console could be
-looked at rather than imagined: `docs/UI-IDEAS-WAVE-2.md`, ids UI-24 onward. It does not
-supersede this file — it starts where this one finished.
+Two further waves were written on 21 Aug, after this one was built and the console could be
+looked at rather than imagined. Neither supersedes this file; each starts where the last
+one finished.
+
+- `docs/UI-IDEAS-WAVE-2.md` — UI-24 to UI-48. **Culled the same day. Only UI-29 survives**,
+  and the file records why the other twenty-four do not.
+- `docs/UI-IDEAS-WAVE-3.md` — UI-49 onward, written against the one test wave two passed:
+  a page of the comic that happens to be true, not a widget in a costume.
 
 This file is the argument: what is in, what is out, and why. **The working briefs live one
 per file in `docs/ideas/`** — mechanism, risks and a done-when checklist for each idea,
