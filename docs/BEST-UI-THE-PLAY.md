@@ -1,7 +1,10 @@
 # Best UI — the play
 
-Four waves produced roughly seventy ideas. That is not a plan, it is a menu, and a menu
-two days from a deadline is how six things get half-built.
+Four waves produced eighty-two ideas, fifty-nine of them in the three waves written on
+21 Aug. That is not a plan, it is a menu, and a menu two days from a deadline is how six
+things get half-built.
+
+`UI-IDEAS-INDEX.md` carries every id and its fate. This file is the decision.
 
 This file is the product decision. It names one spine, one image, one interaction, and
 six moves. Everything else in `UI-IDEAS*.md` is either folded into a move here or dead.
@@ -217,6 +220,17 @@ Dead, with reasons, so they stop coming back.
 | UI-70 · UI-73 · UI-75 · UI-76 · UI-77 · UI-81 | Motion refinements on top of motion that already works. MOVE 5 is worth more than all six, and it is subtraction |
 | UI-78 odometer · UI-79 stamp | Nice, and they land only if MOVE 5's defect fix ships first. Do them in the same commit as MOVE 5 or not at all |
 | All of wave two except UI-29 | Already culled — chrome |
+
+Three ideas are **deferred rather than dead**, because each is nearly free once a move it
+depends on exists and worthless before it: **UI-60** (hold a key, the plates come apart)
+and **UI-73** (the sparkline strokes itself) both ride MOVE 4's timeline, and **UI-71**'s
+between-scan drift is half-served by MOVE 5's sweep hand once UI-57 is out of the way.
+
+One idea joined a move after this file was first written: **UI-74, the impact frame** —
+sixty milliseconds of full-page inversion on a real transition into `CRITICAL` — belongs
+in MOVE 5, because a page that is otherwise still can afford exactly one loud moment and
+that is the one. It lands with its `prefers-reduced-motion` guard in the same commit, and
+it must never repeat inside one render.
 
 **One item is not an idea and is not on any list:** `index.html` carries no `og:` or
 `twitter:` tags, so the URL renders blank wherever it is pasted — including the Discord
