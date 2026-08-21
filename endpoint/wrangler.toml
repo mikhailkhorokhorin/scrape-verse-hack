@@ -1,8 +1,0 @@
-name = "thwip-heal"
-main = "worker.js"
-compatibility_date = "2026-08-01"
-
-[vars]
-ORIGIN = "https://hackathons6943133.gitlab.io"
-PROJECT_ID = ""
-ALLOWED = "c_mt2fnqqngikv29od5,c_mt2fnt3p2k4n644701"

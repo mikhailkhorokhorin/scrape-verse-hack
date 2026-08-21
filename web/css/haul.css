@@ -93,7 +93,7 @@
 }
 
 .stamp{
-  display:flex;gap:var(--s2);align-items:flex-start;
+  display:flex;gap:var(--s2);align-items:flex-start;min-width:0;
   padding:var(--s2);border:3px solid var(--ink);background:var(--void);
 }
 .stamp__ring{
@@ -112,7 +112,7 @@
   display:block;margin-top:3px;font-size:.4375rem;font-weight:700;
   letter-spacing:.12em;text-transform:uppercase;line-height:1.35;
 }
-.stamp__lines{display:flex;flex-direction:column;gap:7px;min-width:0;}
+.stamp__lines{display:flex;flex-direction:column;gap:7px;min-width:0;flex:1 1 auto;}
 .stamp__line{
   display:flex;flex-direction:column;min-width:0;
   font-family:"IBM Plex Mono",monospace;font-size:.6875rem;color:var(--paper);

@@ -107,13 +107,23 @@ function haulMovement(runs) {
   };
 }
 
+function haulUnitOf(runs, key) {
+  for (const run of runs) {
+    const raw = (run.sample || {})[key];
+    if (!isPlainObject(raw)) continue;
+    if (typeof raw.symbol === "string" && raw.symbol) return { prefix: raw.symbol, suffix: "" };
+    if (typeof raw.currency === "string" && raw.currency) return { prefix: "", suffix: " " + raw.currency };
+  }
+  return { prefix: "", suffix: "" };
+}
+
 function haulSpreadKey(runs) {
   const keys = new Set();
   for (const run of runs) for (const key of Object.keys(run.sample || {})) keys.add(key);
   for (const key of keys) {
     if (!haulIsNumeric(key)) continue;
     const values = runs.map((run) => haulNumberOf(run.sample[key])).filter((v) => v !== null);
-    if (values.length >= 3) return { key: key, values: values };
+    if (values.length >= 3) return { key: key, values: values, unit: haulUnitOf(runs, key) };
   }
   return null;
 }
@@ -131,6 +141,7 @@ function haulSpread(runs) {
   return {
     key: found.key,
     values: values,
+    unit: found.unit,
     distinct: distinct,
     lo: sorted[0],
     hi: sorted[sorted.length - 1],
