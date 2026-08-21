@@ -5,6 +5,7 @@
   body::before,.wrap::before,.wrap::after{display:none !important;}
   .fleet-ground,.fleet-symbiote,.modal,.mockflag,.demobar{display:none !important;}
   .intro-replay,.intro,.bubble,.wild-note,.evidence{display:none !important;}
+  .pagenav{display:none !important;}
 
   .masthead .readouts,
   .masthead .tagline,

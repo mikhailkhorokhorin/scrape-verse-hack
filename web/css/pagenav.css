@@ -1,0 +1,70 @@
+.pagenav{
+  position:fixed;top:0;left:0;right:0;z-index:45;
+  display:flex;align-items:center;gap:var(--s3);
+  padding:7px var(--s4) 6px;
+  background:var(--paper);
+  border-bottom:3px solid var(--ink);
+  border-radius:0;
+  box-shadow:0 4px 0 var(--ink);
+  transform:translateY(-102%);
+  transition:transform 200ms cubic-bezier(0.22,1,0.36,1);
+  pointer-events:none;
+  overflow:hidden;
+}
+.pagenav.is-up{transform:translateY(0);pointer-events:auto;}
+
+.pagenav::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(var(--paper-dot) 1px,transparent 1.4px);
+  background-size:5px 5px;opacity:.55;
+}
+.pagenav > *{position:relative;z-index:1;}
+
+.pagenav__mark{
+  font-family:Anton,Impact,sans-serif;font-size:1.125rem;line-height:1;
+  letter-spacing:.04em;color:var(--ink);flex:0 0 auto;
+  padding-top:2px;
+}
+
+.pagenav__links{
+  display:flex;align-items:center;gap:var(--s2);
+  min-width:0;flex:1 1 auto;
+}
+
+.pagenav__link{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.75rem;font-weight:600;letter-spacing:.09em;
+  text-transform:uppercase;text-decoration:none;white-space:nowrap;
+  color:var(--ink);
+  border:2px solid transparent;border-radius:0;
+  padding:3px 7px 2px;
+  transition:background-color 120ms linear,color 120ms linear,border-color 120ms linear;
+}
+.pagenav__link:hover{border-color:var(--ink);background:var(--cyan);}
+.pagenav__link:focus-visible{outline:3px solid var(--pink);outline-offset:1px;}
+.pagenav__link.is-here{
+  background:var(--ink);color:var(--paper);border-color:var(--ink);
+}
+
+#nav-watch,#haulhead,#nav-replay,#nav-feed{scroll-margin-top:64px;}
+
+.is-capture .pagenav{display:none !important;}
+.intro-running .pagenav{display:none !important;}
+
+@media(max-width:768px){
+  .pagenav{gap:var(--s2);padding:6px var(--s2) 5px;}
+  .pagenav__links{gap:6px;}
+  .pagenav__link{font-size:.6875rem;letter-spacing:.05em;padding:3px 4px 2px;}
+  .pagenav__mark{font-size:1rem;}
+  #nav-watch,#haulhead,#nav-replay,#nav-feed{scroll-margin-top:56px;}
+}
+
+@media(max-width:400px){
+  .pagenav{gap:9px;padding:6px 10px 5px;}
+  .pagenav__link{font-size:.625rem;letter-spacing:.02em;padding:3px 3px 2px;}
+  .pagenav__mark{font-size:.9375rem;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .pagenav{transition:none;}
+}

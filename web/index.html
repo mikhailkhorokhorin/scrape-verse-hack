@@ -48,6 +48,8 @@
 <link rel="stylesheet" href="css/ground.css">
 <link rel="stylesheet" href="css/diptych.css">
 <link rel="stylesheet" href="css/intro.css">
+<link rel="stylesheet" href="css/pagenav.css">
+<link rel="stylesheet" href="css/webs.css">
 <link rel="stylesheet" href="css/print.css">
 </head>
 <body>
@@ -106,7 +108,7 @@
     <div id="diptych-body"></div>
   </section>
 
-  <div class="sechead"><h2 class="caption" id="watchhead">The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
+  <div class="sechead" id="nav-watch"><h2 class="caption" id="watchhead">The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
 
   <div class="grid" id="grid" style="min-height:293px" aria-label="Spider fleet"></div>
 
@@ -162,10 +164,10 @@
   <div class="sechead" id="haulhead"><h2 class="caption" id="haulcaption">The Haul</h2><span class="sechead__count" id="haulcount" hidden></span><span class="rule"></span></div>
   <section class="haul" id="haul" aria-label="The data the fleet brought back"></section>
 
-  <div class="sechead"><h2 class="caption" id="replaycaption">Incident Replay</h2><span class="sechead__count" id="replayhead" hidden></span><span class="rule"></span></div>
+  <div class="sechead" id="nav-replay"><h2 class="caption" id="replaycaption">Incident Replay</h2><span class="sechead__count" id="replayhead" hidden></span><span class="rule"></span></div>
   <section class="replay" id="replay" tabindex="0" aria-label="Incident replay. Space plays and pauses, arrow keys step between stages."></section>
 
-  <div class="sechead"><h2 class="caption" id="feedcaption">Incident Feed</h2><span class="sechead__count" id="feedcount" hidden></span><span class="rule"></span></div>
+  <div class="sechead" id="nav-feed"><h2 class="caption" id="feedcaption">Incident Feed</h2><span class="sechead__count" id="feedcount" hidden></span><span class="rule"></span></div>
   <div id="wildnote"></div>
   <div class="feed" id="feed"></div>
 
@@ -227,5 +229,7 @@
 <script src="js/app.js"></script>
 <script src="js/caption.js"></script>
 <script src="js/ground.js"></script>
+<script src="js/webs.js"></script>
+<script src="js/pagenav.js"></script>
 </body>
 </html>
