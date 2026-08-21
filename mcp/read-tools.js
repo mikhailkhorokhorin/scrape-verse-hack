@@ -171,6 +171,24 @@ function totalSeconds(incident) {
   return Math.round((last - first) / 1000);
 }
 
+function shortValue(value) {
+  if (value === null || value === undefined) return 'null';
+  if (value === '') return '""';
+  const text = typeof value === 'string' ? value : JSON.stringify(value);
+  return text.length > 48 ? text.slice(0, 45) + '...' : text;
+}
+
+function verificationRows(incident) {
+  const v = incident.verification;
+  if (!v || !Array.isArray(v.checks) || !v.checks.length) return [];
+  return ['', `verification: ${v.passed}/${v.checked} fields re-checked against the ` +
+    `run after the heal (${v.verdict.toLowerCase().replace(/_/g, ' ')})`,
+  ...v.checks.map((check) =>
+    `  ${check.passed ? 'ok  ' : 'FAIL'} ${check.field}: ${check.from} -> ` +
+    `${check.to || 'not checked'} | was ${shortValue(check.received_before)} | ` +
+    `now ${shortValue(check.received_after)}`)];
+}
+
 function healReceipt(args) {
   const id = typeof args.incident_id === 'string' ? args.incident_id.trim() : '';
   if (!id) throw new Error('incident_id is required and must be a string');
@@ -197,6 +215,7 @@ function healReceipt(args) {
   lines.push('',
     `The collector_id never changed: ${incident.collector_id} was re-woven in place, ` +
     'not replaced. Downstream consumers kept the same endpoint throughout.');
+  lines.push(...verificationRows(incident));
   if (incident.heal_prompt) lines.push('', `heal prompt sent:\n  ${incident.heal_prompt}`);
   return textContent(lines.join('\n'));
 }
@@ -204,6 +223,6 @@ function healReceipt(args) {
 module.exports = {
   DEFAULT_LIMIT, MAX_LIMIT,
   ago, lastRunOf, limitOf, requireCodename, statusBlock, runLine,
-  incidentBlock, phaseRows, totalSeconds,
+  incidentBlock, phaseRows, totalSeconds, verificationRows, shortValue,
   fleetStatus, spiderHistory, incidentLog, healReceipt
 };
