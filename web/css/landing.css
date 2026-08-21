@@ -1,0 +1,28 @@
+.panel--landed{animation:panel-landed 900ms cubic-bezier(.22,1,.36,1) both;}
+
+.panel--landed::after{
+  content:attr(data-landed);
+  position:absolute;left:0;right:0;bottom:0;z-index:3;
+  padding:4px 10px;
+  background:var(--ink);color:var(--paper);
+  font:600 var(--t-micro)/1.4 "IBM Plex Mono",ui-monospace,monospace;
+  letter-spacing:.04em;text-align:left;
+  animation:landed-note 2400ms ease-out both;
+}
+
+@keyframes panel-landed{
+  0%{box-shadow:0 0 0 0 var(--healthy);}
+  35%{box-shadow:0 0 0 4px var(--healthy);}
+  100%{box-shadow:0 0 0 0 transparent;}
+}
+
+@keyframes landed-note{
+  0%{opacity:0;transform:translateY(100%);}
+  10%{opacity:1;transform:translateY(0);}
+  80%{opacity:1;transform:translateY(0);}
+  100%{opacity:0;transform:translateY(100%);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .panel--landed,.panel--landed::after{animation:none;}
+}
