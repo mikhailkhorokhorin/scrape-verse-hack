@@ -26,9 +26,9 @@ never near :00/:30, `git pull --rebase` first, check the cron's last run · any 
 `.github/workflows/watch.yml` backs up `data/` first and is verified against the next
 scheduled run before anything else builds on it.
 
-Orchestration: **at most 3 agents in parallel, disjoint file lanes, lead merges.** S0,
-S2, S3 and S5 are sequential. Inside S1 the three moves run as three parallel agents.
-The battery (S4) runs as three parallel lanes of sequential audits.
+Orchestration: **at most 2 agents in parallel, disjoint file lanes, lead merges.** S0,
+S2, S3 and S5 are sequential. Inside S1 the three moves run two-then-one. The battery
+(S4) runs its three lanes two at a time, the third joining as a lane finishes.
 
 Triage letters, same as `AUDIT-PIPELINE.md`, applied the moment a finding appears:
 **F** fix now · **D** defer with a written reason · **A** accept and state it in
@@ -53,7 +53,7 @@ Nothing new builds on an open wound.
 3. **Finish audit 3's unfinished sweep:** haul cards at 375 (long titles, long URLs,
    the empty state), the replay keyboard walk end to end (Space, arrows, Home, End),
    and proof that the receipt scrolls inside itself while the page does not.
-4. **Chore, from the play's section 5: `og:` and `twitter:` tags.** `index.html` has
+4. **Chore UI-44, from the play's section 5: `og:` and `twitter:` tags.** `index.html` has
    none, so the URL renders blank wherever it is pasted — including the Discord thread
    a judge receives it in. Add `og:title`, `og:description`, `og:url`, `og:image`
    (absolute Pages URLs) and `twitter:card=summary_large_image`. The image points at
@@ -65,11 +65,11 @@ block, and the receipt scrolls inside itself at 375 while the page does not.
 
 ---
 
-## S1 · The cheap moves — three agents, parallel, disjoint files
+## S1 · The cheap moves — two agents, then a third pass
 
 Three moves whose whole cost is typography over numbers already held. Each agent owns
 its own files; none touches another's; `index.html` insertions are single-line and
-reconciled by the lead at merge.
+reconciled by the lead at merge. **Two run in parallel (S1-A and S1-B), then S1-C.**
 
 ### S1-A · MOVE 1 — the open (UI-50 + UI-51 + UI-65)
 
@@ -133,7 +133,7 @@ verify live.
 
 ---
 
-## S2 · MOVE 2 — the scratch. The headline. (lead plus one agent, sequential)
+## S2 · MOVE 2 — the scratch. The headline. (UI-61 + UI-62; lead plus one agent)
 
 Drag the black off a taken panel and underneath is the value that actually came back.
 This is the one image and the one interaction; everything else this weekend supports it.
@@ -182,7 +182,7 @@ parked for S5.
 
 ## S3 · Motion — MOVE 5, then MOVE 4 (one agent each, sequential)
 
-### S3-A · MOVE 5 — stillness (UI-82 fix + UI-80 + UI-69 + UI-74 + UI-78/79)
+### S3-A · MOVE 5 — stillness (UI-82 fix + UI-80 + UI-69 + UI-71 live half + UI-74 + UI-78/79)
 
 The order inside this move is fixed.
 
@@ -198,10 +198,13 @@ The order inside this move is fixed.
    weight-shift move behind the damaged and reacting states. A sick panel becomes the
    only narrative motion on an otherwise still page, which reads harder than anything
    that could be added on top.
-3. **UI-69, the sweep hand.** One thin arc along each panel border, duration computed as
-   `lastScan + 30min − now` rather than chosen, snapping to zero on a landing scan and
-   pulsing at the border when a run is overdue. It is the only duration on the page that
-   is a real interval.
+3. **UI-69, the sweep hand — and with it UI-71's live half.** One thin arc along each
+   panel border, duration computed as `lastScan + 30min − now` rather than chosen,
+   snapping to zero on a landing scan and pulsing at the border when a run is overdue.
+   It is the only duration on the page that is a real interval, and it is what makes
+   UI-71 true: a judge sitting still for sixty seconds sees the page change on its own
+   rather than seeing a screenshot. (UI-71's other half, the yellowing paper, died with
+   UI-57 and is not built.)
 4. **UI-74, the impact frame.** Sixty milliseconds of full-page inversion on a genuine
    transition into CRITICAL, fired from `delta.js` so it can never be spent on
    decoration. Hard-disabled under reduced motion, and it must never repeat inside one

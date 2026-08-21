@@ -57,6 +57,13 @@ test('the table shows the value before beside the value after', () => {
   assert.match(html, /Codex on AWS/);
 });
 
+test('the table sits in its own scroll region so a narrow screen scrolls it, not the page', () => {
+  const html = receiptHTML(INC);
+  assert.match(html, /<div class="receipt__scroll" tabindex="0" role="region"/);
+  assert.match(html, /aria-label="Verification receipt, scrolls sideways"/);
+  assert.ok(html.indexOf('receipt__scroll') < html.indexOf('receipt__table'));
+});
+
 test('a field name carrying markup is escaped, not rendered', () => {
   const row = receiptRowHTML({ field: '<img src=x onerror=alert(1)>', received_before: null, received_after: null, passed: false });
   assert.doesNotMatch(row, /<img/);

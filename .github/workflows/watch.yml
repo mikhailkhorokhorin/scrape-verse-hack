@@ -82,6 +82,7 @@ jobs:
           cp -r web/* public/
           cp -r data public/
           cp -r demo-target public/
+          cp -r assets public/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: public
