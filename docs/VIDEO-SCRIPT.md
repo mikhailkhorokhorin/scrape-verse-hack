@@ -30,7 +30,7 @@ Everything stated below is on disk and checkable. Nothing is invented for camera
 | Collector ID identical before and after, all three | same `c_*` in every record above |
 | The cron committing its own scans | `git log` — `data: scan 2026-08-21T07:49:43Z`, `data: scan 2026-08-21T08:44:18Z` |
 | Six MCP tools over stdio JSON-RPC, no SDK | `app/mcp/registry.js` |
-| 238 tests, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
+| 528 tests, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
 
 **The strongest asset in this list is `inc_003`, and it is the one that failed.** The
 cron opened it alone, diagnosed THROTTLED, healed — and the heal did not work, because
@@ -60,7 +60,10 @@ system that only ever reports its successes is a system nobody can audit.
 3. Browser at 1440px+, zoom 100%, bookmarks bar hidden
 4. Four tabs / windows staged in this order:
    - Tab A: the live console (real data)
-   - Tab B: `demo-target/?v=renamed` — the Chaos Lab, broken variant
+   - Tab B: `demo-target/broken-renamed.html` — the Chaos Lab, broken variant.
+     **The variants are separate files, not query strings** — `demo-target/?v=renamed`
+     serves the *healthy* page. Use `index.html`, `broken-renamed.html`,
+     `broken-drifted.html`
    - Editor: `app/collectors.json`, `app/kestrel-probe.json`, `app/kestrel-after.json`
    - Terminal: Claude Code with the THWIP MCP server already connected (`/mcp` shows it)
 5. In Claude Code, run the two read-tool calls once before recording so the responses are
@@ -84,6 +87,12 @@ the fleet pulse move on their own for two seconds before speaking.
 **Direction:** Do not click. The grid is the hero shot and it has to be seen before it is
 explained.
 
+**Reality check:** the fleet is currently **all three green at 100%**, so there is no
+black substance on any panel in this frame — the header reads `FLEET INTEGRITY 100%`,
+`MEAN RE-WEAVE 72m 45s`, badge `LIVE`. That is the honest state and it is the right cold
+open, but it means the symbiote cannot be pointed at until Section 2's cutaway and the
+incident cards in Section 5. Do not gesture at "the black" over this shot.
+
 ---
 
 ## Section 2 — Question 1: how the scraper was designed · 0:12–0:45
@@ -103,9 +112,14 @@ three collector blocks.
 > makes decay measurable: we don't ask whether a field came back, we ask whether what came
 > back is still allowed to be there.
 
-**Direction:** Pause with ATLAS's `availability` block on screen — the `pattern` line — as
-you say "allowed to be there". Then cut back to the console grid and hover one panel so
-the Integrity bar reads.
+**Direction:** Pause with ATLAS's `availability` block on screen — the `pattern` line,
+`"^(In stock|Out of stock)$"`, at line 60 of `collectors.json` — as you say "allowed to be
+there". Then cut back to the console grid.
+
+All three panels are healthy today, so each is a **strip with a 100% Integrity bar** and
+no black on it. For the substance itself, cut to the **HOW TO READ A SPIDER** legend
+directly under the grid — it shows the states side by side — or to the Section 5 incident
+cards where BODEGA sits at 0% with four DEAD fields. Do not promise black on the grid.
 
 **Say:**
 
@@ -133,11 +147,15 @@ THWIP fleet — 3 spiders, 0 degraded, 0 critical
 
 BODEGA (mikhailkhorokhorin.github.io)
   integrity 100%  HEALTHY
+  scanned 75m ago at 2026-08-21T09:13:59.565Z
   rows 12
   collector_id c_mt2lkwxa1bb5uz223s
   live: title, price, rating, image
 ...
 ```
+
+The `scanned Nm ago` figure grows with wall-clock time — do not read it aloud, and do
+not be surprised when it differs from this block on the day.
 
 **Type:** `What has broken so far?`
 
@@ -157,7 +175,7 @@ calling them is stronger than calling them, and it is the truthful reason.
 
 ## Section 4 — Question 3, part one: the Chaos Lab · 1:20–1:40
 
-**Screen:** Tab B — `demo-target/?v=renamed`.
+**Screen:** Tab B — `demo-target/broken-renamed.html`.
 
 **Say — this line is required:**
 
@@ -181,11 +199,15 @@ seconds.
 
 ## Section 5 — Question 3, part two: the three real incidents · 1:40–2:20
 
-**Screen:** Back to the console, incident feed. Three cards.
+**Screen:** Back to the console, incident feed. Three cards, newest first — the feed reads
+**inc_003 (BODEGA), inc_001 (KESTREL), inc_002 (ATLAS)** in a two-column layout, *not* in
+numeric order. Do not say "in order" over it. The narration below walks KESTREL → ATLAS →
+BODEGA, so drive it from the editor files and the incident cards, not by reading the feed
+top to bottom.
 
 **Say:**
 
-> Three real breaks, three real repairs. Here they are in order.
+> Three real breaks, three real repairs.
 
 **Screen:** Cut to `app/kestrel-probe.json`, scroll slowly.
 
@@ -203,9 +225,9 @@ seconds.
 > Same collector afterwards. Real titles, real points, real authors. Zero to a hundred.
 >
 > ATLAS, strain DRIFTED, was subtler. The availability selector matched every availability
-> element on the page and joined them together, so every row read "In stock nineteen
-> available In stock In stock" — populated on every scan, wrong on every scan. Ninety to a
-> hundred.
+> element on the page and joined them together, so every row read "In stock, nineteen
+> available, In stock, In stock" and on down the page — populated on every scan, wrong on
+> every scan. Ninety to a hundred.
 
 **Screen:** Cut to the BODEGA incident card, then to the `inc_003` summary text.
 
@@ -253,9 +275,21 @@ phases:
   REWEAVING  2026-08-21T07:48:20.782Z  +0s
   VERIFIED   2026-08-21T09:13:59.565Z  +5139s
 
+total 5660s from detection to verification
+
 The collector_id never changed: c_mt2lkwxa1bb5uz223s was re-woven in place,
-not replaced.
+not replaced. Downstream consumers kept the same endpoint throughout.
+
+heal prompt sent:
+  On mikhailkhorokhorin.github.io: 'title' and 'price' and 'rating' and 'image'
+  return null after a layout change. Likely THROTTLED: every field came back
+  empty, so the request itself is likely being blocked or served a different
+  page. Fix the extraction for those fields.
 ```
+
+The output continues past the collector_id line — it ends with the heal prompt, not with
+"not replaced". Scroll so the `collector_id` line is the frame you hold; the prompt block
+below it is a bonus, not the point.
 
 **Say:**
 
@@ -319,3 +353,53 @@ accelerated" line.
 - [ ] Confirm the collector ID is legible at 1080p, not just at source resolution
 - [ ] Confirm the `inc_003` summary text is readable, not just visible
 - [ ] Upload, get the link, put it in `app/README.md` and in `docs/SUBMISSION.md`
+
+---
+
+## Shot check — 2026-08-21
+
+Every section was opened on the staging build (`http://localhost:8081/`) and each claim
+compared against what actually renders. Reference stills are in `video-stills/`, outside
+both repositories. Animations were frozen (`*{animation:none!important}`) before capture.
+
+| # | Section | Verdict | Still |
+|---|---|---|---|
+| 1 | Cold open · the grid | reproducible — note added: fleet is all-green, no symbiote in frame | `01-cold-open-grid.png` |
+| 2 | `collectors.json` · validators | reproducible — direction corrected, `pattern` is line 60 | `02-collectors-json.png`, `02b-legend-how-to-read.png` |
+| 3 | MCP · `fleet_status` | reproducible — quoted block corrected (`scanned … ago` line) | `03-mcp-fleet-status.png` |
+| 4 | Chaos Lab · variants | **fixed** — `?v=` query strings do not switch variants | `04a-chaos-healthy.png`, `04b-chaos-renamed.png`, `04c-chaos-drifted.png` |
+| 5 | Three real incidents | **fixed** — feed order is newest-first, not numeric | `05a-kestrel-probe-broken.png`, `05b-kestrel-after-healed.png`, `05c-inc003-summary.png` |
+| 6 | `heal_receipt` · the receipt | reproducible — quoted block completed; every number matches | `06-incident-replay.png`, `06b-mcp-heal-receipt.png` |
+| 7 | THE HAUL | reproducible — 636 rows, 30 scans, 3 sources, provenance stamps present | `07-the-haul.png` |
+
+Raw tool output as captured, for word-for-word comparison on the day:
+`video-stills/_mcp-fleet_status.txt`, `_mcp-heal_receipt-inc_003.txt`,
+`_mcp-incident_log.txt`.
+
+### What was corrected, and why
+
+1. **Chaos Lab URLs** — the staging tab was listed as `demo-target/?v=renamed`. That query
+   string is inert; the page serves the *healthy* build. The variants are separate files:
+   `index.html`, `broken-renamed.html`, `broken-drifted.html`. This would have put a
+   healthy page on camera under the word "broken".
+2. **`fleet_status` block** — the real output carries a `scanned Nm ago at <ts>` line the
+   script omitted. Added, with a note that the figure moves with wall-clock time.
+3. **`heal_receipt` block** — the real output does not end at "not replaced". It continues
+   with `total 5660s`, a second clause on the collector_id line, and the heal prompt.
+   Completed, so the frame matches what the terminal prints.
+4. **Incident feed order** — the feed renders newest-first (inc_003, inc_001, inc_002) in
+   two columns. "Here they are in order" contradicted the screen; removed.
+5. **Test count** — `npm test` now reports **528** tests, not 238.
+6. **ATLAS drift string** — real value is `In stock (19 available) In stock In stock…`;
+   narration reworded to match what is on screen.
+7. **Sections 1–2 symbiote** — all three spiders are at 100%, so no black substance is on
+   any panel. Both directions now say so and point at the legend and the incident cards
+   instead.
+
+### Verified unchanged
+
+Collector IDs (all three), `inc_003` phase timestamps and `+521s / +0s / +5139s` gaps,
+`0% -> 100%`, strain names, the two cron commits authored by `thwip watch`, six MCP tools
+with exactly two carrying the credit warning, `MEAN RE-WEAVE 72m 45s / mean of 3
+re-weaves`, badge `LIVE`, ATLAS blast radius 120 rows across 6 scans, and the full
+`inc_003` summary text rendering legibly in the feed.

@@ -8,7 +8,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "node --test \"test/**/*.test.js\"",
+    "test": "node test/run.js",
     "health": "node scripts/health-check.js",
     "repair": "node scripts/repair.js",
     "mcp": "node mcp/server.js",
