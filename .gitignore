@@ -7,6 +7,5 @@ create-*.json
 *-probe.json
 node_modules/
 .DS_Store
-docs/
 nul
 public/

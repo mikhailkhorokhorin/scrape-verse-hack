@@ -2,21 +2,14 @@
 
 Hackathon project. Deadline **Aug 23, 2026**. You are working autonomously.
 
-## First, make sure the docs are here
+## First, read the docs
 
-Specs, plan and task queue live in a separate repository. It is gitignored here, so clone
-it into this directory if it is missing:
+Specs, plan and task queue are vendored into `docs/` in this repository — a judge sees
+the whole story without leaving GitHub. Start with `docs/CLAUDE.md`; it is the real
+operating manual and it supersedes nothing here, it completes it.
 
-```bash
-[ -d docs ] || git clone git@gitlab.com:hackathons6943133/scrape-verse/docs.git docs
-```
-
-The docs repository still lives on GitLab. The **code** repository moved to GitHub —
-https://github.com/mikhailkhorokhorin/scrape-verse-hack — and that is where CI, the cron
-and Pages run. Do not confuse the two.
-
-Then read `docs/CLAUDE.md` — it is the real operating manual and it supersedes nothing
-here, it completes it.
+The code repository is https://github.com/mikhailkhorokhorin/scrape-verse-hack — CI,
+the cron and Pages all run there. GitLab remains as a mirror only.
 
 ## How you work
 

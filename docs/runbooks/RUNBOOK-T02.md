@@ -4,7 +4,7 @@
 > what was run, not as work outstanding. **Do not run these commands again** — `create`
 > spends credit and a collector that already has an ID is healed, never recreated.
 
-The Collector IDs and the heal history are in `docs/COLLECTORS.md`; the URLs and
+The Collector IDs and the heal history are in [`../COLLECTORS.md`](../COLLECTORS.md); the URLs and
 per-field validators are in `collectors.json`.
 
 | Codename | Collector ID | Target |
@@ -18,7 +18,7 @@ and `create-bodega.json` — `--pretty -o` wrote them so the ID would survive a 
 terminal, and they are the evidence that each collector is real.
 
 BODEGA was created last because it needed the demo page's public URL, which needed Pages
-live. That sequence is recorded in `GITHUB-SETUP.md`, including the exact command.
+live. That sequence is recorded in [`GITHUB-SETUP.md`](GITHUB-SETUP.md), including the exact command.
 
 To confirm the pipeline still sees all three:
 
