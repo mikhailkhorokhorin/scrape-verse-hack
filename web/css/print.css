@@ -3,7 +3,7 @@
 
   html,body{background:#fff;color:#000;overflow:visible;}
   body::before,.wrap::before,.wrap::after{display:none !important;}
-  .fleet-ground,.fleet-symbiote,.modal,.mockbar{display:none !important;}
+  .fleet-ground,.fleet-symbiote,.modal,.mockflag,.demobar{display:none !important;}
   .intro-replay,.intro,.bubble,.wild-note,.evidence{display:none !important;}
 
   .masthead .readouts,
@@ -19,9 +19,7 @@
   #replaycaption,
   #feedcaption,
   .sechead,
-  .replay__controls,
   .rscrub,
-  .rticks,
   #replay-toggle{display:none !important;}
 
   .wordmark{color:#000;font-size:18pt;letter-spacing:.04em;margin:0 0 3mm;}
@@ -31,6 +29,26 @@
   main{display:block;}
 
   .replay{display:none !important;}
+
+  body.has-issue .replay{
+    display:block !important;
+    border:0;background:none;padding:0;margin:0;
+  }
+  body.has-issue .replay > *:not(.receipt){display:none !important;}
+  body.has-issue .receipt{
+    display:block !important;
+    page-break-inside:avoid;break-inside:avoid;
+    border:2pt solid #000;box-shadow:none;background:#fff;color:#000;
+    margin:0 0 6mm;
+  }
+  body.has-issue .receipt__head,
+  body.has-issue .receipt__table td,
+  body.has-issue .receipt__table th{color:#000;border-color:#000;}
+  body.has-issue .receipt__head b,
+  body.has-issue .receipt__was,
+  body.has-issue .receipt__row--pass .receipt__now,
+  body.has-issue .receipt__row--pass .receipt__mark,
+  body.has-issue .receipt__row--fail .receipt__mark{color:#000;}
 
   .feed{display:block;}
   .incident{display:none !important;}
