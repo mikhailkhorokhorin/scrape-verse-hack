@@ -6,8 +6,9 @@ function routeIncidentSource() {
   return MOCK ? MOCK_RAW_INCIDENTS : RAW_INCIDENTS;
 }
 
-function routeReplayFor(id) {
-  const incident = findIssue(routeIncidentSource(), id);
+function routedReplay() {
+  if (!ROUTE.wanted) return null;
+  const incident = findIssue(routeIncidentSource(), ROUTE.wanted);
   if (!incident) return null;
   return buildReplay(incident, RAW_HISTORY);
 }
@@ -20,37 +21,20 @@ function routeMark(id) {
   if (card) card.classList.add("is-open");
 }
 
-function routeScrollTo(id) {
+function routeScrollTo() {
   const section = document.getElementById("replay");
-  if (!section || !id) return;
+  if (!section) return;
   section.scrollIntoView({ block: "start", behavior: "smooth" });
 }
 
 function applyRoute(scroll) {
-  const id = ROUTE.wanted;
-  if (!id) {
-    if (ROUTE.applied !== null) {
-      ROUTE.applied = null;
-      routeMark(null);
-      renderReplay();
-    }
-    return;
-  }
-
-  const model = routeReplayFor(id);
-  if (!model) {
-    if (ROUTE.applied !== null) {
-      ROUTE.applied = null;
-      renderReplay();
-    }
-    routeMark(null);
-    return;
-  }
-
-  ROUTE.applied = id;
-  mountReplay(model);
-  routeMark(id);
-  if (scroll) routeScrollTo(id);
+  const model = routedReplay();
+  const landed = model ? ROUTE.wanted : null;
+  const changed = landed !== ROUTE.applied;
+  ROUTE.applied = landed;
+  routeMark(landed);
+  if (changed) renderReplay();
+  if (landed && scroll) routeScrollTo();
 }
 
 function readRoute() {

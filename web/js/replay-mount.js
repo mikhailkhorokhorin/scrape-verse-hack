@@ -72,5 +72,6 @@ function mountReplay(model) {
 
 function renderReplay() {
   const source = MOCK ? MOCK_RAW_INCIDENTS : RAW_INCIDENTS;
-  mountReplay(pickReplay(source, RAW_HISTORY));
+  const routed = typeof routedReplay === "function" ? routedReplay() : null;
+  mountReplay(routed || pickReplay(source, RAW_HISTORY));
 }
