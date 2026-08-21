@@ -17,8 +17,12 @@ function firstLine(err) {
 }
 
 function lastHealAt(incidents, codename) {
-  const mine = incidents.filter((incident) => incident.spider === codename);
-  return mine.length ? new Date(mine[mine.length - 1].opened_at).getTime() : 0;
+  return incidents
+    .filter((incident) => incident && incident.spider === codename)
+    .reduce((latest, incident) => {
+      const at = new Date(incident.opened_at).getTime();
+      return Number.isFinite(at) && at > latest ? at : latest;
+    }, 0);
 }
 
 function clause(fields, verb) {
@@ -104,6 +108,10 @@ function heal(collector, run, stages, strain) {
   try {
     const rows = lib.rowsOf(lib.parsePayload(
       lib.bdata(['scraper', 'run', collector.collector_id, collector.url, '--pretty'])));
+    if (!rows.length) {
+      console.error(`${collector.codename}: verification run returned no rows`);
+      return null;
+    }
     stages.push({ stage: 'VERIFIED', ts: new Date().toISOString() });
     const record = lib.runRecord(collector, rows);
     lib.appendHistory({ ...record, after_heal: true });
@@ -150,6 +158,12 @@ function main() {
   const incidents = lib.incidents();
   const now = Date.now();
   const forced = process.env.HEAL_COLLECTOR || null;
+  const known = lib.collectors().filter((c) => c.collector_id).map((c) => c.collector_id);
+
+  if (forced && !known.includes(forced)) {
+    console.error('HEAL_COLLECTOR is not a known collector, refusing to heal');
+    process.exit(1);
+  }
 
   let healed = 0;
   let failed = 0;

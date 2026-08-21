@@ -139,6 +139,7 @@ function isFlatlined(rows, field) {
 }
 
 function dominantState(rows, field, rule) {
+  if (!rows.length) return 'dead';
   const tally = { live: 0, infected: 0, dead: 0 };
   for (const row of rows) tally[classify(row?.[field], rule)]++;
   const dominant = Object.keys(tally).reduce((a, b) => (tally[a] >= tally[b] ? a : b));
