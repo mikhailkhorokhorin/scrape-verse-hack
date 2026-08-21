@@ -43,6 +43,29 @@
 .dip__panel .spark__tip,.dip__panel .spark__hit{display:none;}
 .dip__panel .chip--reveals{cursor:default;}
 
+.dip__panel .panel--compact,.dip__panel .panel--big{
+  padding:var(--s3);gap:var(--s2);justify-content:flex-start;
+}
+.dip__panel .panel .codename{font-size:1.75rem;}
+.dip__panel .panel .universe{font-size:.8125rem;}
+.dip__panel .panel .badge{font-size:var(--t-micro);padding:5px 9px;}
+.dip__panel .panel .phead{align-items:flex-start;}
+.dip__panel .panel .integrity__value{font-size:2.5rem;line-height:1;}
+.dip__panel .panel .integrity .label{font-size:var(--t-label);letter-spacing:.1em;}
+.dip__panel .panel .chip{font-size:.75rem;padding:4px 8px;}
+.dip__panel .panel .bar{height:14px;}
+
+.dip__panel .panel--compact .rig-slot{
+  flex:0 0 auto;min-height:0;margin:2px 0;
+}
+.dip__panel .panel--compact .rig-slot .rig{max-height:104px;}
+.dip__panel .panel--compact .sparkframe{flex:0 0 auto;}
+.dip__panel .panel--compact .compact-foot{
+  order:-1;margin-top:0;gap:var(--s2);
+}
+.dip__panel .panel--compact .phead{order:-2;}
+.dip__panel .panel--compact .compact-foot .integrity__value{font-size:2.5rem;}
+
 .dip__cap{
   display:flex;flex-wrap:wrap;align-items:baseline;gap:0 8px;margin:0;
   font-size:var(--t-micro);letter-spacing:.05em;color:var(--dim);

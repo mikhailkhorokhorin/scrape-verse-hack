@@ -46,7 +46,7 @@
   background:var(--ink);color:var(--paper);border-color:var(--ink);
 }
 
-#nav-watch,#haulhead,#nav-replay,#nav-feed{scroll-margin-top:64px;}
+html{scroll-padding-top:64px;}
 
 .is-capture .pagenav{display:none !important;}
 .intro-running .pagenav{display:none !important;}
@@ -56,7 +56,7 @@
   .pagenav__links{gap:6px;}
   .pagenav__link{font-size:.6875rem;letter-spacing:.05em;padding:3px 4px 2px;}
   .pagenav__mark{font-size:1rem;}
-  #nav-watch,#haulhead,#nav-replay,#nav-feed{scroll-margin-top:56px;}
+  html{scroll-padding-top:56px;}
 }
 
 @media(max-width:400px){

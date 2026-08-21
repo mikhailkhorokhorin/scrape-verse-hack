@@ -44,6 +44,28 @@ scored 1:1 is `display:none` — a hidden template branch, not invisible text.
 
 ## Phase 1 — Build: three improvements, three agents, parallel
 
+**Status: done Aug 21, 19:48 UTC.** Three agents, three commits, pushed after a rebase
+onto the cron's 19:30 scan. 826 tests green (1C added 5), `npx eslint .` clean, every
+file under 250 lines, zero comments anywhere in `web/`.
+
+Measured at the gate rather than taken on report:
+
+- **Rhythm, the point of the whole phase:** act boundaries now 68-72px against 20-24px
+  inside an act, off `getBoundingClientRect`. Before: 44-48 vs 20-24. Two tiers that
+  close together were the actual reason the page read as a pile.
+- **Headings:** all four now read as sentences — "THE WATCH: 3 SPIDERS UNDER WATCH".
+- **Router safety:** `#nav-feed` navigates, console clean, and `#inc_003` still routes
+  (`body.has-issue`, replay mounted) with the nav in place.
+- **No horizontal scroll** at 375 or 640: `scrollWidth === clientWidth` at both.
+  `.fleet-symbiote` sits outside the viewport by design and creates no scroll — two
+  agents flagged it as overflow; both flags were false alarms, checked directly.
+- **`?capture=1`:** nav hidden, all 8 web nodes present at opacity .13.
+
+One flag left open on purpose: the impeccable hook reports `border-accent-on-rounded`
+on `pagenav.css` L6. It is wrong — the rule sets `border-radius:0` and the border is a
+`border-bottom` on a square strip, which is what the spec requires. Not suppressed.
+
+
 ### 1A · Sticky section index (`web/js/pagenav.js`, `web/css/pagenav.css`)
 
 The answer to "split it into pages" that keeps one page.
