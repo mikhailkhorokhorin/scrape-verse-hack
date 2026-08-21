@@ -35,7 +35,24 @@
         "stage": "VERIFIED",
         "ts": "2026-08-21T06:59:24.534Z"
       }
-    ]
+    ],
+    "verification": {
+      "ran": true,
+      "checked": 1,
+      "passed": 1,
+      "verdict": "EVERY_FIELD_BACK",
+      "checks": [
+        {
+          "field": "availability",
+          "from": "infected",
+          "to": "live",
+          "received_before": "In stock (19 available) In stock In stock In stock In stock In stock In stock",
+          "received_after": "In stock",
+          "passed": true
+        }
+      ],
+      "backfilled": true
+    }
   },
   {
     "id": "inc_001",
@@ -79,7 +96,48 @@
         "stage": "VERIFIED",
         "ts": "2026-08-21T05:40:09.733Z"
       }
-    ]
+    ],
+    "verification": {
+      "ran": true,
+      "checked": 4,
+      "passed": 4,
+      "verdict": "EVERY_FIELD_BACK",
+      "checks": [
+        {
+          "field": "title",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "Codex on AWS bedrock bug causing 10x charges",
+          "passed": true
+        },
+        {
+          "field": "points",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": 62,
+          "passed": true
+        },
+        {
+          "field": "comments",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": 17,
+          "passed": true
+        },
+        {
+          "field": "author",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "TheP1000",
+          "passed": true
+        }
+      ],
+      "backfilled": true
+    }
   },
   {
     "spider": "BODEGA",
@@ -123,6 +181,47 @@
         "ts": "2026-08-21T09:13:59.565Z"
       }
     ],
-    "id": "inc_003"
+    "id": "inc_003",
+    "verification": {
+      "ran": true,
+      "checked": 4,
+      "passed": 4,
+      "verdict": "EVERY_FIELD_BACK",
+      "checks": [
+        {
+          "field": "title",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "Ceramic pour-over dripper",
+          "passed": true
+        },
+        {
+          "field": "price",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "£18.00",
+          "passed": true
+        },
+        {
+          "field": "rating",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "4.4 out of 5",
+          "passed": true
+        },
+        {
+          "field": "image",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg",
+          "passed": true
+        }
+      ],
+      "backfilled": true
+    }
   }
 ]
