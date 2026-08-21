@@ -7,7 +7,8 @@ the one before it.
 
 Standing constraints for every task in this file: no comments in code, max 250 lines
 per file, vanilla JS as plain globals loaded via `<script>` in order (no modules, no
-build step), CSS split by meaning, `npm test` green (821 baseline) and `npx eslint .`
+build step), CSS split by meaning, `npm test` green (821 at the time of writing; 886
+after the coverage pass) and `npx eslint .`
 clean after every phase, `DESIGN-SPEC.md` section 8 (Banned) checked before any CSS
 lands, `prefers-reduced-motion` honoured by every new animation, pushes never near
 :00/:30 (cron), `git pull --rebase` + check the remote before pushing.
