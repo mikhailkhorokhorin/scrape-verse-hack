@@ -10,6 +10,7 @@
   "scripts": {
     "test": "node --test \"test/**/*.test.js\"",
     "health": "node scripts/health-check.js",
-    "repair": "node scripts/repair.js"
+    "repair": "node scripts/repair.js",
+    "mcp": "node mcp/server.js"
   }
 }

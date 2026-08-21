@@ -36,7 +36,8 @@ Commit each task separately. A single commit spanning six tasks cannot be review
 | Scripts language | Node |
 | Console framework | None. Vanilla, no build step |
 | Frontend starting point | Port `docs/prototype.html`. Never rewrite it from the spec |
-| CI | GitLab. There is no in-file cron; the schedule is created in the project UI |
+| CI | **GitHub Actions** — `.github/workflows/watch.yml`, `*/30` cron in the file. GitLab runners never came up; that project is a mirror and `.gitlab-ci.yml` is kept only as history |
+| Tests | `node:test`, no dependencies. `npm test` — 193 tests, must stay green |
 
 ## Two hard stops — the only reasons to come back to a human
 

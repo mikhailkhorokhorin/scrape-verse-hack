@@ -30,7 +30,7 @@
       "price": {
         "value": 17.93,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Three",
       "image": null,
@@ -96,7 +96,7 @@
       "price": {
         "value": 13.99,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Two",
       "image_url": "https://books.toscrape.com/media/cache/a0/7e/a07ed8f1c23f7b4baf7102722680bd30.jpg",
@@ -162,7 +162,7 @@
       "price": {
         "value": 53.74,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "One",
       "image_url": "https://books.toscrape.com/media/cache/08/e9/08e94f3731d7d6b760dfbfbc02ca5c62.jpg",
@@ -228,7 +228,7 @@
       "price": {
         "value": 57.25,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Three",
       "image_url": "https://books.toscrape.com/media/cache/ad/96/ad96e9c9f1664cbcb0e9627b007fb6f9.jpg",
@@ -294,7 +294,7 @@
       "price": {
         "value": 17.46,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Five",
       "image_url": "https://books.toscrape.com/media/cache/b8/e9/b8e91bd2fc74c3954118999238abb4b8.jpg",
@@ -360,7 +360,7 @@
       "price": {
         "value": 52.29,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Five",
       "image_url": "https://books.toscrape.com/media/cache/97/27/97275841c81e66d53bf9313cba06f23e.jpg",
@@ -426,7 +426,7 @@
       "price": {
         "value": 22.65,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "One",
       "image_url": "https://books.toscrape.com/media/cache/6b/07/6b07b77236b7c80f42bd90bf325e69f6.jpg",
@@ -491,7 +491,7 @@
       "price": {
         "value": 22.6,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Four",
       "image_url": "https://books.toscrape.com/media/cache/d1/2d/d12d26739b5369a6b5b3024e4d08f907.jpg",
@@ -585,7 +585,7 @@
       "price": {
         "value": 51.77,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Three",
       "image_url": "https://books.toscrape.com/media/cache/fe/72/fe72f0532301ec28892ae79a629a293c.jpg",
@@ -679,7 +679,7 @@
       "price": {
         "value": 47.82,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Four",
       "image_url": "https://books.toscrape.com/media/cache/c0/59/c05972805aa7201171b8fc71a5b00292.jpg",
@@ -744,7 +744,7 @@
       "price": {
         "value": 22.65,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "One",
       "image_url": "https://books.toscrape.com/media/cache/6b/07/6b07b77236b7c80f42bd90bf325e69f6.jpg",
@@ -838,7 +838,7 @@
       "price": {
         "value": 13.99,
         "currency": "GBP",
-        "symbol": "Â£"
+        "symbol": "Ã‚Â£"
       },
       "rating": "Two",
       "image_url": "https://books.toscrape.com/media/cache/a0/7e/a07ed8f1c23f7b4baf7102722680bd30.jpg",
@@ -871,6 +871,100 @@
       "title": "The Lost Treasure of Sid Meier's Pirates",
       "points": 42,
       "comments": 10,
+      "author": "spankibalt"
+    }
+  },
+  {
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-21T09:13:59.565Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": "Â£18.00",
+      "rating": "4.4 out of 5",
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T09:21:15.246Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 20,
+    "sample": {
+      "title": "Libertarianism for Beginners",
+      "price": {
+        "value": 51.33,
+        "currency": "GBP",
+        "symbol": "Â£"
+      },
+      "rating": "Two",
+      "image_url": "https://books.toscrape.com/media/cache/91/a4/91a46253e165d144ef5938f2d456b88f.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T09:21:21.347Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "sample": {
+      "title": "The Lost Treasure of Sid Meier's Pirates",
+      "points": 59,
+      "comments": 17,
       "author": "spankibalt"
     }
   }

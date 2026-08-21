@@ -29,6 +29,7 @@ async function loadLive() {
   FIELDS = SPIDERS.length ? SPIDERS[0].fieldOrder : [];
   renderGrid();
   renderFeed();
+  renderHaul();
   renderReplay();
 }
 

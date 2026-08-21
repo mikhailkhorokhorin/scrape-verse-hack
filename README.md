@@ -12,9 +12,11 @@ Scrapers do not crash. They decay — a target site changes, extraction starts r
 nulls and wrong values, and the pipeline stays green while the data quietly rots. THWIP
 watches for that, shows it, and repairs it.
 
-**Specs, backlog and plan live in the [docs repository](https://gitlab.com/hackathons6943133/scrape-verse/docs).**
+**Source repository → https://github.com/mikhailkhorokhorin/scrape-verse-hack**
+(branches `main` and `develop`; the GitLab project is a mirror.)
 
-<!-- TODO before submitting: header screenshot of THE WATCH, taken with ?capture=1 at 1440px+ -->
+**Specs, backlog and plan live in the docs repository, cloned into `docs/`.**
+
 <!-- TODO before submitting: demo video link -->
 
 ## It already caught a real one
@@ -50,12 +52,13 @@ and `kestrel-after.json`, the scans are in `data/history.json` (`04:43:39Z` and
 ## Layout
 
 ```
-scripts/        health-check and repair, Node
-web/            the console — no build step, no framework
-data/           history.json, incidents.json, committed by CI
-demo-target/    the page we break on purpose during the demo
-collectors.json targets and per-field validators
-.gitlab-ci.yml  scan every 30 min, publish Pages
+scripts/                    health-check and repair, Node
+web/                        the console — no build step, no framework
+test/                       193 tests, node:test, no dependencies
+data/                       history.json, incidents.json, committed by CI
+demo-target/                the Chaos Lab — three variants of the same shop page
+collectors.json             targets and per-field validators
+.github/workflows/watch.yml scan every 30 min, heal, publish Pages
 ```
 
 ## Look at it first
@@ -63,7 +66,8 @@ collectors.json targets and per-field validators
 The console is the product. Seeing it needs no account, no key and no credit:
 
 ```bash
-git clone <this repo> && cd thwip
+git clone https://github.com/mikhailkhorokhorin/scrape-verse-hack.git
+cd scrape-verse-hack
 python3 -m http.server 8000          # any static server will do
 ```
 
@@ -83,6 +87,26 @@ plate instead of the console — the page fetches its two JSON files, and browse
 demand, which is the fastest way to see the three field states and the symbiote move.
 Add `?capture=1` to hide every control for a clean screenshot.
 
+## Chaos Lab — break the site yourself
+
+BODEGA scrapes a shop page we control, and that page ships in three variants so the break
+does not have to be taken on trust. Switch between them from the header of the page
+itself, or open them directly:
+
+| Variant | URL | What the collector sees |
+|---|---|---|
+| **Healthy** | [`demo-target/`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/) | Every selector resolves. This is the contract BODEGA was built against |
+| **Renamed** | [`demo-target/broken-renamed.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/broken-renamed.html) | A redesign moved the class names. `price` and `image` match nothing, `rating` moved into a data attribute — fields go **DEAD** |
+| **Drifted** | [`demo-target/broken-drifted.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/broken-drifted.html) | Markup untouched, values rotted. Price is an em dash, rating is the literal string `"undefined"`, image is a placeholder — fields stay full and **LIE** |
+
+The third one is the point of the whole project. Nothing is null, nothing throws, row
+count is unchanged, and every value is wrong — the failure a green pipeline hides. Point
+a scraper at `broken-drifted.html` and watch it succeed at collecting nothing.
+
+All three are generated from one source of truth: `demo-target/build-data.js` holds the
+12 products and the variant definitions, `build-page.js` renders them, and
+`node demo-target/build.js` rewrites all three HTML files. Edit the data, not the markup.
+
 ## Running it for real
 
 Only needed to produce new data. This calls Bright Data and costs credit:
@@ -99,21 +123,42 @@ to run before anything is created. `repair.js` does nothing unless a collector h
 failing for two consecutive scans and is outside its 2-hour cooldown; force one with
 `HEAL_COLLECTOR=c_xxx node scripts/repair.js`.
 
-CI needs two masked variables under **Settings → CI/CD → Variables**:
+## Running the tests
 
-| Variable | What it is |
+193 tests, `node:test`, no dependencies and no test framework to install:
+
+```bash
+npm test
+```
+
+They cover the parts that decide whether the pipeline is telling the truth: field
+classification and its exact boundaries, Integrity scoring, payload shapes, strain
+diagnosis, the heal decision (two consecutive bad scans, 2-hour cooldown), and atomic
+JSON storage. No network and no `bdata` calls — the suite runs offline in under a second.
+
+## CI
+
+Everything runs on **GitHub Actions**, in `.github/workflows/watch.yml`:
+
+| Job | When | What it does |
+|---|---|---|
+| `scan` | `*/30 * * * *` cron, or manually | `health-check.js`, then `repair.js`, then commits `data/` back |
+| `build` | push to `main`, or the cron | Assembles `public/` from `web/`, `data/` and `demo-target/` |
+| `deploy` | `main` only | Publishes to GitHub Pages |
+
+**One secret, no second token** — Settings → Secrets and variables → Actions:
+
+| Secret | What it is |
 |---|---|
 | `BRIGHTDATA_API_KEY` | Bright Data CLI auth |
-| `DATA_TOKEN` | Project Access Token, scope `write_repository`, **role Maintainer** |
 
-`main` is a protected branch with push restricted to Maintainers. A Project Access Token
-created with the Developer role will be rejected on push and every scan will fail at the
-commit step — the pipeline goes green up to that point, so it fails quietly. Create the
-token with **Maintainer**. `CI_JOB_TOKEN` cannot push at all, which is why this token
-exists.
+The scan commits with the built-in `GITHUB_TOKEN`, which the workflow requests through
+`permissions: contents: write`. Pages must be set to **Source: GitHub Actions**, not
+"Deploy from a branch" — the workflow uploads the artifact itself.
 
-And a pipeline schedule at `*/30 * * * *` under **Settings → CI/CD → Pipeline schedules**.
-GitLab has no in-file cron — this step is manual and the project does nothing without it.
+The cron is in the file, so the schedule needs no setup in the UI. `concurrency: watch`
+keeps two scans from writing `data/` at once. The `scan` job runs only on the cron or on
+a manual dispatch, so pushing code never spends credit.
 
 ## Targets
 
@@ -121,7 +166,7 @@ Three, already chosen and checked against `robots.txt`. See `collectors.json`.
 
 | Codename | Universe | Why |
 |---|---|---|
-| BODEGA | our own demo page | broken on purpose, so the demo is reproducible — **not yet created**, see below |
+| BODEGA | our own demo page | breakable on purpose, so the demo is reproducible |
 | ATLAS | books.toscrape.com | no robots.txt, built for scraping, server-rendered |
 | KESTREL | news.ycombinator.com | real site; robots allows the front page, `Crawl-delay: 30` |
 
@@ -130,15 +175,14 @@ Data's pre-built scraper library — swapping one silently breaks a hackathon ru
 
 ## Collector IDs
 
-Real Scraper Studio collectors, created with `bdata scraper create`. The registry with
-creation dates and the full heal log is in
-[`docs/COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs).
+All three are real Scraper Studio collectors, created with `bdata scraper create`. The
+registry with creation dates and the full heal log is in `docs/COLLECTORS.md`.
 
 | Codename | Collector ID |
 |---|---|
+| BODEGA | `c_mt2lkwxa1bb5uz223s` |
 | ATLAS | `c_mt2fnqqngikv29od5` |
 | KESTREL | `c_mt2fnt3p2k4n644701` |
-| BODEGA | _pending — created last, against the demo page_ |
 
 **These IDs do not change when a collector heals.** That is the point of the self-healing
 loop and the thing worth checking: the same collector that broke is the one that came
@@ -150,17 +194,17 @@ against its ID in `docs/COLLECTORS.md`.
 
 Stated plainly rather than left for you to find:
 
-- **BODEGA is not created.** It targets our own demo page and needs that page's public
-  URL first. Two collectors exist, not three
-- **`data/incidents.json` is empty.** The KESTREL heal above was run manually, before the
-  automated incident loop was wired in, so it is logged in `docs/COLLECTORS.md` rather
-  than as an incident record. Incident Replay and MTTR therefore render empty on the live
-  route — use `?mock=1` to see them
-- **The automated repair path is untested end to end.** `scripts/repair.js` is written and
-  wired into CI, but the heal that actually happened was invoked by hand
-- **ATLAS sits at 90%, not 100%.** Its `price` comes back as
-  `{value, currency, symbol}` rather than a scalar and reads `infected`. Real extraction
-  is imperfect; the number on screen is the honest one
+- **`data/incidents.json` holds one incident, not two.** Two heals happened — KESTREL
+  0% → 100% and ATLAS 90% → 100% — but both were invoked by hand, before the automated
+  incident loop was wired in. Only KESTREL was written back as an incident record
+  (`inc_001`); the ATLAS heal is visible in `data/history.json` as a 90 → 100 step at
+  `06:59:24Z` and is logged in `docs/COLLECTORS.md`, without an incident record of its own
+- **The automated repair path is untested end to end.** `scripts/repair.js` is written,
+  unit-tested and wired into CI, but both heals that actually happened were invoked by
+  hand. The decision logic is covered by tests; the unattended round trip is not
+- **MTTR is currently a mean of one sample.** `renderMttr()` averages every incident's
+  `closed_at − opened_at`; with one incident on disk that average is that single
+  incident's 26m 24s. It reads `--` when there are none
 
 ## The data
 
@@ -180,7 +224,7 @@ Four moving parts, one of which is the product. There is no backend: the schedul
 pipeline *is* the backend, and two committed JSON files are the database.
 
 ```
-GitLab CI (scheduled pipeline, every 30 min)
+GitHub Actions — .github/workflows/watch.yml (cron */30, every 30 min)
   └─> scripts/health-check.js
         ├─ bdata scraper run <c_*> <url> --pretty
         ├─ classify every field on every row: live / infected / dead
@@ -271,8 +315,8 @@ queue. Do not ask what to do next; the queue is the answer.
 
 ## Deploying the console anywhere
 
-The `pages` job in `.gitlab-ci.yml` assembles the site, but the same bundle can be built
-by hand in one command — useful if CI runners are unavailable:
+The `build` job in `.github/workflows/watch.yml` assembles the site, but the same bundle
+can be built by hand in one command — useful if CI runners are unavailable:
 
 ```bash
 mkdir -p public && cp -r web/* public/ && cp -r data public/ && cp -r demo-target public/
@@ -294,4 +338,6 @@ deployed layout is arranged.
 - Real `bdata` calls, never mocked. A judge checks the Collector ID
 - `create` takes 5-25 minutes and `heal` up to 15, and both cost credit. **Never recreate a
   collector that already has an ID** in `docs/COLLECTORS.md` — if `run` fails, `heal` it
+- Run `npm test` before changing anything in `scripts/` — the suite is the contract
+  between what the pipeline writes and what the console reads
 - No secrets in the repo, in CI logs, or in any frame of the demo video
