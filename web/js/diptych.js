@@ -23,8 +23,17 @@ function diptychWellFor(runs, hurt) {
   return well.sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts))[0];
 }
 
-function diptychRank(pair, incidents) {
-  return (incidentAt(incidents, pair.hurt) ? 0 : 1);
+function diptychRank(record, incidents) {
+  return incidentAt(incidents, record) ? 0 : 1;
+}
+
+function diptychHurtFor(runs, incidents) {
+  return runs
+    .filter((run) => clampPct(run.integrity) < DIPTYCH_HURT_MAX)
+    .sort((a, b) =>
+      clampPct(a.integrity) - clampPct(b.integrity) ||
+      diptychRank(a, incidents) - diptychRank(b, incidents) ||
+      Date.parse(a.ts) - Date.parse(b.ts))[0];
 }
 
 function pickDiptych(history, incidents) {
@@ -40,10 +49,7 @@ function pickDiptych(history, incidents) {
   const pairs = [];
   for (const runs of byCollector.values()) {
     runs.sort((a, b) => Date.parse(a.ts) - Date.parse(b.ts));
-    const hurt = runs
-      .filter((run) => clampPct(run.integrity) < DIPTYCH_HURT_MAX)
-      .sort((a, b) => clampPct(a.integrity) - clampPct(b.integrity) ||
-        Date.parse(a.ts) - Date.parse(b.ts))[0];
+    const hurt = diptychHurtFor(runs, incidents);
     if (!hurt) continue;
     const well = diptychWellFor(runs, hurt);
     if (!well) continue;
@@ -53,7 +59,7 @@ function pickDiptych(history, incidents) {
   if (pairs.length === 0) return null;
   pairs.sort((a, b) =>
     clampPct(a.hurt.integrity) - clampPct(b.hurt.integrity) ||
-    diptychRank(a, incidents) - diptychRank(b, incidents) ||
+    diptychRank(a.hurt, incidents) - diptychRank(b.hurt, incidents) ||
     Date.parse(a.hurt.ts) - Date.parse(b.hurt.ts));
   return pairs[0];
 }

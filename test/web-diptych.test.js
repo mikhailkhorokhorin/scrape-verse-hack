@@ -112,6 +112,21 @@ test('pickDiptych breaks a tie towards the run an incident was opened on', () =>
   assert.equal(pair.hurt.spider, opened.spider);
 });
 
+test('pickDiptych prefers the incident-marked break when one collector broke twice', () => {
+  const opened = INCIDENTS.find((inc) => inc.integrity_before === 0);
+  const earlier = run({ collector_id: opened.collector_id, spider: opened.spider, ts: '2026-08-21T01:00:00.000Z', integrity: 0, status: 'CRITICAL' });
+  const marked = run({ collector_id: opened.collector_id, spider: opened.spider, ts: opened.opened_at, integrity: 0, status: 'CRITICAL' });
+  const well = run({ collector_id: opened.collector_id, spider: opened.spider, ts: '2026-08-21T23:00:00.000Z' });
+  const pair = pickDiptych([earlier, marked, well], INCIDENTS);
+  assert.equal(pair.hurt.ts, opened.opened_at);
+});
+
+test('pickDiptych on the committed history lands on a run the incident feed names', () => {
+  const pair = pickDiptych(HISTORY, INCIDENTS);
+  const named = INCIDENTS.some((inc) => inc.spider === pair.hurt.spider && inc.opened_at === pair.hurt.ts);
+  assert.ok(named, 'expected the chosen break to carry an incident id');
+});
+
 test('pickDiptych skips runs with an unusable timestamp or integrity', () => {
   const rows = [
     run({ ts: 'nope', integrity: 0 }),
