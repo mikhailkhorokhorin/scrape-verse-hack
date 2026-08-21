@@ -17,7 +17,7 @@ watch:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_PIPELINE_SOURCE == "web"'          # manual run, for rehearsals
-    - if: '$CI_PIPELINE_SOURCE == "trigger"'      # T-38 heal endpoint
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'      # T-38 heal endpoint, passes HEAL_COLLECTOR
   resource_group: watch                            # serialize runs, or the JSON corrupts
   variables:
     GIT_STRATEGY: clone

@@ -1,6 +1,7 @@
 "use strict";
 
 const MONEY_KEYS = ["value", "amount", "price"];
+const SCALAR_KEYS = ["value", "amount", "price", "text", "url", "src", "href"];
 
 function isPlainObject(raw) {
   return raw !== null && typeof raw === "object" && !Array.isArray(raw);
@@ -16,6 +17,15 @@ function moneyOf(raw) {
   return currency ? amount + " " + currency : amount;
 }
 
+function unwrapScalar(raw) {
+  for (const key of SCALAR_KEYS) {
+    if (!Object.prototype.hasOwnProperty.call(raw, key)) continue;
+    const inner = raw[key];
+    if (inner === null || typeof inner !== "object") return inner;
+  }
+  return undefined;
+}
+
 function valueText(raw) {
   if (raw === null) return "null";
   if (raw === undefined) return "missing";
@@ -25,6 +35,8 @@ function valueText(raw) {
   if (isPlainObject(raw)) {
     const money = moneyOf(raw);
     if (money !== null) return money;
+    const scalar = unwrapScalar(raw);
+    if (scalar !== undefined) return valueText(scalar);
     const parts = Object.keys(raw).map((k) => k + ": " + valueText(raw[k]));
     return "{ " + parts.join(", ") + " }";
   }

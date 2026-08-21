@@ -265,6 +265,26 @@ Read `docs/CLAUDE.md` first — it puts you in autonomous mode. Then `docs/PLAN.
 is being built, then take the first unchecked item in `docs/PROGRESS.md` and work down the
 queue. Do not ask what to do next; the queue is the answer.
 
+## Deploying the console anywhere
+
+The `pages` job in `.gitlab-ci.yml` assembles the site, but the same bundle can be built
+by hand in one command — useful if CI runners are unavailable:
+
+```bash
+mkdir -p public && cp -r web/* public/ && cp -r data public/ && cp -r demo-target public/
+```
+
+`public/` is then a self-contained static site: no build step, no server-side code, and
+the console reads `data/history.json` and `data/incidents.json` relative to itself. Drop
+it on any static host. To check it locally before publishing:
+
+```bash
+cd public && python -m http.server 8080
+```
+
+Serve `public/`, not `web/` — the console fetches `data/` as a sibling, which is how the
+deployed layout is arranged.
+
 ## Rules
 
 - Real `bdata` calls, never mocked. A judge checks the Collector ID

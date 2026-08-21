@@ -19,6 +19,7 @@ function renderGrid() {
             "<span>Integrity = <b>(live + &#189; infected) / expected</b></span>" +
             "<span>Repair at <b>&lt;60 twice</b></span>"
         );
+    setFleetSpread(null);
     setReadout("fleet", "--", null);
     setReadout("lastscan", "--", null);
     setReadout("mttr", "--", null);
@@ -34,6 +35,7 @@ function renderGrid() {
 
   markTallCells(grid);
 
+  setFleetSpread(avg);
   setReadout("fleet", avg + "%", COLOR[gradeOf(avg)]);
   setDelta("fleet", fleetTrend(avg));
   setCount("fleetcount", SPIDERS.length, "spider");
@@ -56,6 +58,13 @@ function renderGrid() {
   const newest = SPIDERS.reduce((max, s) => Math.max(max, Date.parse(s.ts) || 0), 0);
   setReadout("lastscan", newest ? clockOf(new Date(newest).toISOString()) : "--", null);
   renderMttr();
+}
+
+function setFleetSpread(avg) {
+  const el = document.getElementById("fleet-sym");
+  if (!el) return;
+  const lost = avg === null ? 0 : Math.max(0, (100 - clampPct(avg)) / 100);
+  el.style.setProperty("--fleet", lost.toFixed(2));
 }
 
 function renderMttr() {
