@@ -55,10 +55,14 @@ does not assume that module is shared, only flags that it should be considered o
 whichever idea builds it first effectively unblocks the others.
 
 Once the diff exists, the bubble itself mounts near the character's head (depends on
-UI-18a existing, for there to be a head to mount near), using the tailed-bubble CSS
-pattern `docs/DESIGN-SPEC.md` already specifies for onomatopoeia-adjacent UI, styled in
-Bangers per the type table. Dismissal is a `setTimeout` under 3000ms, matching the stated
-rule.
+UI-18a existing, for there to be a head to mount near). **There is no tailed-bubble pattern
+in the design system to reuse** — `docs/DESIGN-SPEC.md` specifies Bangers for onomatopoeia
+bursts only, and the only implementation of that is `.burst` (`web/css/states.css` lines
+22-32), a centred, rotated, scale-in/scale-out word with no bubble and no tail. So the
+bubble body and its tail are new CSS. What *is* reusable is the lifecycle: `burst()`
+(`web/js/panel.js` lines 103-116) already knows how to attach a transient element to a
+specific panel and clean it up afterwards, and the Bangers face and the burst easing curves
+carry over. Dismissal is a `setTimeout` under 3000ms, matching the stated rule.
 
 ## Risks
 

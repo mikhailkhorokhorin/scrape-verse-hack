@@ -47,8 +47,11 @@ metric or invent narrative text beyond what `inc.summary` (written server-side, 
   issue with its replay ready. The merge table's reasoning is direct: "a permalink to an
   issue is part of what makes it an issue" — a comic issue has a number precisely so it can
   be referenced individually, and a URL hash is the web's version of that reference. This
-  also satisfies a real, separately-tracked need: `docs/TASKS.md`'s T-30 ("Link to a single
-  incident") specifies exactly this behaviour — `#inc_014` opens the console with that
+  also revives a task that was deliberately cut: `docs/TASKS.md`'s T-30 ("Link to a single
+  incident") sits on the cut list in both `docs/PLAN.md` (line 144) and `docs/PROGRESS.md`
+  (line 266). Folding it in here is a re-decision, not a rediscovery — it earns its place
+  now only because the issue-cover redesign gives it a reason it did not have when it was
+  cut. T-30 specifies exactly this behaviour — `#inc_014` opens the console with that
   incident's replay ready, unknown ids fall back to THE WATCH rather than erroring, and the
   incident panel exposes its own link. **This routing does not exist in the codebase yet**
   — no file currently reads `location.hash` — so it is genuinely new work folded into this
