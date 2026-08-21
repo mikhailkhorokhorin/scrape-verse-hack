@@ -64,18 +64,20 @@
       </div>
       <div class="readout">
         <span class="label">Watch</span>
-        <span class="readout__value" style="font-size:1.05rem"><span class="pulse" aria-hidden="true"></span>LIVE</span>
+        <span class="readout__value readout__value--word"><span class="pulse" aria-hidden="true"></span>LIVE</span>
       </div>
     </div>
   </header>
 
   <main id="main">
 
-  <div class="pulseline" id="pulse" hidden></div>
+  <div class="pulse-slot" style="min-height:66px">
+    <div class="pulseline" id="pulse" hidden></div>
+  </div>
 
   <div class="sechead"><h2>The Watch</h2><span class="sechead__count" id="fleetcount" hidden></span><span class="rule"></span></div>
 
-  <div class="grid" id="grid" aria-label="Spider fleet"></div>
+  <div class="grid" id="grid" style="min-height:293px" aria-label="Spider fleet"></div>
 
   <aside class="legend" aria-label="How to read this page">
     <h3 class="legend__title">How to read a Spider</h3>
@@ -154,6 +156,7 @@
 <script src="js/received.js"></script>
 <script src="js/panel.js"></script>
 <script src="js/render.js"></script>
+<script src="js/masthead.js"></script>
 <script src="js/heatmap.js"></script>
 <script src="js/heal.js"></script>
 <script src="js/sheet.js"></script>
