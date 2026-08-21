@@ -43,7 +43,8 @@
   font-size:1rem;font-weight:600;text-align:right;
 }
 .track__rate small{display:block;font-size:var(--t-tick);letter-spacing:.1em;
-  text-transform:uppercase;color:var(--dimmer);font-weight:700;}
+  text-transform:uppercase;color:var(--dimmer);font-weight:700;
+  white-space:nowrap;margin-right:-.1em;}
 
 .track__scale{
   display:flex;justify-content:space-between;
