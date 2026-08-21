@@ -3,6 +3,11 @@
 Every idea has a stable id. Reference them by id in commits and prompts. Ids are never
 reused: a merged idea keeps its number and points at where it went.
 
+**Read `docs/BEST-UI-THE-PLAY.md` first.** Four waves produced about seventy ideas; that
+file is the product decision that turns them into one spine, one image, one interaction
+and six moves, and it carries the kill list. The wave files below are the raw material and
+the reasoning, kept so nothing gets re-proposed.
+
 Two further waves were written on 21 Aug, after this one was built and the console could be
 looked at rather than imagined. Neither supersedes this file; each starts where the last
 one finished.
