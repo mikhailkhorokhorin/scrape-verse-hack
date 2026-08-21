@@ -47,6 +47,29 @@ test('initialize advertises the tools capability', () => {
   assert.ok(response.result.capabilities.tools);
 });
 
+test('initialize falls back to the newest supported version for an unknown one', () => {
+  const response = ask({
+    jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '1.0.0' }
+  });
+  assert.equal(response.result.protocolVersion, protocol.PROTOCOL_VERSION);
+});
+
+test('initialize survives params with no protocolVersion at all', () => {
+  const response = ask({ jsonrpc: '2.0', id: 1, method: 'initialize', params: {} });
+  assert.equal(response.result.protocolVersion, protocol.PROTOCOL_VERSION);
+});
+
+test('initialize survives a request with no params member', () => {
+  const response = ask({ jsonrpc: '2.0', id: 1, method: 'initialize' });
+  assert.equal(response.result.serverInfo.name, 'thwip');
+});
+
+test('every advertised protocol version negotiates to itself', () => {
+  for (const version of protocol.SUPPORTED_VERSIONS) {
+    assert.equal(protocol.negotiateVersion(version), version, `${version} must round-trip`);
+  }
+});
+
 test('every response carries the jsonrpc version and the request id', () => {
   const response = ask({ jsonrpc: '2.0', id: 'abc', method: 'ping' });
   assert.equal(response.jsonrpc, '2.0');
