@@ -526,5 +526,34 @@
       "comments": 31,
       "author": "TheP1000"
     }
+  },
+  {
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-21T07:02:55.354Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 1,
+    "sample": {
+      "title": null,
+      "price": null,
+      "rating": null,
+      "image": null
+    }
   }
 ]
