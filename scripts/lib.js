@@ -130,12 +130,14 @@ const statusOf = (integrity) =>
 
 const FLATLINE_MIN_ROWS = 8;
 
+const EMPTY_MARKERS = new Set(['0', '""', '"0"', '"-"', '"n/a"', '"none"']);
+
 function isFlatlined(rows, field) {
   if (rows.length < FLATLINE_MIN_ROWS) return false;
   if (!has(rows[0] || {}, field)) return false;
-  const first = JSON.stringify(rows[0][field]);
-  if (first === undefined) return false;
-  return rows.every((row) => JSON.stringify(row?.[field]) === first);
+  const first = JSON.stringify(unwrap(rows[0][field]));
+  if (first === undefined || !EMPTY_MARKERS.has(first.toLowerCase())) return false;
+  return rows.every((row) => JSON.stringify(unwrap(row?.[field])) === first);
 }
 
 function dominantState(rows, field, rule) {
