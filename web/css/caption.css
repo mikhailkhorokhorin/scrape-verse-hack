@@ -21,6 +21,13 @@
 
 .sechead h2.caption--quiet .caption__lede{color:var(--purple);}
 
+.caption__sep{
+  position:absolute;width:1px;height:1px;
+  margin:-1px;padding:0;overflow:hidden;
+  clip:rect(0 0 0 0);clip-path:inset(50%);
+  white-space:nowrap;border:0;
+}
+
 @media(max-width:520px){
   .caption__num{font-size:1.25rem;}
   .caption__lede{font-size:1.0625rem;}

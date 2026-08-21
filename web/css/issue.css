@@ -7,7 +7,7 @@
     var(--void-2);
 }
 
-.issue__no{
+.issue .issue__no{
   margin:0;font-family:Bangers,Anton,Impact,sans-serif;
   font-size:var(--t-label);letter-spacing:.28em;line-height:1;
   color:var(--ink);background:var(--cyan);

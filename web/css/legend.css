@@ -32,6 +32,15 @@
   font-size:.875rem;line-height:1.45;
   color:#2A2438;
 }
+@media(min-width:901px){
+  .legend{
+    display:grid;
+    grid-template-columns:minmax(0,22rem) minmax(0,1fr);
+    column-gap:var(--s4);align-items:start;
+  }
+  .legend__lede{grid-column:1;margin:6px 0 0;max-width:none;}
+  .legend__cols{grid-column:2;}
+}
 .legend__lede b{color:var(--ink);}
 
 .legend__black{

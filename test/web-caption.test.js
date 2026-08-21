@@ -108,3 +108,32 @@ test('captionHTML escapes a hostile span string rather than injecting markup', (
   assert.ok(!html.includes('<img'));
   assert.ok(html.includes('&lt;img'));
 });
+
+function accessibleName(html) {
+  return html.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+}
+
+test('the accessible name separates the title from the count with punctuation', () => {
+  const name = accessibleName(captionHTML(captionFor('watch', '3 spiders')));
+  assert.equal(name, 'THE WATCH: 3 SPIDERS UNDER WATCH');
+});
+
+test('the accessible name never glues the count onto the title text', () => {
+  const name = accessibleName(captionHTML(captionFor('watch', '3 spiders')));
+  assert.ok(!name.includes('WATCH3'));
+});
+
+test('a count-free caption still reads as a separated sentence', () => {
+  const name = accessibleName(captionHTML(captionFor('feed', '0 incidents')));
+  assert.equal(name, 'INCIDENT FEED: ALL QUIET');
+});
+
+test('the replay caption reads its span as words, not glued to the title', () => {
+  const name = accessibleName(captionHTML(captionFor('replay', '14m 20s replayed')));
+  assert.equal(name, 'INCIDENT REPLAY: 14m 20s FROM BREAK TO REPAIR');
+});
+
+test('every separator is carried in a span the stylesheet can hide', () => {
+  const html = captionHTML(captionFor('haul', '698'));
+  assert.equal((html.match(/caption__sep/g) || []).length, 2);
+});
