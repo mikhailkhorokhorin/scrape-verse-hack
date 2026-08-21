@@ -4,6 +4,7 @@
   html,body{background:#fff;color:#000;overflow:visible;}
   body::before,.wrap::before,.wrap::after{display:none !important;}
   .fleet-ground,.fleet-symbiote,.modal,.mockbar{display:none !important;}
+  .intro-replay,.intro,.bubble,.wild-note,.evidence{display:none !important;}
 
   .masthead .readouts,
   .masthead .tagline,
@@ -23,8 +24,9 @@
   .rticks,
   #replay-toggle{display:none !important;}
 
-  .wordmark{color:#000;font-size:2rem;letter-spacing:.04em;margin:0 0 4mm;}
-  .masthead{display:block;border:0;padding:0;margin:0 0 4mm;}
+  .wordmark{color:#000;font-size:18pt;letter-spacing:.04em;margin:0 0 3mm;}
+  .wordmark::after,.wordmark::before{display:none !important;}
+  .masthead{display:block;border:0;padding:0;margin:0 0 3mm;}
   .wrap{max-width:none;padding:0;margin:0;}
   main{display:block;}
 
@@ -50,34 +52,52 @@
   body:not(.has-issue) .issue:last-child{page-break-after:auto;break-after:auto;}
   body:not(.has-issue) .issue::before{display:none;}
 
+  .issue *{color:#000;}
+  .rule,.sechead__count{display:none !important;}
+  .issue .stage:last-child .stage__name{color:#000;}
+  .issue__no{box-shadow:none;}
+
   .issue__cover{
-    margin:0;padding:6mm 6mm 5mm;background:#fff;
+    margin:0;padding:4mm 5mm 3mm;background:#fff;gap:3px;
     border-bottom:1.5pt solid #000;
   }
-  .issue__no{background:#fff;color:#000;border:1.5pt solid #000;transform:none;}
-  .issue__who{color:#000;text-shadow:none;font-size:30pt;}
-  .issue__sub{color:#000;max-width:40ch;}
-  .issue__at,.issue__when{color:#333;}
-  .issue__strain{background:#fff;color:#000;border:1pt solid #000;}
-  .issue__delta{background:#fff;border:1pt solid #000;}
+  .issue .issue__no,.issue.is-open .issue__no{
+    background:#fff;color:#000;border:1.5pt solid #000;transform:none;font-size:8pt;
+  }
+  .issue.is-open{outline:0 !important;}
+  .issue__who{color:#000;text-shadow:none;font-size:26pt;margin:0;}
+  .issue__sub{color:#000;max-width:46ch;font-size:10pt;line-height:1.25;}
+  .issue .issue__at,.issue .issue__when{color:#333;font-size:7pt;}
+  .issue__strain{background:#fff;color:#000;border:1pt solid #000;font-size:7pt;}
+  .issue__delta{background:#fff;border:1pt solid #000;font-size:15pt;padding:3px 9px 2px;}
   .issue__from,.issue__to,.issue__arrow{color:#000;}
-  .issue__link{color:#000;border-bottom:1pt dotted #000;}
+  .issue__link{color:#000;border-bottom:1pt dotted #000;font-size:7pt;}
 
-  .issue__rig{width:48%;}
-  .issue__rig .rig{max-height:60mm;}
+  .issue__art{margin:0;gap:1px;}
+  .issue__rig{width:34mm;}
+  .issue__rig .rig{max-height:26mm;}
   .rig__leg,.rig__eye,.rig__body{animation:none !important;}
   .rig__abdomen,.rig__head{fill:#fff;stroke:#000;}
   .rig__leg{stroke:#000;}
   .rig__leg[data-state="dead"]{stroke:#999;}
   .rig__eye{fill:#000;}
 
-  .issue__body{padding:0 6mm;}
-  .issue__body p,.blast{color:#000;max-width:none;}
+  .issue__body{padding:4mm 5mm 0;}
+  .issue__body p,.blast{color:#000;max-width:none;font-size:9pt;line-height:1.35;margin-bottom:3mm;}
   .blast__n,.blast code{color:#000;}
-  .stage{border-color:#000;background:#fff;}
+  .stages{margin-top:3mm !important;}
+  .stage{border-color:#000;background:#fff;padding:2mm 3mm;}
   .stage:last-child{background:#fff;}
-  .stage__name{color:#000;}
-  .stage__ts{color:#333;}
-  .diffcol,.diffrow{background:#fff;color:#000;}
-  .infection{border-color:#000;}
+  .stage__name{color:#000;font-size:7pt;}
+  .issue .stage__ts{color:#333;font-size:8pt;}
+
+  .infection{margin-top:3mm;border-color:#000;}
+  .infection__cols{grid-template-columns:1fr 1fr !important;gap:3mm;}
+  .diffcol{background:#fff;color:#000;border-color:#000;padding:2mm;}
+  .diffcol__stamp{color:#000;font-size:8pt;}
+  .issue .diffcol__meta{color:#333;font-size:7pt;}
+  .diffrow{background:#fff;font-size:6.5pt;padding:1px 0;border-bottom-color:#ccc;}
+  .issue .diffrow__val{color:#333;}
+  .issue .diffrow--dead .diffrow__val,.issue .diffrow--infected .diffrow__val{color:#000;font-weight:700;}
+  .diffrow--dead,.diffrow--infected{background:#eee;}
 }
