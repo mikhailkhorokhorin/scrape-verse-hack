@@ -1,6 +1,7 @@
 'use strict';
 
-const PROTOCOL_VERSION = '2024-11-05';
+const PROTOCOL_VERSION = '2025-06-18';
+const SUPPORTED_VERSIONS = ['2025-06-18', '2025-03-26', '2024-11-05'];
 const SERVER_INFO = { name: 'thwip', version: '1.0.0' };
 
 const PARSE_ERROR = -32700;
@@ -48,9 +49,15 @@ function toolError(text) {
   return { content: [{ type: 'text', text }], isError: true };
 }
 
-function initializeResult() {
+function negotiateVersion(requested) {
+  if (typeof requested !== 'string' || !requested) return PROTOCOL_VERSION;
+  return SUPPORTED_VERSIONS.includes(requested) ? requested : PROTOCOL_VERSION;
+}
+
+function initializeResult(params) {
+  const asked = isObject(params) ? params.protocolVersion : undefined;
   return {
-    protocolVersion: PROTOCOL_VERSION,
+    protocolVersion: negotiateVersion(asked),
     capabilities: { tools: { listChanged: false } },
     serverInfo: SERVER_INFO
   };
@@ -62,7 +69,7 @@ function dispatch(message, registry) {
 
   const { method, id, params } = message;
 
-  if (method === 'initialize') return result(id, initializeResult());
+  if (method === 'initialize') return result(id, initializeResult(params));
   if (method === 'ping') return result(id, {});
   if (method === 'tools/list') return result(id, { tools: registry.schemas() });
 
@@ -86,7 +93,7 @@ function dispatch(message, registry) {
     }
   }
 
-  if (method.startsWith('notifications/')) return null;
+  if (method.startsWith('notifications/') && id === undefined) return null;
 
   return failure(id, METHOD_NOT_FOUND, `unknown method: ${method}`);
 }
@@ -119,8 +126,8 @@ function handleLine(line, registry) {
 }
 
 module.exports = {
-  PROTOCOL_VERSION, SERVER_INFO,
+  PROTOCOL_VERSION, SUPPORTED_VERSIONS, SERVER_INFO,
   PARSE_ERROR, INVALID_REQUEST, METHOD_NOT_FOUND, INVALID_PARAMS, INTERNAL_ERROR,
-  validate, isNotification, result, failure,
+  validate, isNotification, result, failure, negotiateVersion,
   textContent, toolError, initializeResult, dispatch, handleLine
 };

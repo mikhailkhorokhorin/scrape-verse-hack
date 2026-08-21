@@ -8,18 +8,23 @@ const MAX_LINE_BYTES = 4 * 1024 * 1024;
 
 function createReader(onLine, onOverflow) {
   let buffer = '';
+  let discarding = false;
   return (chunk) => {
     buffer += chunk;
     let index = buffer.indexOf('\n');
     while (index !== -1) {
       const line = buffer.slice(0, index);
       buffer = buffer.slice(index + 1);
-      onLine(line);
+      if (discarding) discarding = false;
+      else onLine(line);
       index = buffer.indexOf('\n');
     }
     if (buffer.length > MAX_LINE_BYTES) {
       buffer = '';
-      onOverflow();
+      if (!discarding) {
+        discarding = true;
+        onOverflow();
+      }
     }
   };
 }

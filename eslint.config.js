@@ -10,7 +10,7 @@ const globals = {
   },
   node: {
     require: 'readonly', module: 'writable', process: 'readonly',
-    __dirname: 'readonly', console: 'readonly', setTimeout: 'readonly',
+    __dirname: 'readonly', console: 'readonly', setTimeout: 'readonly', clearTimeout: 'readonly',
     Buffer: 'readonly', URL: 'readonly',
   },
 };
