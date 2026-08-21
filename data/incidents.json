@@ -42,5 +42,40 @@
         "ts": "2026-08-21T05:40:09.733Z"
       }
     ]
+  },
+  {
+    "spider": "BODEGA",
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "opened_at": "2026-08-21T07:48:20.779Z",
+    "closed_at": null,
+    "integrity_before": 0,
+    "integrity_after": null,
+    "anomalies": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "recovered_fields": [],
+    "summary": "Extraction kept succeeding while title and price and rating and image stopped returning usable values. The re-weave did not complete.",
+    "rows_per_run": 12,
+    "strain": "THROTTLED",
+    "heal_prompt": "On mikhailkhorokhorin.github.io: 'title' and 'price' and 'rating' and 'image' return null after a layout change. Likely THROTTLED: every field came back empty, so the request itself is likely being blocked or served a different page. Fix the extraction for those fields.",
+    "resolved": false,
+    "stages": [
+      {
+        "stage": "DETECTED",
+        "ts": "2026-08-21T07:39:39.524Z"
+      },
+      {
+        "stage": "DIAGNOSED",
+        "ts": "2026-08-21T07:48:20.779Z"
+      },
+      {
+        "stage": "REWEAVING",
+        "ts": "2026-08-21T07:48:20.782Z"
+      }
+    ],
+    "id": "inc_002"
   }
 ]
