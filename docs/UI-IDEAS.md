@@ -3,6 +3,10 @@
 Every idea has a stable id. Reference them by id in commits and prompts. Ids are never
 reused: a merged idea keeps its number and points at where it went.
 
+This file is the argument: what is in, what is out, and why. **The working briefs live one
+per file in `docs/ideas/`** — mechanism, risks and a done-when checklist for each idea,
+indexed with paths in `docs/TASKS.md`. Decide here, build from there.
+
 Status: **ACCEPTED** = going into the build · **OPEN** = candidate · **MERGED** = folded
 into another id · **REJECTED** = decided against, with a reason, so it stops resurfacing.
 
