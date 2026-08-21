@@ -165,11 +165,12 @@ and [`kestrel-after.json`](docs/evidence/kestrel-after.json), the scans are in
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       826 tests, node:test, no dependencies
+test/                       886 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the Chaos Lab — three variants of the same shop page
 collectors.json             targets and per-field validators
 docs/                       specs, the collector registry, the audit checklist
+docs/evidence/              create envelopes and before/after payloads, as returned
 .github/workflows/watch.yml scan every 30 min, heal, publish Pages
 ```
 
@@ -320,7 +321,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-826 tests, `node:test`, no dependencies and no test framework to install:
+886 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
