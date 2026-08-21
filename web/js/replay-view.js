@@ -10,6 +10,11 @@ function replayDuration(span) {
 
 function replayValue(raw) {
   if (raw === null || raw === undefined) return "null";
+  if (typeof raw === "object") {
+    const flat = JSON.stringify(raw);
+    return esc(flat.length > 34 ? flat.slice(0, 33) + "…" : flat);
+  }
+  if (typeof raw === "number" || typeof raw === "boolean") return esc(String(raw));
   const text = String(raw);
   return '"' + esc(text.length > 34 ? text.slice(0, 33) + "…" : text) + '"';
 }
@@ -24,17 +29,35 @@ function ledgerRowHTML(field) {
   );
 }
 
-function tickHTML(stage, i, span) {
+function tickHTML(stage, i, span, lanes) {
   const at = span > 0 ? (stage.at / span) * 100 : 0;
+  const lane = lanes[i];
+  const anchor = at > 88 ? " rtick--end" : at < 6 ? " rtick--start" : "";
   return (
-    '<button class="rtick" type="button" data-stage="' + i + '"' +
+    '<button class="rtick rtick--lane' + lane + anchor + '" type="button" data-stage="' + i + '"' +
       ' style="left:' + at.toFixed(3) + '%"' +
-      ' aria-label="Jump to ' + esc(stage.name) + " at " + esc(stage.clock) + '">' +
+      ' aria-label="Jump to ' + esc(stage.name) + " at " + esc(stage.clock) +
+      ", " + esc(stage.offset) + ' into the incident">' +
       '<span class="rtick__pip"></span>' +
-      '<span class="rtick__name">' + esc(stage.name) + "</span>" +
-      '<span class="rtick__at mono">+' + esc(stage.offset) + "</span>" +
+      '<span class="rtick__flag">' +
+        '<span class="rtick__name">' + esc(stage.name) + "</span>" +
+        '<span class="rtick__at mono">+' + esc(stage.offset) + "</span>" +
+      "</span>" +
     "</button>"
   );
+}
+
+function tickLanes(stages, span) {
+  const lanes = [];
+  let lastAt = -Infinity;
+  let lane = 0;
+  stages.forEach((st) => {
+    const at = span > 0 ? (st.at / span) * 100 : 0;
+    lane = at - lastAt < 17 ? lane + 1 : 0;
+    lanes.push(lane % 3);
+    lastAt = at;
+  });
+  return lanes;
 }
 
 function replayHeadHTML(model) {
@@ -82,22 +105,26 @@ function replayStageHTML(model) {
 }
 
 function replayTransportHTML(model) {
+  const lanes = tickLanes(model.stages, model.span);
   return (
     '<div class="rtransport">' +
-      '<button class="btn btn--fix rplay" id="replay-toggle" type="button" aria-label="Play the incident timeline">' +
-        '<span data-slot="toggle">Play</span>' +
-      "</button>" +
+      '<div class="rtransport__bar">' +
+        '<button class="btn btn--fix rplay" id="replay-toggle" type="button" aria-label="Play the incident timeline">' +
+          '<span data-slot="toggle">Play</span>' +
+        "</button>" +
+        '<span class="rhint">Space plays · ← → step stages</span>' +
+        '<span class="rclock mono" data-slot="elapsed">+0s</span>' +
+      "</div>" +
       '<div class="rscrub">' +
         '<div class="rscrub__rail">' +
           '<div class="rscrub__done" data-slot="done"></div>' +
           '<div class="rscrub__head" data-slot="head"></div>' +
-          model.stages.map((st, i) => tickHTML(st, i, model.span)).join("") +
+          model.stages.map((st, i) => tickHTML(st, i, model.span, lanes)).join("") +
         "</div>" +
         '<input class="rscrub__input" id="replay-scrub" type="range" min="0" max="1000" value="0" step="1"' +
           ' aria-label="Scrub the incident timeline" aria-valuetext="' +
           esc(model.stages[0].name) + ', +0s">' +
       "</div>" +
-      '<span class="rclock mono" data-slot="elapsed">+0s</span>' +
     "</div>"
   );
 }

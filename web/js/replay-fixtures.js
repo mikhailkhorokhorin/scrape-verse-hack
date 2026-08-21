@@ -13,7 +13,7 @@ const MOCK_RAW_INCIDENTS = [
     collector_id: "c_mock_bodega",
     opened_at: mockStamp(0),
     closed_at: mockStamp(884000),
-    integrity_before: 98,
+    integrity_before: 62,
     integrity_after: 100,
     anomalies: ["price", "rating"],
     recovered_fields: ["price", "rating"],

@@ -48,3 +48,18 @@
 .stage:last-child .stage__name{color:var(--healthy);}
 .stage__name{font-family:"IBM Plex Mono",monospace;font-size:.625rem;font-weight:600;letter-spacing:.1em;color:var(--cyan);}
 .stage__ts{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;font-size:.8125rem;color:var(--dim);}
+
+.strain{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s1) 10px;
+  margin:0 0 var(--s2);
+}
+.strain__tag{
+  font-family:"IBM Plex Mono",monospace;font-size:.625rem;font-weight:600;
+  letter-spacing:.14em;color:var(--ink);background:var(--infected);
+  border:2px solid var(--ink);padding:3px 8px 2px;
+}
+.strain--throttled .strain__tag{background:var(--critical);}
+.strain--renamed .strain__tag{background:var(--degraded);}
+.strain--shifted .strain__tag{background:var(--reweaving);}
+.strain__gloss{color:var(--dim);font-size:.8125rem;line-height:1.4;max-width:52ch;}
+.incident p.strain{margin-bottom:var(--s2);}

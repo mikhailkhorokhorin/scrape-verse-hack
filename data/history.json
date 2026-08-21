@@ -1,1 +1,69 @@
-[]
+[
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-21T04:43:20.951Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating"
+    ],
+    "fields_infected": [
+      "price",
+      "availability"
+    ],
+    "fields_dead": [
+      "image"
+    ],
+    "integrity": 60,
+    "status": "DEGRADED",
+    "rows": 20,
+    "sample": {
+      "title": "The Coming Woman: A Novel Based on the Life of the Infamous Feminist, Victoria Woodhull",
+      "price": {
+        "value": 17.93,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Three",
+      "image": null,
+      "availability": "In stock (19 available) In stock In stock In stock In stock In stock In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-21T04:43:39.996Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 30,
+    "sample": {
+      "title": null,
+      "points": null,
+      "comments": null,
+      "author": null
+    }
+  }
+]
