@@ -31,13 +31,16 @@ function receiptHTML(inc) {
         (v.checked === 1 ? "" : "s") + " re-checked against the run after the heal &mdash; " +
         esc(VERDICT_WORD[v.verdict] || "") +
       "</p>" +
-      '<table class="receipt__table">' +
-        "<thead><tr>" +
-          '<th class="receipt__mark"><span class="receipt__hidden">Result</span></th>' +
-          "<th>Field</th><th>Received before</th><th>Received after</th>" +
-        "</tr></thead>" +
-        "<tbody>" + v.checks.map(receiptRowHTML).join("") + "</tbody>" +
-      "</table>" +
+      '<div class="receipt__scroll" tabindex="0" role="region" ' +
+        'aria-label="Verification receipt, scrolls sideways">' +
+        '<table class="receipt__table">' +
+          "<thead><tr>" +
+            '<th class="receipt__mark"><span class="receipt__hidden">Result</span></th>' +
+            "<th>Field</th><th>Received before</th><th>Received after</th>" +
+          "</tr></thead>" +
+          "<tbody>" + v.checks.map(receiptRowHTML).join("") + "</tbody>" +
+        "</table>" +
+      "</div>" +
     "</div>"
   );
 }

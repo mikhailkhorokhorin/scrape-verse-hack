@@ -1,6 +1,8 @@
 "use strict";
 
 function bindReplayKeys(root) {
+  if (root.dataset.keysBound === "1") return;
+  root.dataset.keysBound = "1";
   root.addEventListener("keydown", (e) => {
     const onControl = e.target.closest("button,input");
     if (e.key === " " || e.key === "k") {

@@ -50,16 +50,16 @@ function tickHTML(stage, i, span, lanes) {
 }
 
 function tickLanes(stages, span) {
-  const lanes = [];
-  let lastAt = -Infinity;
-  let lane = 0;
-  stages.forEach((st) => {
+  const taken = [-Infinity, -Infinity, -Infinity];
+  return stages.map((st) => {
     const at = span > 0 ? (st.at / span) * 100 : 0;
-    lane = at - lastAt < 17 ? lane + 1 : 0;
-    lanes.push(lane % 3);
-    lastAt = at;
+    let lane = taken.findIndex((last) => at - last >= 17);
+    if (lane === -1) {
+      lane = taken.indexOf(Math.min(...taken));
+    }
+    taken[lane] = at;
+    return lane;
   });
-  return lanes;
 }
 
 function replayHeadHTML(model) {
@@ -174,7 +174,8 @@ function replayBlastHTML(model) {
     '<p class="replay__blast">' +
       '<b class="blast__n is-frozen" data-slot="blast" data-total="' + model.blastRows + '">' +
         groupNum(model.blastRows) + "</b>" +
-      " rows shipped with " + named + " before this re-weave landed." +
+      (model.blastRows === 1 ? " row shipped with " : " rows shipped with ") +
+      named + " before this re-weave landed." +
     "</p>"
   );
 }

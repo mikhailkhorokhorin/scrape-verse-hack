@@ -105,13 +105,21 @@ function paintStage(model, slots, stageIndex) {
   });
 }
 
+function blastCountAt(total, ms, stop) {
+  if (!(stop > 0)) return total;
+  const ratio = Math.min(1, ms / stop);
+  if (ratio >= 1) return total;
+  return Math.max(1, Math.round(total * ratio));
+}
+
 function paintBlast(model, slots, ms) {
   if (!slots.blast || !model.blastRows) return;
   const verified = model.stages.find((st) => st.name === "VERIFIED");
   const stop = verified ? verified.at : model.span;
-  const ratio = stop > 0 ? Math.min(1, ms / stop) : 1;
-  slots.blast.textContent = groupNum(model.blastRows * ratio);
-  slots.blast.classList.toggle("is-frozen", ratio >= 1);
+  const settled = !REPLAY.playing;
+  const shown = settled ? model.blastRows : blastCountAt(model.blastRows, ms, stop);
+  slots.blast.textContent = groupNum(shown);
+  slots.blast.classList.toggle("is-frozen", settled || shown >= model.blastRows);
 }
 
 function paintScrub(model, slots, ms) {

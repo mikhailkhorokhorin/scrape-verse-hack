@@ -43,6 +43,12 @@ function elapsedOf(ms) {
   return mins + "m " + String(secs).padStart(2, "0") + "s";
 }
 
+function verifiedValueOf(incident, field) {
+  const checks = (incident.verification && incident.verification.checks) || [];
+  const hit = checks.find((c) => c && c.field === field && c.passed);
+  return hit ? hit.received_after : undefined;
+}
+
 function replayFieldsOf(incident, pair) {
   const order = pair
     ? pair.dirty.fields_expected || Object.keys(pair.dirty.sample || {})
@@ -53,12 +59,14 @@ function replayFieldsOf(incident, pair) {
   return order.map((field) => {
     const broken = anomalies.includes(field);
     const back = recovered.includes(field);
+    const checked = verifiedValueOf(incident, field);
+    const fromPair = pair && pair.clean.sample ? pair.clean.sample[field] : undefined;
     return {
       name: field,
       before: pair ? stateWord(pair.clean, field) : "live",
       broken: broken ? (pair ? stateWord(pair.dirty, field) : "dead") : "live",
       after: !broken || back ? "live" : (pair ? stateWord(pair.dirty, field) : "dead"),
-      cleanValue: pair && pair.clean.sample ? pair.clean.sample[field] : undefined,
+      cleanValue: checked === undefined ? fromPair : checked,
       dirtyValue: pair && pair.dirty.sample ? pair.dirty.sample[field] : undefined,
       recovered: broken && back,
     };

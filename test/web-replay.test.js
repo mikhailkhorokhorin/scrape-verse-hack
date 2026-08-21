@@ -176,10 +176,25 @@ test('buildReplay leaves untouched fields live across all three phases', () => {
   }
 });
 
-test('buildReplay attaches the clean and dirty sample values to each field', () => {
+test('buildReplay shows what the field was actually returning while broken', () => {
   const anomaly = model.fields.find((f) => f.name === INCIDENT.anomalies[0]);
-  assert.equal(anomaly.cleanValue, model.pair.clean.sample[anomaly.name]);
   assert.equal(anomaly.dirtyValue, model.pair.dirty.sample[anomaly.name]);
+});
+
+test('a recovered field shows the value the verification run recorded, not the older sample', () => {
+  const checks = (INCIDENT.verification && INCIDENT.verification.checks) || [];
+  const passed = checks.find((c) => c && c.passed);
+  if (!passed) return;
+  const field = model.fields.find((f) => f.name === passed.field);
+  assert.equal(field.cleanValue, passed.received_after);
+});
+
+test('with no verification to read, the clean value falls back to the earlier sample', () => {
+  const bare = Object.assign({}, INCIDENT);
+  delete bare.verification;
+  const fallback = buildReplay(bare, HISTORY);
+  const anomaly = fallback.fields.find((f) => f.name === bare.anomalies[0]);
+  assert.equal(anomaly.cleanValue, fallback.pair.clean.sample[anomaly.name]);
 });
 
 test('buildReplay counts blast rows over the incident window', () => {
