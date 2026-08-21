@@ -1,0 +1,31 @@
+.symbiote__teeth{
+  position:absolute;left:0;right:0;height:14px;
+  bottom:calc(var(--spread,0) * 100%);
+  background:var(--symbiote);
+  -webkit-clip-path:polygon(
+    0 0,100% 0,100% 30%,
+    96% 100%,92% 30%,88% 92%,84% 30%,80% 100%,76% 30%,72% 88%,68% 30%,64% 96%,
+    60% 30%,56% 90%,52% 30%,48% 100%,44% 30%,40% 86%,36% 30%,32% 96%,28% 30%,
+    24% 92%,20% 30%,16% 100%,12% 30%,8% 88%,4% 30%,0 96%);
+  clip-path:polygon(
+    0 0,100% 0,100% 30%,
+    96% 100%,92% 30%,88% 92%,84% 30%,80% 100%,76% 30%,72% 88%,68% 30%,64% 96%,
+    60% 30%,56% 90%,52% 30%,48% 100%,44% 30%,40% 86%,36% 30%,32% 96%,28% 30%,
+    24% 92%,20% 30%,16% 100%,12% 30%,8% 88%,4% 30%,0 96%);
+  transition:bottom 800ms cubic-bezier(.22,1,.36,1);
+}
+
+.symbiote__eyes{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--spread,0) * 100% - 44px);
+  width:74px;opacity:0;
+  transition:opacity 700ms ease,bottom 800ms cubic-bezier(.22,1,.36,1);
+}
+.panel[data-drowned] .symbiote__eyes{opacity:.92;}
+
+.symbiote__eyes path{fill:var(--paper);}
+
+@media(max-width:767px){
+  .symbiote__teeth{height:10px;}
+  .symbiote__eyes{width:58px;bottom:calc(var(--spread,0) * 100% - 34px);}
+}

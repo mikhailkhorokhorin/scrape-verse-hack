@@ -30,7 +30,8 @@ function panelHTML(sp, idx) {
   const note = seriesNote(sp.series);
 
   const body = compact
-    ? sparkline(sp.series, color, sp.scars) +
+    ? '<div class="rig-slot">' + rigSVG(sp, st) + "</div>" +
+      sparkline(sp.series, color, sp.scars) +
       note +
       streakHTML(sp, st) +
       '<div class="compact-foot">' +
@@ -58,7 +59,9 @@ function panelHTML(sp, idx) {
       '" aria-label="' + esc(panelLabel(sp, st, readout)) + '" data-idx="' + idx +
       '"' + (sp.healed ? ' data-healed="' + (sp.healed > 9 ? "9+" : sp.healed) + '"' : "") +
       ' style="--spread:' + (sp.unwatched ? 0 : spread) + '"' + (!sp.unwatched && Number(spread) > PAPER_SPREAD ? ' data-drowned="1"' : '') + '>' +
-      (showSymbiote ? '<div class="symbiote" style="--spread:' + (sp.unwatched ? 0 : shown) + '"><div class="symbiote__body"></div></div>' : "") +
+      (compact ? "" : '<div class="rig-mark" aria-hidden="true">' + rigSVG(sp, st) + "</div>") +
+      (showSymbiote ? symbioteHTML(sp.unwatched ? 0 : shown) : "") +
+      '<span class="panel__no" aria-hidden="true">' + (idx + 1) + "</span>" +
       head +
       body +
     "</button>" +
@@ -69,8 +72,11 @@ function panelHTML(sp, idx) {
 
 function panelLabel(sp, st, readout) {
   const score = readout === "--" ? "no current reading" : "integrity " + readout;
+  const chart = (sp.series || []).length > 1
+    ? " Arrow keys step the history chart scan by scan."
+    : "";
   return sp.code + ", " + sp.universe + " — " + st + ", " + score +
-    ". Open the full diagnosis.";
+    ". Open the full diagnosis." + chart;
 }
 
 function streakHTML(sp, st) {
