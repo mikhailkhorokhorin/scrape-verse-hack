@@ -172,7 +172,7 @@ stranger inherits, counted from the tree rather than remembered:
 
 | | |
 |---|---|
-| Tests | **1,112**, across 59 `test/*.test.js` files |
+| Tests | **1,137**, across 59 `test/*.test.js` files |
 | Dependencies | **zero** — `dependencies` and `devDependencies` are both empty objects |
 | Source files | 140 JS + 50 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
 | Comments | **zero, as policy** — `grep -c '^\s*//'` across `web/js`, `scripts` and `tools` returns 0 |
@@ -210,7 +210,7 @@ npm test && npx eslint . && node tools/numbers-audit.js
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       1,112 tests, node:test, no dependencies
+test/                       1,137 tests, node:test, no dependencies
   pipeline/                 scoring, classification, healing, verification
   web/                      the console's modules, run in a vm context
   mcp/                      protocol, tools, injection resistance
@@ -286,6 +286,16 @@ reconsidered: the sparkline **crawler** was built, looked wrong, and was cut bef
 committed; the masthead **cover character** was rejected before any code, because the
 tagline block carries the product thesis. The full brief set, with each brief's own status
 line, is in [`docs/ideas/`](docs/ideas/).
+
+**The manual.** The console is the product; the manual is its back page.
+[`web/manual.html`](web/manual.html) — live at
+<https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html> — carries the four
+things a stranger needs in one place: the three commands that get the watch running, all
+eight MCP tools with the free/paid split made explicit, the six-step path a judge should
+take, and the three clicks that break a Spider in the Chaos Lab. Every command on it is
+one that actually runs, and a test asserts the page, this README and `SUBMISSION.md` all
+still agree with the committed `meta.json`, so none of them can drift. It prints cleanly
+if you would rather read it on paper.
 
 ## Break it yourself (ten seconds, no install)
 
@@ -391,7 +401,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-1,112 tests, `node:test`, no dependencies and no test framework to install:
+1,137 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test

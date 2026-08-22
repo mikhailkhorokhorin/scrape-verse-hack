@@ -46,6 +46,15 @@
   background:var(--ink);color:var(--paper);border-color:var(--ink);
 }
 
+.pagenav__pages{
+  display:flex;align-items:center;gap:var(--s1);
+  flex:0 0 auto;margin-left:auto;padding-left:var(--s2);
+}
+.pagenav__link--page{
+  border-color:var(--ink);background:var(--paper);
+}
+.pagenav__link--page:hover{background:var(--cyan);}
+
 html{scroll-padding-top:64px;}
 
 .is-capture .pagenav{display:none !important;}

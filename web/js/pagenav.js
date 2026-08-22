@@ -7,6 +7,8 @@ const PAGENAV_SECTIONS = [
   { target: "nav-feed", watch: "feed", label: "FEED" },
 ];
 
+const PAGENAV_PAGES = [{ href: "manual.html", label: "MANUAL" }];
+
 const PAGENAV = { root: null, links: new Map(), seen: new Map(), current: null };
 
 function pagenavMarkup() {
@@ -14,8 +16,13 @@ function pagenavMarkup() {
     '<a class="pagenav__link" href="#' + section.target +
     '" data-nav="' + section.target + '">' + section.label + "</a>"
   ).join("");
+  const pages = PAGENAV_PAGES.map((page) =>
+    '<a class="pagenav__link pagenav__link--page" href="' + page.href +
+    '">' + page.label + "</a>"
+  ).join("");
   return '<span class="pagenav__mark" aria-hidden="true">THWIP</span>' +
-    '<span class="pagenav__links">' + links + "</span>";
+    '<span class="pagenav__links">' + links + "</span>" +
+    '<span class="pagenav__pages">' + pages + "</span>";
 }
 
 function pagenavBuild() {
