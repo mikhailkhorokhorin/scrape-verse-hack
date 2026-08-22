@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const { loadWebModule, plain } = require('../web-loader.js');
 
 const context = loadWebModule(['delta.js']);
-const { snapshotOf, fieldChangesBetween, deltaBetween, changedCodesOf } = context;
+const { snapshotOf, fieldChangesBetween, deltaBetween } = context;
 
 function spider(overrides) {
   return Object.assign({
@@ -106,17 +106,4 @@ test('deltaBetween reports each changed collector separately', () => {
     spider({ code: 'ATLAS', ts: '2026-08-21T12:30:00Z' }),
   ]);
   assert.deepEqual(plain(next.changes.map((c) => c.code).sort()), ['ATLAS', 'BODEGA']);
-});
-
-test('changedCodesOf returns only collectors that landed a new run', () => {
-  const first = deltaBetween(null, [spider(), spider({ code: 'ATLAS' })]);
-  const next = deltaBetween(first.snapshot, [
-    spider({ ts: '2026-08-21T12:30:00Z' }),
-    spider({ code: 'ATLAS', fields: { title: 'live', price: 'infected' } }),
-  ]);
-  assert.deepEqual(plain(changedCodesOf(next)), ['BODEGA']);
-});
-
-test('changedCodesOf tolerates a missing delta', () => {
-  assert.deepEqual(plain(changedCodesOf(null)), []);
 });

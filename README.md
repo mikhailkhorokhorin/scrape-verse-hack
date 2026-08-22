@@ -172,9 +172,9 @@ stranger inherits, counted from the tree rather than remembered:
 
 | | |
 |---|---|
-| Tests | **1,137**, across 59 `test/*.test.js` files |
+| Tests | **1,136**, across 60 files in `test/{pipeline,web,mcp,tools}/` |
 | Dependencies | **zero** — `dependencies` and `devDependencies` are both empty objects |
-| Source files | 140 JS + 50 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
+| Source files | 141 JS + 51 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
 | Comments | **zero, as policy** — `grep -c '^\s*//'` across `web/js`, `scripts` and `tools` returns 0 |
 | Enforcement | ESLint and the full suite run in CI on every push |
 
@@ -210,7 +210,7 @@ npm test && npx eslint . && node tools/numbers-audit.js
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       1,137 tests, node:test, no dependencies
+test/                       1,136 tests, node:test, no dependencies
   pipeline/                 scoring, classification, healing, verification
   web/                      the console's modules, run in a vm context
   mcp/                      protocol, tools, injection resistance
@@ -401,7 +401,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-1,137 tests, `node:test`, no dependencies and no test framework to install:
+1,136 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test

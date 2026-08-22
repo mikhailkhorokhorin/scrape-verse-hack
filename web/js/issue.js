@@ -115,6 +115,7 @@ function issueCoverHTML(inc, history) {
     '<header class="issue__cover">' +
       '<p class="issue__no">' + esc(issueLabelOf(inc.id)) + "</p>" +
       '<h3 class="issue__who">' + esc(inc.who) + "</h3>" +
+      wildBadgeHTML(inc) +
       issueSubtitleHTML(inc.strain) +
       issueArtHTML(inc, history) +
       issueStampHTML(inc) +

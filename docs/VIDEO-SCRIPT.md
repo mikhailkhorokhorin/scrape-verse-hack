@@ -31,7 +31,7 @@ Everything below is on disk and checkable. Nothing is invented for camera.
 | **Two of the three breaks were on sites we do not control** | `web/js/wild.js` computes it; the note renders above the feed |
 | Nineteen cron commits authored by `thwip watch` | `git log --author="thwip watch"` |
 | Six MCP tools over stdio JSON-RPC, no SDK | `mcp/registry.js` |
-| 1,137 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
+| 1,136 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
 
 **The strongest asset in this list is `inc_003`, and it is the one that failed.** The cron
 opened it alone, diagnosed THROTTLED, healed — and the heal did not work, because nothing

@@ -35,15 +35,6 @@ function introBeats(inc) {
   ];
 }
 
-function introHoldMs(beats) {
-  const i = beats.findIndex((b) => b.hold);
-  if (i < 0) return 0;
-  const crack = beats.slice(0, i).reverse().find((b) => b.word);
-  const next = beats.slice(i + 1).find((b) => b.word);
-  if (!crack || !next) return 0;
-  return next.at - crack.at;
-}
-
 function introSpreadOf(integrity) {
   const lost = Math.max(0, (100 - clampPct(integrity)) / 100);
   return Math.min(MAX_VISIBLE_SPREAD, lost).toFixed(2);

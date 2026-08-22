@@ -6,7 +6,7 @@ const { loadWebModule, readFixture, plain } = require('../web-loader.js');
 
 const context = loadWebModule(['config.js', 'format.js', 'intro-plan.js']);
 const {
-  introIncidentOf, introBeats, introHoldMs, introSpreadOf, introDecision,
+  introIncidentOf, introBeats, introSpreadOf, introDecision,
   introSeen, introMarkSeen, INTRO_SPAN_MS, INTRO_FLAG, MAX_VISIBLE_SPREAD,
 } = context;
 
@@ -66,27 +66,6 @@ test('the schedule is the six beats of the brief, in order, ending live at 6s', 
 test('every onomatopoeia the brief names is fired exactly once', () => {
   const words = introBeats(introIncidentOf(INCIDENTS)).map((b) => b.word).filter(Boolean);
   assert.deepEqual(plain(words), ['SNAP!', 'CRACK!', 'WEAVE…', 'PURGE!', 'THWIP!']);
-});
-
-test('the hold is the longest stretch of silence between two spoken beats', () => {
-  const beats = introBeats(introIncidentOf(INCIDENTS));
-  const hold = introHoldMs(beats);
-  assert.equal(hold, 1800);
-
-  const spoken = beats.filter((b) => b.word);
-  const gaps = spoken.slice(1).map((b, i) => b.at - spoken[i].at);
-  assert.equal(Math.max(...gaps), hold);
-  assert.equal(gaps.filter((g) => g === hold).length, 1);
-});
-
-test('the hold outlasts every other beat-to-beat step, so it reads as a pause', () => {
-  const beats = introBeats(introIncidentOf(INCIDENTS));
-  const hold = introHoldMs(beats);
-  const holdIndex = beats.findIndex((b) => b.hold);
-  for (let i = 1; i < beats.length; i += 1) {
-    if (i === holdIndex || i === holdIndex + 1) continue;
-    assert.ok(beats[i].at - beats[i - 1].at < hold);
-  }
 });
 
 test('nothing is painted or spoken during the hold — it is a genuine pause', () => {
