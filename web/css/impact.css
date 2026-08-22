@@ -1,0 +1,17 @@
+body.impact{
+  filter:invert(1);
+  animation:impact-frame 60ms steps(1,end) 1;
+}
+
+@keyframes impact-frame{
+  0%{filter:invert(1);}
+  100%{filter:invert(0);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  body.impact{filter:none;animation:none;}
+}
+
+@media print{body.impact{filter:none;animation:none;}}
+
+.is-capture body.impact{filter:none;animation:none;}

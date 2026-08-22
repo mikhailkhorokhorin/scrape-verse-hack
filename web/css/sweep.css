@@ -1,0 +1,40 @@
+.sweep{
+  position:absolute;inset:5px;z-index:4;pointer-events:none;
+  width:calc(100% - 10px);height:calc(100% - 10px);overflow:visible;
+}
+
+.sweep__track,.sweep__hand{fill:none;}
+
+.sweep__track{stroke:var(--paper);stroke-width:2;opacity:.09;}
+
+.sweep__hand{
+  stroke:var(--cyan);stroke-width:2;
+  stroke-dashoffset:0;opacity:.55;
+  transition:stroke-dasharray 900ms linear;
+}
+
+.is-healthy .sweep__hand{stroke:var(--healthy);}
+.is-degraded .sweep__hand{stroke:var(--degraded);}
+.is-critical .sweep__hand{stroke:var(--critical);}
+.is-reweaving .sweep__hand{stroke:var(--reweaving);}
+.is-unwatched .sweep__hand{stroke:var(--unwatched);opacity:.5;}
+
+.panel.is-overdue .sweep__hand{
+  stroke:var(--degraded);
+  animation:sweep-overdue 2.4s ease-in-out infinite;
+}
+
+@keyframes sweep-overdue{
+  0%,100%{opacity:.62;}
+  50%{opacity:.16;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .sweep__hand{transition:none;}
+  .panel.is-overdue .sweep__hand{animation:none;opacity:.62;}
+}
+
+@media print{.sweep{display:none;}}
+
+.is-capture .sweep__hand{transition:none;}
+.is-capture .panel.is-overdue .sweep__hand{animation:none;opacity:.62;}

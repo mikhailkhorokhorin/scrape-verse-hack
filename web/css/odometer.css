@@ -1,0 +1,27 @@
+.odo{display:inline-flex;align-items:baseline;font-variant-numeric:tabular-nums;}
+
+.odo__said{
+  position:absolute;width:1px;height:1px;overflow:hidden;
+  clip-path:inset(50%);white-space:nowrap;
+}
+
+.odo__slot{
+  display:inline-block;overflow:hidden;
+  height:1em;line-height:1;width:.62em;
+}
+
+.odo__fixed{display:inline-block;line-height:1;}
+
+.odo__reel{
+  display:block;
+  transform:translateY(calc(var(--odo,0) * -1em));
+  transition:transform 520ms cubic-bezier(.22,1,.36,1);
+}
+
+.odo__d{display:block;height:1em;line-height:1;text-align:center;}
+
+@media(prefers-reduced-motion:reduce){
+  .odo__reel{transition:none;}
+}
+
+.is-capture .odo__reel{transition:none;}

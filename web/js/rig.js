@@ -40,13 +40,18 @@ function eyesSVG(build, status) {
     .join("");
 }
 
+function rigRestless(status) {
+  return status === "degraded" || status === "critical" || status === "reweaving";
+}
+
 function rigSVG(sp, status) {
   const build = rigBuildOf(sp.code);
   const seed = seedOf(sp.code || "");
   const blink = (seed % 7) + 4;
   const sway = (seed % 5) + 9;
+  const restless = rigRestless(status) ? " rig--restless" : "";
   return (
-    '<svg class="rig" viewBox="-72 12 144 88" role="img" aria-hidden="true" ' +
+    '<svg class="rig' + restless + '" viewBox="-72 12 144 88" role="img" aria-hidden="true" ' +
       'data-status="' + status + '" data-code="' + esc(sp.code) + '" ' +
       'style="--rig-blink:' + blink + 's;--rig-sway:' + sway + 's">' +
       '<g class="rig__legs">' + legsSVG(sp, build, seed) + "</g>" +

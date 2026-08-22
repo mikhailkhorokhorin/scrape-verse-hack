@@ -32,6 +32,7 @@ function announceLandings(spiders) {
   LAST_SNAPSHOT = delta.snapshot;
   if (!delta.changes.length) return delta;
   speak(delta, spiders);
+  if (typeof impactFire === "function") impactFire(delta);
   if (prefersReducedMotion()) return delta;
   delta.changes.filter((change) => change.newRun).forEach(markLanded);
   return delta;
