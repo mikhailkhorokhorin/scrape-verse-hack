@@ -223,5 +223,69 @@
       ],
       "backfilled": true
     }
+  },
+  {
+    "spider": "BODEGA",
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "opened_at": "2026-08-22T08:06:16.400Z",
+    "closed_at": "2026-08-22T08:08:18.117Z",
+    "integrity_before": 50,
+    "integrity_after": 100,
+    "anomalies": [
+      "price",
+      "rating"
+    ],
+    "recovered_fields": [
+      "price",
+      "rating"
+    ],
+    "verification": {
+      "ran": true,
+      "checked": 2,
+      "passed": 2,
+      "verdict": "EVERY_FIELD_BACK",
+      "checks": [
+        {
+          "field": "price",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "£18.00",
+          "passed": true
+        },
+        {
+          "field": "rating",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "4.4",
+          "passed": true
+        }
+      ]
+    },
+    "summary": "Extraction kept succeeding while price and rating stopped returning usable values. The re-weave restored price and rating and Integrity returned to 100%.",
+    "rows_per_run": 12,
+    "strain": "RENAMED",
+    "heal_prompt": "On mikhailkhorokhorin.github.io: 'price' and 'rating' return null after a layout change. Likely RENAMED: the other fields still extract correctly, so a selector moved rather than the page changing wholesale. Fix the extraction for those fields.",
+    "resolved": true,
+    "stages": [
+      {
+        "stage": "DETECTED",
+        "ts": "2026-08-22T07:56:22.427Z"
+      },
+      {
+        "stage": "DIAGNOSED",
+        "ts": "2026-08-22T08:06:16.400Z"
+      },
+      {
+        "stage": "REWEAVING",
+        "ts": "2026-08-22T08:06:16.402Z"
+      },
+      {
+        "stage": "VERIFIED",
+        "ts": "2026-08-22T08:08:18.114Z"
+      }
+    ],
+    "id": "inc_004"
   }
 ]
