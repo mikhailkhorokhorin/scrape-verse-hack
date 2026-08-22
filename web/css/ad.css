@@ -19,7 +19,7 @@
   margin:0 0 var(--s2);
   font-family:"IBM Plex Mono",ui-monospace,monospace;
   font-size:var(--t-tick);font-weight:600;letter-spacing:.26em;
-  text-transform:uppercase;color:#4A4160;
+  text-transform:uppercase;color:var(--ink-3);
   border-bottom:2px solid var(--ink);padding-bottom:6px;
 }
 
@@ -40,7 +40,7 @@
 
 .ad__lede{
   margin:var(--s2) 0 0;max-width:66ch;
-  font-size:var(--t-body);line-height:1.5;color:#2A2438;
+  font-size:var(--t-body);line-height:1.5;color:var(--ink-2);
 }
 .ad__lede b{color:var(--ink);}
 
@@ -90,7 +90,7 @@
   display:block;margin-top:4px;
   font-family:"IBM Plex Mono",ui-monospace,monospace;
   font-size:var(--t-tick);font-weight:600;letter-spacing:.08em;
-  text-transform:uppercase;color:#4A4160;
+  text-transform:uppercase;color:var(--ink-3);
 }
 
 .ad__tools{list-style:none;margin:0;padding:0;}
@@ -109,7 +109,7 @@
   padding:2px 6px 1px;justify-self:start;
 }
 .ad__tool--paid .ad__toolname{background:var(--infected);}
-.ad__toolwhat{font-size:.8125rem;line-height:1.45;color:#2A2438;}
+.ad__toolwhat{font-size:.8125rem;line-height:1.45;color:var(--ink-2);}
 
 .ad__guarantee{
   display:flex;flex-wrap:wrap;align-items:center;gap:10px var(--s2);
@@ -136,7 +136,7 @@
   margin:0;position:relative;text-align:center;
   border-top:3px dashed var(--ink);
   font-family:"IBM Plex Mono",ui-monospace,monospace;
-  font-size:var(--t-tick);font-weight:600;letter-spacing:.2em;color:#4A4160;
+  font-size:var(--t-tick);font-weight:600;letter-spacing:.2em;color:var(--ink-3);
 }
 .ad__cut span{
   display:inline-block;position:relative;top:-9px;
@@ -159,7 +159,7 @@
 .ad__formsub{
   display:block;margin-top:6px;
   font-family:"Space Grotesk",system-ui,sans-serif;
-  font-size:.8125rem;font-weight:400;letter-spacing:0;color:#4A4160;
+  font-size:.8125rem;font-weight:400;letter-spacing:0;color:var(--ink-3);
 }
 
 .ad__orders{list-style:none;margin:0;padding:0;counter-reset:ad;}
@@ -221,7 +221,7 @@
   border-top:2px dashed var(--ink);
   font-family:"IBM Plex Mono",ui-monospace,monospace;
   font-size:var(--t-micro);font-weight:600;letter-spacing:.12em;
-  text-transform:uppercase;color:#4A4160;
+  text-transform:uppercase;color:var(--ink-3);
 }
 .ad__line{display:inline-flex;align-items:center;gap:8px;flex:1 1 190px;}
 .ad__line i{flex:1;min-width:70px;border-bottom:2px solid var(--ink);height:14px;}
