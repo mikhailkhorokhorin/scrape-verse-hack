@@ -324,6 +324,18 @@ finds an unstated gap discounts everything else; a stated one costs nothing.
 - **The heal-trigger endpoint was never built.** The console reads and explains; it has no
   button that spends credit. Healing runs from the cron or from the two MCP action tools,
   which is the honest surface and the one under test
+- **The no-hash print is four pages, not three.** Three incident covers, one per page, plus
+  the No-Prize letter on a fourth. The No-Prize carries `break-inside:avoid` and is printed
+  open by design, so it takes a page of its own rather than being split across the third
+  cover. Each `#inc_XXX` deep link still prints as exactly one page carrying its receipt
+- **The scratch has no keyboard affordance, by design.** It is a pointer-only reveal over a
+  decorative canvas that is `aria-hidden`. Every value it uncovers is already in the
+  accessibility tree through the per-field chips and the detail sheet, both fully keyboard
+  reachable, so the canvas adds no information a keyboard user cannot otherwise get
+- **The sticky section nav is last in the tab order.** It is appended to `<body>` after the
+  content it links to, so a keyboard user reaches the sections themselves before the
+  shortcut list. Correct for a skip-style nav that appears on scroll, but it does mean the
+  visually-first element is not the first tab stop
 
 None of these touch requirement 4, which is the one that matters most: three heals, three
 unchanged Collector IDs, all three verifiable from the committed JSON with no API key.
