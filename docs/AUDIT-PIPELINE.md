@@ -1028,3 +1028,37 @@ costs nothing.
 | Audit | What we are not fixing | Why it is acceptable |
 |---|---|---|
 | | | |
+
+---
+
+# The final audit — 22 Aug, after the restructure
+
+Run against the console, the CHAOS LAB and the manual, at 1440 and 375, with
+`prefers-reduced-motion`, `?capture=1` and print all exercised.
+
+**19/20 · zero P0 · zero P1.** Accessibility 4, Performance 3, Theming 4, Responsive 4,
+Anti-patterns 4.
+
+The one finding that mattered was a **P1 the restructure created**: the mock banner, newly
+moved out of a JavaScript string and into `mock.css`, sat at `position:sticky; top:0` on
+top of the fixed page nav, which also pins to `top:0`. Every hit test on all five nav
+links landed on `DIV.mockflag` — the CHAOS LAB page's navigation was completely
+unclickable, and nothing in the suite could see it, because the tests read source rather
+than hit-test a rendered page. Fixed by offsetting the nav under the banner
+(`body:has(.mockflag) .pagenav{top:var(--mockflag-h)}`) with matching
+`scroll-padding-top`, verified at both widths, banner wrapping to two lines at 375.
+
+Also fixed: two touch targets below 44px on a coarse pointer, the BREAK BODEGA button at
+3.36:1 (now 5.12), four focus rings falling back to the browser default, five hard-coded
+hexes that duplicated existing tokens, and three small texts on the manual that missed AA
+(`.ad__box`, `.ad__no`, `.ad__chaosnote`). The manual now measures **zero contrast
+failures** across every leaf element on the page.
+
+**Performance is the one score we did not hold at 4, and the reason is honest**: three
+identical frame-rate runs on this machine gave 30, 39.8 and 59.9 fps, a spread caused by
+several browser tabs and concurrent agents rather than by the page. An empty control page
+in the same browser at the same moment ran at 120fps. The only figure worth standing
+behind is the best run's vsync-locked 59.9fps, and it does **not** reproduce the 95fps an
+earlier audit recorded. Structurally the page is sound — no layout thrash, no
+backdrop-filter, no blurred shadows, no images to lazy-load — but **the number should be
+re-measured on a quiet machine before anyone quotes it.**
