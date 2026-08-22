@@ -69,9 +69,22 @@ window):
       and 82 animated rig parts on screen, so the audit's performance worry did not
       materialise. The only elements extending past the viewport are `.fleet-symbiote` and
       its body, which are deliberately `inset:-20px` and `pointer-events:none`.
-- [ ] Run again immediately before submission, against the final build
-- [ ] Every surface in the checklist above confirmed legible with no horizontal scroll
-- [ ] Frame rate at 375px with all animated symbiote layers active is acceptable (no
-      visible stutter during a normal interaction pass)
-- [ ] Any failure found is either fixed or explicitly logged as a known limitation before
-      submission — not silently left broken
+- [x] Run again immediately before submission, against the final build — **pass 2 done
+      Aug 22**, Chromium at 375x812 against live data, after all six moves landed
+- [x] Every surface in the checklist above confirmed legible with no horizontal scroll —
+      `scrollWidth` 365 against a 365 client width, exactly equal, at 375px
+- [x] Frame rate at 375px with all animated symbiote layers active is acceptable —
+      **95fps median** across three three-second scroll passes (93/95/95), measured with
+      the turbulence filter, five sweep hands and the scroll-driven press all active.
+      Higher than pass 1's 76, because MOVE 5 took the idle animation off healthy panels:
+      stillness turned out to be a performance decision as well as a design one
+- [x] Any failure found is either fixed or explicitly logged as a known limitation —
+      one was found and fixed during the battery: `scratchReduced()` existed and was
+      tested but was never called, so the scratch regrew under `prefers-reduced-motion`.
+      It now suppresses the regrow and toggles on tap
+
+**A note on measurement, because it cost time.** An earlier reading of this same page
+gave 27fps and looked like a serious regression. It was measured with eight browser tabs
+open and two agents driving the same Chromium instance. Isolating the page — one tab, no
+other work — gives 95. Measure the phone gate in a quiet browser or the number means
+nothing.
