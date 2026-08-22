@@ -12,14 +12,12 @@ WeMakeDevs × Bright Data, 17–23 Aug 2026.
 **The manual → [`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html)** ·
 **Demo video → `<VIDEO>`**
 
-![A broken Spider panel with the black substance dragged open, showing the values that actually came back: price null, and an availability field that returned "In stock" seven times joined into one string](assets/the-watch.png)
-
 Every scraper is a Spider with an **Integrity** score, 0–100: how much of what it
 promised came back real. When Integrity drops, a black substance climbs its panel
-covering exactly the share that was lost. Drag it off and you see the values that
-actually arrived.
+covering exactly the share that was lost — and you can drag it off to read the values
+that actually arrived.
 
-![The black substance being dragged off a taken panel, revealing the values the scraper actually returned: price null in red, rating "undefined" as a literal string in violet](assets/scratch.gif)
+![Dragging the black substance off a broken Spider panel; underneath are the values the scraper really returned, every one of them null](assets/scratch.gif)
 
 ---
 
@@ -327,5 +325,4 @@ Stated plainly rather than left for a judge to find:
   no key appears in this repository, in the console, or in the demo video.
 - **Never edit a record to look better.** `inc_003`'s wrong diagnosis stays.
 
-MIT licensed. Built by [@mikhailkhorokhorin](https://github.com/mikhailkhorokhorin) with
-Claude Code, in the week of 17–23 August 2026.
+MIT licensed.

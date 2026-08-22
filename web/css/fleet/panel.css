@@ -35,7 +35,7 @@
 }
 .symbiote__body{
   position:absolute;inset:0;background:var(--symbiote);
-  --reach:calc(var(--spread,0) * 100%);
+  --reach:calc(var(--spread,0) * 82%);
   -webkit-mask-image:linear-gradient(to top,#000 0,#000 var(--reach),transparent calc(var(--reach) + 11%));
   mask-image:linear-gradient(to top,#000 0,#000 var(--reach),transparent calc(var(--reach) + 11%));
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
