@@ -377,7 +377,27 @@ beside the `collector_id` line. If you trim anything for time, trim elsewhere.
 
 ---
 
-## Section 6c — What stops a heal from lying · insert after Section 6 if the runtime allows
+## Section 6b — The scratch · insert before Section 7 if the runtime allows
+
+**Screen:** Tab A, scrolled to any panel showing black. Press and drag across it.
+
+**Say:**
+
+> The black covers exactly what the scraper lost. You can drag it off.
+
+**Direction:** One slow horizontal drag, then lift. The substance tears open under the
+pointer and the values that actually came back are underneath — `price: null` in red,
+a literal `"undefined"` in violet — and it closes over again after four seconds. Say
+nothing else over it. This is the single image the project has, and the gesture explains
+itself faster than any sentence.
+
+**If the live fleet is at 100%** there is no black to scratch. Use `?mock=1` for this
+shot and say "this is the mock fixture" once, or cut the section — an honest empty page
+beats a staged one.
+
+---
+
+## Section 6c — What stops a heal from lying · insert after the scratch if the runtime allows
 
 This is the answer to the obvious objection, and the objection a judge who has seen other
 entries will already have: *the healer reports its own success, so why believe it?* Worth
@@ -409,26 +429,6 @@ Section 3's or Section 6's frame came out unreadable, this one is the backup.
 
 ---
 
-## Section 6b — The scratch · insert before Section 7 if the runtime allows
-
-**Screen:** Tab A, scrolled to any panel showing black. Press and drag across it.
-
-**Say:**
-
-> The black covers exactly what the scraper lost. You can drag it off.
-
-**Direction:** One slow horizontal drag, then lift. The substance tears open under the
-pointer and the values that actually came back are underneath — `price: null` in red,
-a literal `"undefined"` in violet — and it closes over again after four seconds. Say
-nothing else over it. This is the single image the project has, and the gesture explains
-itself faster than any sentence.
-
-**If the live fleet is at 100%** there is no black to scratch. Use `?mock=1` for this
-shot and say "this is the mock fixture" once, or cut the section — an honest empty page
-beats a staged one.
-
----
-
 ## Section 7 — Question 4: what the output became · 2:42–2:55
 
 **Screen:** Console, scroll to THE HAUL.
@@ -454,6 +454,24 @@ no music sting.
 
 ---
 
+## Section 7b — the back page · 8 seconds, cut first if you run long
+
+**Screen:** click `MANUAL` in the console's nav. Let the ad's headline and the coupon land,
+then scroll once, slowly, past the six numbered tickets. Do not stop on any of them.
+
+**Say over it:**
+
+> The console has a back page. It carries the pitch, all eight tools, the three lines that
+> install this, and the six things a judge should do — as a page you can print. The test
+> count on it is read from the repository at page load, so it is right now, not whenever
+> I typed it.
+
+**Direction:** Eight seconds, one scroll, no clicking. The point is that the thing has a
+back cover at all — it reads as finished rather than as a demo. Do not read the tools
+aloud; they are already on screen and Section 3 said what they do.
+
+---
+
 ## Cut order if you run long
 
 Cut in this order and stop as soon as you are under 3:00:
@@ -465,7 +483,8 @@ Cut in this order and stop as soon as you are under 3:00:
    agent control (−10s)
 4. Section 2's character explanation — the legend is visible anyway (−10s)
 5. Section 6's `backfilled` note — it is in `SUBMISSION.md` in writing (−9s)
-6. Section 6c entirely — the evidence report is one command in the README (−20s)
+6. Section 7b, the back page — the manual is linked from the README anyway (−8s)
+7. Section 6c entirely — the evidence report is one command in the README (−20s)
 
 **Never cut:** the `heal_receipt` collector-ID frame, the `inc_003` failed-heal paragraph,
 the "our own page, broken on purpose" line, the "two of the three were not staged" line, or
