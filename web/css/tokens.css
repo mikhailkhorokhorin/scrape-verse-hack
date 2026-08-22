@@ -1,5 +1,6 @@
 :root{
   --ink:#0B0A10; --paper:#F4EFE4; --paper-dot:#DED5C2;
+  --ink-2:#2A2438; --ink-3:#4A4160;
   --void:#14061F; --void-2:#1F0A2E; --void-dot:#2C1140;
   --pink:#FF2E88; --cyan:#00E5FF; --purple:#6C2BD9;
   --healthy:#B6FF3C; --degraded:#FFB800; --critical:#FF1E1E; --reweaving:#00E5FF;

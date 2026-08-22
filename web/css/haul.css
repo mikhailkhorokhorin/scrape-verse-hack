@@ -18,11 +18,11 @@
 }
 .haultotals__item i{
   font-style:normal;font-size:var(--t-micro);font-weight:700;
-  letter-spacing:.1em;text-transform:uppercase;color:#4A4160;margin-top:5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:5px;
 }
 .haultotals__note{
   flex:1 1 260px;margin:0 0 0 auto;max-width:52ch;
-  font-size:.8125rem;line-height:1.45;color:#2A2438;
+  font-size:.8125rem;line-height:1.45;color:var(--ink-2);
 }
 @media(min-width:901px){
   .haultotals__note{text-align:right;}

@@ -30,7 +30,7 @@
   margin:6px 0 var(--s2);
   max-width:74ch;
   font-size:.875rem;line-height:1.45;
-  color:#2A2438;
+  color:var(--ink-2);
 }
 @media(min-width:901px){
   .legend{
@@ -75,7 +75,7 @@
   font-size:var(--t-tick);font-weight:600;
   letter-spacing:.18em;text-transform:uppercase;
   margin:0 0 5px;padding-bottom:3px;
-  color:#4A4160;
+  color:var(--ink-3);
   border-bottom:2px solid var(--ink);
 }
 
@@ -93,7 +93,7 @@
 .legend__note{
   grid-column:2;
   font-size:var(--t-micro);
-  color:#4A4160;
+  color:var(--ink-3);
 }
 .legend__note b{color:var(--ink);}
 .legend__note--foot{

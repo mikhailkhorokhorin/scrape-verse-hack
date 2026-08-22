@@ -130,5 +130,5 @@
   font-family:Anton,Impact,sans-serif;font-size:1.125rem;letter-spacing:.06em;
   text-transform:uppercase;color:var(--ink);line-height:1;
 }
-.rest__line{font-size:.8125rem;line-height:1.4;color:#2A2438;}
-.rest__runs{font-size:var(--t-micro);color:#4A4160;letter-spacing:.04em;}
+.rest__line{font-size:.8125rem;line-height:1.4;color:var(--ink-2);}
+.rest__runs{font-size:var(--t-micro);color:var(--ink-3);letter-spacing:.04em;}
