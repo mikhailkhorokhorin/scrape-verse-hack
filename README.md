@@ -204,7 +204,7 @@ stranger inherits, counted from the tree rather than remembered:
 |---|---|
 | Tests | **1,149**, across 60 files in `test/{pipeline,web,mcp,tools}/` |
 | Dependencies | **zero** — `dependencies` and `devDependencies` are both empty objects |
-| Source files | 141 JS + 51 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
+| Source files | 142 JS + 51 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
 | Comments | **zero, as policy** — `grep -c '^\s*//'` across `web/js`, `scripts` and `tools` returns 0 |
 | Enforcement | ESLint and the full suite run in CI on every push |
 
