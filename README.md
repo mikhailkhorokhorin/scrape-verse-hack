@@ -38,7 +38,7 @@ Nothing below needs an API key, touches the network, or spends a credit.
 
 ---
 
-## Requirement 3 — a custom scraper built in Scraper Studio
+## The scrapers, built in Scraper Studio
 
 Three collectors, each created with `bdata scraper create` against a site the Bright Data
 pre-built library does not cover. No Scrapers Library entry is used anywhere in this
@@ -60,7 +60,7 @@ per target is in the table above.
 
 ---
 
-## Requirement 10 — example structured output
+## What comes back
 
 One real row, exactly as ATLAS returned it and as it is committed in
 [`data/history.json`](data/history.json):
@@ -87,19 +87,25 @@ the row was captured. Provenance travels with the data.
 
 ---
 
-## Requirement 11 — AI assistance, disclosed
+## Where AI helped, and where it did not
 
-This project was built with **Claude Code (Anthropic)** as the coding agent, which is
-also how Bright Data intends Scraper Studio to be driven: the whole `bdata` workflow runs
-inside the agent, in the terminal, with no dashboard.
+**Claude Code (Anthropic)** was used throughout, which is also how Bright Data intends
+Scraper Studio to be driven: the whole `bdata` workflow runs inside a coding agent, in
+the terminal, with no dashboard.
 
-The agent wrote most of the implementation. Every architectural decision, every target
-choice, the Integrity model, the symbiote metaphor, the honesty rules below, and the
-decision to leave a wrong diagnosis on the record were the author's, and every line was
-reviewed before it was committed. The author can explain any part of it: the Integrity
-model, the two-consecutive-scans rule before a repair fires, why verification runs a
-fresh scrape instead of trusting the heal, and why one wrong diagnosis was left on the
-record.
+It helped most with **ideas and with parts of the code** — sketching approaches, drafting
+the pipeline scripts, writing large stretches of the test suite, and arguing back when a
+design was weak. It did not build the project on its own.
+
+The **console front-end is hand-built**: the comic layout, the symbiote metaphor, the
+scratch reveal, the character rig, the diptych and the whole visual system came from the
+author rather than from a prompt. So did the decisions that make the rest of it worth
+anything — which sites to target and why, the Integrity model and its three field states,
+the rule that a repair waits for two consecutive bad scans, the rule that verification
+runs a fresh scrape instead of trusting the heal's own report, and the choice to leave a
+wrong diagnosis on the record rather than tidy it away.
+
+Everything was read before it was committed, and the author can explain any part of it.
 
 ---
 
