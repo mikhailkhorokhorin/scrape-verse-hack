@@ -36,7 +36,7 @@ Method, not vibes:
 Done when: zero provably-unreferenced functions/selectors remain, and the sweep's one
 paragraph (what was removed, why it was safe) lands at the bottom of this file.
 
-## R2 · `test/` grows an anatomy *(lead, ~40min)*
+## R2 · `test/` grows an anatomy — **DONE 22 Aug 07:13 UTC**
 
 ```
 test/
@@ -57,6 +57,16 @@ Contracts to update in the same commit:
   `node --test test/heal-that-lies.test.js` line.
 
 Done when: `npm test` prints the same total from the new tree, CI's next run agrees.
+
+**Result.** 59 files moved with `git mv` (rename similarity 97-99%, history intact) into
+`pipeline/ web/ mcp/ tools/`, the `web-` and `mcp-` prefixes dropped since the folder now
+carries that meaning. Three path classes rewritten mechanically: `./web-loader.js` →
+`../web-loader.js`, `../scripts|mcp|tools/` → `../../`, and five `path.join(__dirname,
+'..')` → `'..', '..'`. `test/run.js` walks subdirectories and now forwards its argv, so
+CI calls the same runner (`node test/run.js --test-reporter=tap`) instead of a glob —
+Node 20 in CI does not expand `test/**/*.test.js`, and `node --test test/` does not
+recurse, so the runner is the only form that works in both places. 1,112 tests before,
+1,112 after, lint clean, `data/` backed up before the workflow edit.
 
 ## R3 · `web/js` and `web/css` mirror the product *(Agent A after R1, ~1-1.5h)*
 

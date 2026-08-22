@@ -5,7 +5,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(__dirname, '..', '..');
 const WEB = path.join(ROOT, 'web');
 const manual = fs.readFileSync(path.join(WEB, 'manual.html'), 'utf8');
 const manualCss = fs.readFileSync(path.join(WEB, 'css', 'manual.css'), 'utf8');
@@ -72,10 +72,12 @@ test('the no-key receipt one-liner is reproduced verbatim, quoting and all', () 
   assert.ok(manual.includes('| node mcp/server.js'));
 });
 
-test('the test count on the page is the count the README and SUBMISSION claim', () => {
-  assert.ok(readme.includes('1,112 tests'));
-  assert.ok(submission.includes('1,112 tests'));
-  assert.match(manual, /1,112 tests/);
+test('the test count on the page is the count the committed meta.json records', () => {
+  const meta = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'meta.json'), 'utf8'));
+  const claimed = meta.tests.toLocaleString('en-US');
+  assert.match(manual, new RegExp(claimed + ' tests'), 'the manual drifted from meta.json');
+  assert.ok(readme.includes(claimed + ' tests'), 'the README drifted from meta.json');
+  assert.ok(submission.includes(claimed + ' tests'), 'SUBMISSION drifted from meta.json');
 });
 
 test('all eight MCP tools are listed, each exactly once', () => {

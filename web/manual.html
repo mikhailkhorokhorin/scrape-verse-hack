@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="THWIP — the manual. Install the watch, drive it from an agent over MCP, judge it in ten minutes, or break it yourself in the Chaos Lab.">
+<title>THWIP Manual</title>
+<link rel="canonical" href="https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="THWIP">
+<meta property="og:title" content="THWIP — the manual">
+<meta property="og:description" content="Get the watch, drive it from an agent, judge it in ten minutes, break it yourself. Every command on this page is one that actually runs.">
+<meta property="og:url" content="https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2314061F'/%3E%3Cpath d='M16 3 3 16l13 13 13-13z' fill='none' stroke='%23FF2E88' stroke-width='3'/%3E%3Cpath d='M16 9v14M9 16h14' stroke='%2300E5FF' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/scrollbar.css">
+<link rel="stylesheet" href="css/pagenav.css">
+<link rel="stylesheet" href="css/manual.css">
+</head>
+<body class="manual-page">
+
+<nav class="pagenav pagenav--static is-up" aria-label="Pages">
+  <span class="pagenav__mark" aria-hidden="true">THWIP</span>
+  <span class="pagenav__links">
+    <a class="pagenav__link" href="index.html">THE WATCH</a>
+    <a class="pagenav__link is-here" href="manual.html" aria-current="page">MANUAL</a>
+  </span>
+</nav>
+
+<div class="wrap">
+
+  <header class="masthead manual-head">
+    <div>
+      <h1 class="wordmark wordmark--manual">THWIP</h1>
+      <p class="tagline">Scrapers do not crash, they <b>rot</b>. This is the back page of the
+      issue: how to install the watch, how to drive it from an agent, and how to break it
+      yourself. <b>Every command here is one that runs</b> — no pseudo-code, no placeholders.</p>
+    </div>
+  </header>
+
+  <main>
+
+  <section class="man" id="get" aria-labelledby="get-h">
+    <div class="sechead"><h2 class="caption" id="get-h">1 · Get the watch</h2><span class="rule"></span></div>
+    <p class="man__lead">Clone it, prove it, connect it. The clone and the suite spend nothing
+    and need no key; the last line hands the fleet to your coding agent.</p>
+    <pre class="man__code"><code>git clone https://github.com/mikhailkhorokhorin/scrape-verse-hack.git
+cd scrape-verse-hack
+npm test
+claude mcp add thwip -- node mcp/server.js</code></pre>
+    <p class="man__note"><b>1,137 tests</b>, <span class="mono">node:test</span>, zero
+    dependencies, offline. No network and no <span class="mono">bdata</span> calls — the
+    credit-spending paths run against a mocked <span class="mono">lib.bdata</span>.</p>
+    <p class="man__note">To see the console rather than the code, serve the repo over HTTP with
+    <span class="mono">python3 -m http.server 8000</span>, then open
+    <span class="mono">/web/</span>. Opening the file directly shows an error plate: the page
+    fetches two JSON files, and browsers block <span class="mono">fetch</span> on
+    <span class="mono">file://</span> origins.</p>
+  </section>
+
+  <section class="man" id="drive" aria-labelledby="drive-h">
+    <div class="sechead"><h2 class="caption" id="drive-h">2 · Drive it from an agent</h2><span class="rule"></span></div>
+    <p class="man__lead">Eight tools over stdio JSON-RPC 2.0, written straight against the spec:
+    no SDK, no dependencies. <b>Six read the committed data: instant, free, no network.</b>
+    The other two spend Bright Data credit and declare it in their own tool descriptions, so a
+    well-behaved agent asks before it bills you.</p>
+
+    <ul class="tools" aria-label="The eight MCP tools">
+      <li class="tool tool--free">
+        <span class="tool__name mono">fleet_status</span>
+        <span class="tool__what">Latest run for every Spider — integrity, status, rows, live fields, collector_id</span>
+        <span class="tool__cost">FREE</span>
+      </li>
+      <li class="tool tool--free">
+        <span class="tool__name mono">spider_history</span>
+        <span class="tool__what">Run history for one Spider, oldest first, with post-heal runs marked</span>
+        <span class="tool__cost">FREE</span>
+      </li>
+      <li class="tool tool--free">
+        <span class="tool__name mono">incident_log</span>
+        <span class="tool__what">Every recorded break, with strain, integrity delta and resolution</span>
+        <span class="tool__cost">FREE</span>
+      </li>
+      <li class="tool tool--free">
+        <span class="tool__name mono">heal_receipt</span>
+        <span class="tool__what">Full timestamped receipt for one incident, beside the collector_id that did not change</span>
+        <span class="tool__cost">FREE</span>
+      </li>
+      <li class="tool tool--free">
+        <span class="tool__name mono">evidence_report</span>
+        <span class="tool__what">The whole trail: stage durations, per-field before and after, SHA-256 digests recomputed from disk</span>
+        <span class="tool__cost">FREE</span>
+      </li>
+      <li class="tool tool--free">
+        <span class="tool__name mono">numbers_audit</span>
+        <span class="tool__what">Every number the console shows, recomputed by a second implementation that shares no code with it</span>
+        <span class="tool__cost">FREE</span>
+      </li>
+      <li class="tool tool--paid">
+        <span class="tool__name mono">scan_fleet</span>
+        <span class="tool__what">Live scrape through Bright Data, scored field by field</span>
+        <span class="tool__cost">SPENDS CREDIT</span>
+      </li>
+      <li class="tool tool--paid">
+        <span class="tool__name mono">heal_spider</span>
+        <span class="tool__what">Diagnose, re-weave, verify with a fresh scrape, open an incident</span>
+        <span class="tool__cost">SPENDS CREDIT</span>
+      </li>
+    </ul>
+
+    <p class="man__note">Exercise the server with no API key at all. This prints every phase
+    beside the unchanged <span class="mono">collector_id</span>, then the per-field
+    verification table:</p>
+    <pre class="man__code man__code--wrap"><code>printf '%s\n%s\n' \
+  '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}' \
+  '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}' \
+  | node mcp/server.js</code></pre>
+  </section>
+
+  <section class="man" id="judge" aria-labelledby="judge-h">
+    <div class="sechead"><h2 class="caption" id="judge-h">3 · Judge it in ten minutes</h2><span class="rule"></span></div>
+    <p class="man__lead">Six things, in this order. The first three take under two minutes
+    each; the last three are one command apiece.</p>
+
+    <ol class="steps">
+      <li class="step">
+        <h3 class="step__h">Open the console</h3>
+        <p>The opening sequence replays <span class="mono">inc_003</span>, a real recorded
+        incident, not a mock. Scroll to <b>Incident Feed</b>: three cards, each a comic issue
+        with its own permalink. The note above the feed counts the breaks that happened on
+        sites we do not control. <a class="man__link" href="index.html">Open the watch &rarr;</a></p>
+      </li>
+      <li class="step">
+        <h3 class="step__h">Check requirement 4 in one command</h3>
+        <p>Clone, then run the <span class="mono">heal_receipt</span> one-liner from section 2.
+        It prints every phase beside the unchanged <span class="mono">collector_id</span>, then
+        the per-field verification table. No API key, no network, no credit.</p>
+      </li>
+      <li class="step">
+        <h3 class="step__h">Run the suite</h3>
+        <pre class="man__code man__code--tight"><code>npm test</code></pre>
+        <p>1,137 tests, <span class="mono">node:test</span>, zero dependencies, offline, spends
+        nothing.</p>
+      </li>
+      <li class="step">
+        <h3 class="step__h">Break one yourself, in the browser, in ten seconds</h3>
+        <p>The <b>CHAOS LAB</b> route opens a synthetic fleet running the real mechanics. The
+        three clicks are in section 4.</p>
+      </li>
+      <li class="step">
+        <h3 class="step__h">Print the evidence trail</h3>
+        <pre class="man__code man__code--tight"><code>node tools/evidence-report.js</code></pre>
+        <p>For each incident: the collector id on both sides of the repair (asserted
+        identical), the stage durations, the value every field held before and after, the
+        verdict, and SHA-256 digests recomputed from the committed files at call time.</p>
+      </li>
+      <li class="step">
+        <h3 class="step__h">Count what no human did</h3>
+        <pre class="man__code man__code--tight"><code>git log --author="thwip watch" --oneline | wc -l
+node tools/numbers-audit.js</code></pre>
+        <p>The first counts the commits the workflow authored rather than a person. The second
+        recomputes every number the console shows from the committed JSON, by a second
+        implementation that shares no code with the console.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="man" id="break" aria-labelledby="break-h">
+    <div class="sechead"><h2 class="caption" id="break-h">4 · Break it yourself</h2><span class="rule"></span></div>
+    <p class="man__lead">The fleet in this mode is synthetic and the page says so at the top.
+    <b>The mechanics running it are the same code the live console uses.</b></p>
+
+    <p class="man__cta"><a class="chaos" href="index.html?mock=1">OPEN THE CHAOS LAB &rarr;</a></p>
+
+    <ol class="clicks">
+      <li class="click">
+        <span class="click__key">BREAK BODEGA</span>
+        <span class="click__what">The substance climbs the panel — its spread is the integrity deficit, so the black is the number rather than an effect.</span>
+      </li>
+      <li class="click">
+        <span class="click__key">DRAG ACROSS IT</span>
+        <span class="click__what">The black tears away, showing the values that actually came back.</span>
+      </li>
+      <li class="click">
+        <span class="click__key">RE-WEAVE</span>
+        <span class="click__what">The receipt prints, carrying the per-field was and now table.</span>
+      </li>
+    </ol>
+
+    <p class="man__note">Add <span class="mono">?capture=1</span> to hide every control for a
+    clean screenshot. The real console lives on the plain route and never falls back to
+    synthetic data — it shows honest empty states until the cron has committed a scan.</p>
+  </section>
+
+  </main>
+
+  <footer class="manfoot">
+    <a class="man__link" href="index.html">&larr; Back to the watch</a>
+    <span class="manfoot__note">Three collectors, three real breaks, three heals on unchanged Collector IDs.</span>
+  </footer>
+
+</div>
+
+</body>
+</html>

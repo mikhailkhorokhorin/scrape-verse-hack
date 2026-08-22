@@ -281,7 +281,7 @@ committed JSON in data/. Nothing is cached and nothing is hand-written.
     2026-08-21  day of the first recorded break
             25  scans that ran before 06:00 UTC, unattended
            542  rows extracted before 06:00 UTC, unattended
-          1112  tests recorded in meta.json
+          1137  tests recorded in meta.json
           true  meta.json records the last human touch
              3  incidents carrying a per-field verification
 

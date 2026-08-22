@@ -33,7 +33,7 @@ one command apiece.
    `printf '%s\n%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}' '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}' | node mcp/server.js`
    It prints every phase beside the unchanged `collector_id`, then the per-field
    verification table. No API key, no network, no credit.
-3. **`npm test`** — 1,112 tests, `node:test`, zero dependencies, offline, spends nothing.
+3. **`npm test`** — 1,137 tests, `node:test`, zero dependencies, offline, spends nothing.
 4. **Break one yourself, in the browser, in ten seconds.**
    https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1 opens the **CHAOS LAB**:
    press **BREAK BODEGA** and the substance climbs the panel; drag across it and the black
@@ -266,7 +266,7 @@ in `web/js/`, assembled by the `build` job in `.github/workflows/watch.yml`.
 | App repository | **done** | public, MIT — https://github.com/mikhailkhorokhorin/scrape-verse-hack |
 | Docs repository | **done** | public, on GitLab |
 | `README.md` | **done** | pitch, setup, tests, CI, Chaos Lab, architecture, Collector IDs, healing walkthrough |
-| Test suite | **done** | 1,112 tests, `npm test`, `node:test`, zero dependencies, offline |
+| Test suite | **done** | 1,137 tests, `npm test`, `node:test`, zero dependencies, offline |
 | MCP server | **done** | `mcp/` — eight tools over stdio JSON-RPC, no SDK |
 | Demo video | **not recorded** | `docs/VIDEO-SCRIPT.md` |
 | Video link in README | **not done** | add the moment the video is uploaded |
