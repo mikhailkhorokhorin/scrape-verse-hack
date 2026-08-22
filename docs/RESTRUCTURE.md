@@ -216,7 +216,7 @@ where one level still holds 26 files; the same for `test/web`; and the newspaper
 stop looking like the plain page in a styled issue. Video records ~11:20 UTC; the D1
 incident is mid-flight and nothing here touches `data/`, `scripts/` or `demo-target/`.
 
-## R6 · The ad moves to the back page *(agent, ~1h)*
+## R6 · The ad moves to the back page — **DONE 22 Aug 08:20 UTC**
 
 The manual and the ad currently say the same things twice — the ad says them better.
 So the ad stops being a section of the console and becomes the **centerpiece of the
@@ -239,7 +239,7 @@ manual**, and the manual's plain duplicates die:
   full coupon is *gone* from the console); the manual tests assert the whole ad,
   including the meta-count guard. `?capture=1` and print checked on both pages.
 
-## R7 · The manual dresses like the issue *(same agent, same pass, ~45min)*
+## R7 · The manual dresses like the issue — **DONE 22 Aug 08:20 UTC**
 
 DESIGN-SPEC §8 first, then, concretely:
 - the console's halftone ground and paper/ink panels instead of the flat body;
@@ -254,7 +254,7 @@ DESIGN-SPEC §8 first, then, concretely:
 
 Done when a reader scrolling console → manual cannot tell the design hand changed.
 
-## R8 · CSS mirrors the modules *(lead, ~40min)*
+## R8 · CSS mirrors the modules — **DONE 22 Aug 08:35 UTC**
 
 `web/css/` (51 files, flat) takes the same anatomy as the JS, one level:
 
@@ -277,7 +277,7 @@ four tests that read css by hand-built path (`stillness`, `wild`, `chaos-lab`,
 `manual`) go through it; there is no ESLint contract on css. Gate: suite, lint, zero
 console messages on both pages, screenshot at 1440/375 against before.
 
-## R9 · Depth where one level overflows *(lead, after R8, ~40min)*
+## R9 · Depth where one level overflows — **DONE 22 Aug 08:05 UTC**
 
 `fleet/` holds 26 files and `sheets/` 17 — the folders solved provenance, not volume.
 One more level, grouped by what a stranger would ask for:
@@ -335,3 +335,29 @@ reads as a page of the same comic with the ad as its centerpiece and a live test
 count; the console still has six message slots, the sixth now a teaser; every css and
 js file sits in a folder that names its part; and nothing on either page says a thing
 the repo cannot prove.
+
+
+---
+
+# Round two, closed — 22 Aug 08:35 UTC
+
+Everything in this round shipped. The ad is the manual's centrepiece and the console
+keeps a one-panel teaser in its sixth slot; the manual wears the issue's halftone,
+ticket-numbered steps and colophon; 51 stylesheets and 99 modules sit in folders named
+for the parts they build; `test/web` mirrors `web/js` folder for folder.
+
+Three findings came out of the work that were worth more than the moves themselves:
+
+- **The coupon's Chaos Lab link was relative.** `href="?mock=1"` on the manual would have
+  resolved to `manual.html?mock=1`, a page with no fleet on it. Now absolute.
+- **The colophon claimed three breaks.** By the time the manual was built there were four.
+  Replaced with a claim that cannot go stale: every break on the record was real, and every
+  heal landed on a Collector ID that did not change.
+- **The mock banner styled itself from a JavaScript string** — `position:sticky;
+  z-index:9999` inline — which put it over the Chaos Lab's own heading and out of reach of
+  the stylesheet. Moved to `mock.css` at `z-index:60`, with `scroll-margin-top` on the bar
+  so an anchor jump clears both sticky strips. Three tests now hold that shape.
+
+A dedicated `ci` workflow was added alongside `watch`: lint, the suite, a zero-dependency
+assertion, the 250-line cap and the numbers audit, on Node 20 and 22, for every push and
+pull request. It went green on its first run.
