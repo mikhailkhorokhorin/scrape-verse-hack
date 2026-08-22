@@ -58,7 +58,7 @@ test('evidenceParts states collectors, healed incidents, rows, tests and a colle
   const incidents = [{ verified: true }, { verified: false }, { verified: true }];
   const history = [{ rows: 10 }, { rows: 5 }];
   const parts = evidenceParts(spiders, incidents, history, { tests: 528 }, false);
-  assert.deepEqual(plain(parts), ['2 collectors', '2 incidents healed', '15 rows', '528 tests', 'c_two']);
+  assert.deepEqual(plain(parts), ['2 collectors', '2 incidents healed', '15 rows', '528 tests', 'collector c_two']);
 });
 
 test('evidenceParts counts only verified incidents as healed', () => {
@@ -90,7 +90,7 @@ test('evidenceParts ignores runs with a missing or unusable row count', () => {
 test('evidenceParts omits only the test segment when meta is missing', () => {
   const spiders = [spider('c_one', '2026-01-01T00:00:00Z')];
   const parts = evidenceParts(spiders, [{ verified: true }], [{ rows: 7 }], null, false);
-  assert.deepEqual(plain(parts), ['1 collector', '1 incident healed', '7 rows', 'c_one']);
+  assert.deepEqual(plain(parts), ['1 collector', '1 incident healed', '7 rows', 'collector c_one']);
 });
 
 test('evidenceParts omits the test segment when meta carries no test count', () => {
