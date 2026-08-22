@@ -4288,5 +4288,108 @@
       "comments": null,
       "author": null
     }
+  },
+  {
+    "collector_id": "c_mt4pkrma2b8beq8jv5",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-22T22:34:40.205Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt4watrl16nf8i3in7",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-22T22:45:12.547Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url"
+    ],
+    "fields_infected": [
+      "availability"
+    ],
+    "fields_dead": [],
+    "integrity": 90,
+    "status": "HEALTHY",
+    "rows": 1000,
+    "rows_expected": 20,
+    "sample": {
+      "title": "Soumission",
+      "price": {
+        "value": 50.1,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 1,
+      "image_url": "https://books.toscrape.com/media/cache/ee/cf/eecfe998905e455df12064dba399c075.jpg",
+      "availability": "In stock (20 available) In stock In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt4wke4p10o50u8bzp",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-22T22:46:24.190Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments"
+    ],
+    "fields_infected": [
+      "author"
+    ],
+    "fields_dead": [],
+    "integrity": 88,
+    "status": "DEGRADED",
+    "rows": 61,
+    "rows_expected": 30,
+    "sample": {
+      "title": "NetBSD and My Life (2005)",
+      "points": 70,
+      "comments": 319,
+      "author": "gnyeki cavem0nkey jambalaya8 cavem0nkey jambalaya8 eahm clort jambalaya8 Brian_K_White tolerance Grimeton whalesalad tolerance leecommamichael Grimeton pelasaco whalesalad kev009 alexpotato tech_army"
+    }
   }
 ]
