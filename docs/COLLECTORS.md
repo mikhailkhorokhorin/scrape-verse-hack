@@ -54,8 +54,8 @@ verbatim from the row above rather than retyping it.
 
 | Date | Collector ID (unchanged) | Codename | Strain | What broke | Integrity before → after | Duration | Incident |
 |---|---|---|---|---|---|---|---|
-| Aug 21, 07:48Z | `c_mt2lkwxa1bb5uz223s` | BODEGA | THROTTLED | All four fields returned `null` on four consecutive scans from `07:02:55Z` — the collector was reading the demo page but extracting nothing | 0% → **100%** | detection to clean scan ~1h 25m | `inc_003` — closed, see below |
-| Aug 21, ~06:40Z | `c_mt2fnqqngikv29od5` | ATLAS | DRIFTED | `availability` matched every `p.instock.availability` on the page and joined them, returning `"In stock (19 available) In stock In stock…"` on every row. The field stayed populated the whole time — it just stopped being true | 90% → **100%** | ~19 min | manual, pre-cron. No incident record — see below |
+| Aug 21, 07:48Z | `c_mt2lkwxa1bb5uz223s` | BODEGA | THROTTLED | All four fields returned `null` on four consecutive scans from `07:02:55Z` — the collector was reading the demo page but extracting nothing | 0% → **100%** | 94m 20s detection to verified | `inc_003` — closed, see below |
+| Aug 21, ~06:40Z | `c_mt2fnqqngikv29od5` | ATLAS | DRIFTED | `availability` matched every `p.instock.availability` on the page and joined them, returning `"In stock (19 available) In stock In stock…"` on every row. The field stayed populated the whole time — it just stopped being true | 90% → **100%** | 106m 12s | `inc_002` — reconstructed after the fact, see below |
 | Aug 21, 05:13Z | `c_mt2fnt3p2k4n644701` | KESTREL | RENAMED | The generated scraper emitted `story_points` and `comment_count` instead of the contracted keys, and every value was `0`. All four fields read `dead` | 0% → **100%** | 26m 24s | `inc_001` |
 
 The KESTREL heal ran unattended end to end — `planner → code_fixer → step_preview_runner →
