@@ -96,7 +96,7 @@ masthead and the pulse slot:
   inside four hours, then `YOU DO NOT PREVENT THE BREAK. YOU COME BACK FROM IT, AND
   YOU RECORD IT.`
 
-Files: `web/js/open.js`, `web/css/open.css`, one link and one script line in
+Files: `web/js/fleet/vitals/open.js`, `web/css/fleet/open.css`, one link and one script line in
 `index.html`.
 
 The CI half: `watch.yml`'s meta step also writes `last_human_ts` — the timestamp of the
@@ -117,7 +117,7 @@ post-mortem: `inc_003.summary` **verbatim from `incidents.json`**, never paraphr
 with its timestamps. The empty envelope is the joke; the honest write-up inside is the
 payoff, and it scores in Best Clean Code as well as Best UI.
 
-Files: `web/js/noprize.js`, `web/css/noprize.css`, one line each in `index.html`.
+Files: `web/js/sheets/issue/noprize.js`, `web/css/sheets/noprize.css`, one line each in `index.html`.
 
 **Done when:** the summary text on screen is byte-identical to the committed JSON string;
 the keyboard opens it; Escape does not close it (it is disclosure, not a modal); it
@@ -131,7 +131,7 @@ LINE.` The coupon carries the real commands — `git clone`, `npm test`,
 `meta.json`, never hardcoded**. The waves' own `821 TESTS` example is already stale
 twice over, which is the argument for reading it live.
 
-Files: `web/js/ad.js`, `web/css/ad.css`, one line each in `index.html`.
+Files: `web/js/sheets/ad.js`, `web/css/ad.css`, one line each in `index.html`.
 
 **Done when:** the commands copy-paste-run from a clean clone; the count is live; the ad
 reads as a page of the comic at 1440/768/375; hidden in capture; and its print behaviour
@@ -195,7 +195,7 @@ that up understands the entire product in four seconds with no legend.
    `aria-hidden` — the values remain available to the accessibility tree through the
    existing chips.
 
-Files: `web/js/scratch.js`, `web/css/scratch.css`, and minimal hooks in `panel.js` or
+Files: `web/js/fleet/symbiote/scratch.js`, `web/css/fleet/scratch.css`, and minimal hooks in `panel.js` or
 `symbiote.js` only if unavoidable. UI-62's flinch — the substance recoiling a few percent
 on hover — rides along if it is trivial, and is cut without discussion if it fights the
 filter.

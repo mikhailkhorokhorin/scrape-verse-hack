@@ -27,8 +27,8 @@ Everything below is on disk and checkable. Nothing is invented for camera.
 | ATLAS `c_mt2fnqqngikv29od5`, DRIFTED, 90 → 100, books.toscrape.com | `data/incidents.json` `inc_002` |
 | BODEGA `c_mt2lkwxa1bb5uz223s`, THROTTLED, 0 → 100, **opened by the cron itself** | `data/incidents.json` `inc_003` |
 | Collector ID identical before and after, all three | same `c_*` in every record above |
-| A per-field `verification` object on every incident | `scripts/verify.js`, rendered by `web/js/sheets/receipt.js`, printed by `heal_receipt` |
-| **Two of the three breaks were on sites we do not control** | `web/js/fleet/wild.js` computes it; the note renders above the feed |
+| A per-field `verification` object on every incident | `scripts/verify.js`, rendered by `web/js/sheets/issue/receipt.js`, printed by `heal_receipt` |
+| **Two of the three breaks were on sites we do not control** | `web/js/fleet/vitals/wild.js` computes it; the note renders above the feed |
 | Nineteen cron commits authored by `thwip watch` | `git log --author="thwip watch"` |
 | Six MCP tools over stdio JSON-RPC, no SDK | `mcp/registry.js` |
 | 1,136 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |

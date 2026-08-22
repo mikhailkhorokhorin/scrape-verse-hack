@@ -301,7 +301,7 @@ written to `history.json` and nothing should look for them there:
 
 | State | Where it comes from |
 |---|---|
-| `UNWATCHED` | derived in `web/js/adapter.js` when the newest run is over 3 hours old |
+| `UNWATCHED` | derived in `web/js/data/adapter.js` when the newest run is over 3 hours old |
 | `REWEAVING` | read from `status` by `adapter.js`, for a heal in flight |
 
 `REWEAVING` is currently unreachable: the console tests `status === "REWEAVING"` but no

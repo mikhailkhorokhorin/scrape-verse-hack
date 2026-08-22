@@ -8,7 +8,7 @@ const { loadWebModule, modulePath } = require('../web-loader.js');
 
 const context = loadWebModule(['config.js', 'format.js', 'ad.js']);
 const {
-  adHTML, adTestCount, adTestLine, adCouponHTML, adToolsHTML,
+  adHTML, adTestCount, adTestLine, adCouponHTML, adToolsHTML, adTeaserHTML,
   AD_FREE_TOOLS, AD_PAID_TOOLS, AD_ORDERS, AD_REPO,
 } = context;
 
@@ -140,4 +140,42 @@ test('the ad is suppressed on the fixture page, where there is no real count to 
 test('a hostile meta value is escaped rather than rendered', () => {
   const html = adHTML({ tests: '<img src=x onerror=alert(1)>' });
   assert.doesNotMatch(html, /<img/);
+});
+
+test('the console slot carries a teaser, not the full pitch it used to duplicate', () => {
+  const html = adTeaserHTML();
+  assert.match(html, /<section class="teaser" id="ad" aria-labelledby="teaser-title">/);
+  assert.match(html, /EIGHT TOOLS\./);
+  assert.match(html, /NO SDK\./);
+  assert.match(html, /CONNECT IN ONE LINE\./);
+});
+
+test('the teaser keeps the sixth slot named, so the issue still counts to six', () => {
+  assert.match(adTeaserHTML(), /A MESSAGE FROM THE WATCH &middot; NO\. 6 OF 6/);
+});
+
+test('the teaser hands the reader to the manual and claims nothing it cannot show', () => {
+  const html = adTeaserHTML();
+  assert.match(html, /<a class="teaser__cta" href="manual\.html">READ THE MANUAL &rarr;/);
+  ['SEND NO MONEY NOW', 'CUT ALONG THE DOTTED LINE', 'IRON-CLAD GUARANTEE'].forEach((claim) => {
+    assert.ok(!html.includes(claim), claim + ' belongs on the manual, not the teaser');
+  });
+  AD_ORDERS.forEach(([, cmd]) => {
+    assert.ok(!html.includes(cmd), cmd + ' is a coupon line and must not be in the teaser');
+  });
+});
+
+test('the teaser carries no live test count, because it never fetches one', () => {
+  assert.doesNotMatch(adTeaserHTML(), /ad-tests|\d,\d{3}/);
+});
+
+test('the console mount renders the teaser and the manual builder renders the coupon', () => {
+  const source = fs.readFileSync(modulePath('ad.js'), 'utf8');
+  const mount = source.slice(source.indexOf('function mountAd'));
+  assert.match(mount, /adTeaserHTML\(\)/);
+  assert.doesNotMatch(mount, /adHTML\(/);
+});
+
+test('the coupon chaos tag names the console explicitly, so it works from the manual too', () => {
+  assert.match(adCouponHTML({ tests: 935 }), /href="index\.html\?mock=1"/);
 });
