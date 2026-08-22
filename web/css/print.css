@@ -105,6 +105,14 @@
 
   .issue__body{padding:4mm 5mm 0;}
   .issue__body p,.blast{color:#000;max-width:none;font-size:9pt;line-height:1.35;margin-bottom:3mm;}
+
+  body.has-issue .receipt{margin:0 0 4mm;}
+  body.has-issue .issue__cover{padding:3mm 5mm 2mm;}
+  body.has-issue .issue__who{font-size:22pt;}
+  body.has-issue .issue__body{padding:3mm 5mm 0;}
+  body.has-issue .issue__body p,body.has-issue .blast{margin-bottom:2mm;}
+  body.has-issue .stages{margin-top:2mm !important;}
+  body.has-issue .infection{margin-top:2mm;}
   .blast__n,.blast code{color:#000;}
   .stages{margin-top:3mm !important;}
   .stage{border-color:#000;background:#fff;padding:2mm 3mm;}
