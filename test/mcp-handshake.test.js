@@ -113,12 +113,12 @@ test('a notifications/ method carrying an id still gets a reply so the client ne
 
 test('tools/list tolerates a cursor parameter it does not paginate on', () => {
   const response = ask({ jsonrpc: '2.0', id: 1, method: 'tools/list', params: { cursor: 'abc' } });
-  assert.equal(response.result.tools.length, 6);
+  assert.equal(response.result.tools.length, registry.TOOLS.length);
 });
 
 test('tools/list works with no params member', () => {
   const response = ask({ jsonrpc: '2.0', id: 1, method: 'tools/list' });
-  assert.equal(response.result.tools.length, 6);
+  assert.equal(response.result.tools.length, registry.TOOLS.length);
 });
 
 test('resources/list and prompts/list report method-not-found, matching the capabilities', () => {

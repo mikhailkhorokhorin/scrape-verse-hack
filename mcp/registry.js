@@ -2,6 +2,7 @@
 
 const read = require('./read-tools.js');
 const actions = require('./action-tools.js');
+const reports = require('./report-tools.js');
 
 const SPIDER_PROP = {
   type: 'string',
@@ -77,6 +78,38 @@ const TOOLS = [
       additionalProperties: false
     },
     handler: (args) => read.healReceipt(args)
+  },
+  {
+    name: 'evidence_report',
+    description:
+      'The full evidence trail for one incident, or for every incident when none is named: ' +
+      'collector_id before and after the repair (identical, asserted — the tool fails loudly ' +
+      'if it ever is not), the four stage timestamps with the duration between each, a ' +
+      'per-field table of state and value before and after, the verification verdict, and ' +
+      'SHA-256 digests of the incident record and of every committed payload file behind it. ' +
+      'Digests are recomputed from disk at call time. Reads recorded data only.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        incident_id: {
+          type: 'string',
+          description: 'Incident id from incident_log, for example inc_001. Omit for all.'
+        }
+      },
+      additionalProperties: false
+    },
+    handler: (args) => reports.evidenceReport(args)
+  },
+  {
+    name: 'numbers_audit',
+    description:
+      'Every number the THWIP console shows, recomputed from the committed JSON in data/ — ' +
+      'scans, rows extracted, incidents, resolved heals, mean time to repair, the overnight ' +
+      'unattended totals and whether every incident kept its collector_id. Nothing here is ' +
+      'cached or hand-written, so a judge can check any headline figure against its source. ' +
+      'Reads recorded data only.',
+    inputSchema: { type: 'object', properties: {}, additionalProperties: false },
+    handler: () => reports.numbersAudit()
   },
   {
     name: 'scan_fleet',

@@ -80,11 +80,11 @@ test('notifications produce no response', () => {
   assert.equal(ask({ jsonrpc: '2.0', method: 'notifications/initialized' }), null);
 });
 
-test('tools/list exposes all six fleet tools', () => {
+test('tools/list exposes all eight fleet tools', () => {
   const names = ask({ jsonrpc: '2.0', id: 1, method: 'tools/list' }).result.tools
     .map((tool) => tool.name);
-  assert.deepEqual(names.sort(), ['fleet_status', 'heal_receipt', 'heal_spider',
-    'incident_log', 'scan_fleet', 'spider_history']);
+  assert.deepEqual(names.sort(), ['evidence_report', 'fleet_status', 'heal_receipt',
+    'heal_spider', 'incident_log', 'numbers_audit', 'scan_fleet', 'spider_history']);
 });
 
 test('every listed tool carries a description and an object input schema', () => {
