@@ -2,7 +2,8 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadWebModule, readFixture, setGlobal, plain } = require('../../web-loader.js');
+const fs = require('node:fs');
+const { loadWebModule, readFixture, setGlobal, plain, modulePath } = require('../../web-loader.js');
 
 const WEB_FILES = [
   'config.js', 'format.js', 'value.js', 'infection.js', 'adapter.js',
@@ -227,4 +228,23 @@ test('the diptych reads its records straight out of the committed history', () =
   const hurt = plain(pair.hurt);
   const found = HISTORY.find((r) => r.ts === hurt.ts && r.spider === hurt.spider);
   assert.deepEqual(plain(found), hurt);
+});
+
+test('the diptych asks the scratch to mount on the panel that was taken', () => {
+  const source = fs.readFileSync(modulePath('diptych.js'), 'utf8');
+  assert.match(source, /scratchMountPanel\(panel, sp\)/);
+  assert.match(source, /querySelectorAll\("\.dip__panel \.panel"\)\[1\]/);
+});
+
+test('the diptych scratch survives a healthy fleet, because it reads frozen history', () => {
+  const source = fs.readFileSync(modulePath('diptych.js'), 'utf8');
+  assert.match(source, /spiderFromRecord\(pair\.hurt, RAW_HISTORY\)/);
+  assert.doesNotMatch(source, /SPIDERS\[/);
+});
+
+test('mounting the scratch does not give the inert panel its sheet back', () => {
+  const source = fs.readFileSync(modulePath('diptych.js'), 'utf8');
+  const render = source.slice(source.indexOf('function renderDiptych'));
+  assert.ok(render.indexOf('diptychInert(body)') < render.indexOf('diptychScratch(body)'),
+    'the panel is made inert before the scratch is mounted');
 });

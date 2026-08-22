@@ -202,7 +202,7 @@ stranger inherits, counted from the tree rather than remembered:
 
 | | |
 |---|---|
-| Tests | **1,149**, across 60 files in `test/{pipeline,web,mcp,tools}/` |
+| Tests | **1,152**, across 60 files in `test/{pipeline,web,mcp,tools}/` |
 | Dependencies | **zero** — `dependencies` and `devDependencies` are both empty objects |
 | Source files | 142 JS + 51 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
 | Comments | **zero, as policy** — `grep -c '^\s*//'` across `web/js`, `scripts` and `tools` returns 0 |
@@ -247,7 +247,7 @@ web/                        the console — no build step, no framework
   css/{base,fleet,sheets,fx,print,mock}/   the same anatomy, one level
   manual.html               the back page: install, tools, judge path
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       1,149 tests, node:test, no dependencies
+test/                       1,152 tests, node:test, no dependencies
   pipeline/                 scoring, classification, healing, verification
   web/                      mirrors web/js, folder for folder
   mcp/                      protocol, tools, injection resistance
@@ -437,7 +437,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-1,149 tests, `node:test`, no dependencies and no test framework to install:
+1,152 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
