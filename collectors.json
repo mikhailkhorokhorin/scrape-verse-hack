@@ -31,7 +31,7 @@
       "codename": "ATLAS",
       "universe": "books.toscrape.com",
       "url": "https://books.toscrape.com/",
-      "collector_id": "c_mt2fnqqngikv29od5",
+      "collector_id": "c_mt4pkj4d27wrf28gdg",
       "rows_per_run": 20,
       "note": "sandbox built for scraping, no robots.txt, server-rendered. rating lives in a CSS class, not text",
       "fields": {
