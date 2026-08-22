@@ -74,7 +74,7 @@ function evidenceParts(spiders, incidents, history, meta, terse) {
   }
 
   const cid = newestCid(spiders);
-  if (cid) parts.push(shortCid(cid));
+  if (cid) parts.push((terse ? "" : "collector ") + shortCid(cid));
 
   return parts;
 }
