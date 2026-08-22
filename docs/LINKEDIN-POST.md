@@ -34,8 +34,8 @@ links are already filled in.
 > 0–100 on how much of what it promised actually came back real, and repairs the ones
 > that slip.
 >
-> Then it happened to us for real. Three times, which is the only part of this worth
-> reading.
+> Then it happened to us for real. Four times, and the fourth is the only part of this
+> genuinely worth reading.
 >
 > **One.** KESTREL, scraping the Hacker News front page, came back with 30 rows and an
 > Integrity of 0. Rows were being found, so nothing looked broken from the outside. But
@@ -64,7 +64,19 @@ links are already filled in.
 > A monitoring tool that quietly rewrites its own history to look smarter is precisely
 > the thing this project exists to catch. It doesn't get an exemption for being ours.
 >
-> And the detail I care about most, across all three: the Collector ID was identical
+> **Four.** This morning I committed a redesign of our own demo page — moved the class
+> names, the way a real redesign moves them — and then did nothing. No command, no
+> approval, nobody watching. The cron saw Integrity fall to 50%, and it did *not* react to
+> that: one bad scan is usually a blip, so it waited for a second one. When the second came
+> it opened the incident, called the strain RENAMED, re-wove the collector, and then
+> verified by scraping the site again and scoring what came back — not by believing the
+> repair's own report. Eleven minutes fifty-six from detection to verification.
+> `price: null → £18.00`, `rating: null → 4.4`, same Collector ID.
+>
+> That is the whole product in one incident: it noticed, it was skeptical of a single
+> reading, it fixed the thing, and then it refused to take its own word for it.
+>
+> And the detail I care about most, across all four: the Collector ID was identical
 > before and after every repair. `c_mt2fnt3p2k4n644701` going in, the same string coming
 > out. The collectors weren't recreated. They were repaired. The one that broke is the
 > one that came back.

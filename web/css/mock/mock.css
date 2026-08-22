@@ -5,6 +5,15 @@
   font-size:var(--t-micro);text-align:center;border-bottom:3px solid var(--ink);
 }
 
+body:has(.mockflag) .pagenav{top:var(--mockflag-h);}
+body:has(.mockflag){--mockflag-h:38px;}
+html:has(.mockflag){scroll-padding-top:calc(64px + 38px);}
+
+@media(max-width:768px){
+  html:has(.mockflag){scroll-padding-top:calc(56px + 52px);}
+  body:has(.mockflag){--mockflag-h:52px;}
+}
+
 .demobar{
   position:relative;z-index:20;margin:var(--s4) 0 var(--s3);
   scroll-margin-top:96px;

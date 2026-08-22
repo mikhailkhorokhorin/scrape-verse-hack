@@ -33,7 +33,7 @@ one command apiece.
    `printf '%s\n%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}' '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}' | node mcp/server.js`
    It prints every phase beside the unchanged `collector_id`, then the per-field
    verification table. No API key, no network, no credit.
-3. **`npm test`** — 1,136 tests, `node:test`, zero dependencies, offline, spends nothing.
+3. **`npm test`** — 1,149 tests, `node:test`, zero dependencies, offline, spends nothing.
 4. **Break one yourself, in the browser, in ten seconds.**
    https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1 opens the **CHAOS LAB**:
    press **BREAK BODEGA** and the substance climbs the panel; drag across it and the black
@@ -69,7 +69,7 @@ The things a submission is rejected or discounted for missing.
 ### Requirement 4 — the evidence, in one place
 
 This is the requirement most likely to be checked by hand, so it is written out rather
-than referenced. **Three heals, three incidents, all resolved, every Collector ID
+than referenced. **Four heals, four incidents, all resolved, every Collector ID
 unchanged.**
 
 | Incident | Spider | Collector ID before → after | Strain | Integrity | Site is ours? | Opened by |
@@ -77,8 +77,19 @@ unchanged.**
 | `inc_001` | KESTREL | `c_mt2fnt3p2k4n644701` → **identical** | RENAMED | 0 → 100 | **no** — news.ycombinator.com | hand |
 | `inc_002` | ATLAS | `c_mt2fnqqngikv29od5` → **identical** | DRIFTED | 90 → 100 | **no** — books.toscrape.com | hand |
 | `inc_003` | BODEGA | `c_mt2lkwxa1bb5uz223s` → **identical** | THROTTLED | 0 → 100 | yes — our demo page | **the cron, unattended** |
+| `inc_004` | BODEGA | `c_mt2lkwxa1bb5uz223s` → **identical** | RENAMED | 50 → 100 | yes — our demo page | **the cron, and no phase was human** |
 
-Source: `data/incidents.json`, all three with `resolved: true`, `closed_at` set, four
+`inc_004` is the one to check first. On 22 Aug we committed a redesign of our own demo
+page — the class names moved, exactly as a real site's redesign moves them — and then
+touched nothing. The cron saw Integrity fall to 50% at 07:28, waited for a second
+consecutive bad scan rather than reacting to one, opened the incident at 07:56,
+diagnosed the strain as `RENAMED`, re-wove the collector, and verified against a fresh
+scrape at 08:08. **Eleven minutes and fifty-six seconds from detection to verification,
+with `price: null → £18.00` and `rating: null → 4.4` on an unchanged Collector ID.** No
+human ran a command, approved a repair, or edited a record. Print it yourself:
+`node tools/evidence-report.js inc_004`.
+
+Source: `data/incidents.json`, all four with `resolved: true`, `closed_at` set, four
 stage timestamps and a `verification` object each. Verify with `heal_receipt` on any
 incident id — it prints every phase beside the unchanged `collector_id`.
 
@@ -266,7 +277,7 @@ in `web/js/`, assembled by the `build` job in `.github/workflows/watch.yml`.
 | App repository | **done** | public, MIT — https://github.com/mikhailkhorokhorin/scrape-verse-hack |
 | Docs repository | **done** | public, on GitLab |
 | `README.md` | **done** | pitch, setup, tests, CI, Chaos Lab, architecture, Collector IDs, healing walkthrough |
-| Test suite | **done** | 1,136 tests, `npm test`, `node:test`, zero dependencies, offline |
+| Test suite | **done** | 1,149 tests, `npm test`, `node:test`, zero dependencies, offline |
 | MCP server | **done** | `mcp/` — eight tools over stdio JSON-RPC, no SDK |
 | Demo video | **not recorded** | `docs/VIDEO-SCRIPT.md` |
 | Video link in README | **not done** | add the moment the video is uploaded |
