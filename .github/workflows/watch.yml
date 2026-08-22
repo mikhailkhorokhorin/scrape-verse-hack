@@ -68,7 +68,7 @@ jobs:
       - name: Count the tests
         run: |
           set -euo pipefail
-          node --test --test-reporter=tap test/*.test.js > tap.txt
+          node test/run.js --test-reporter=tap > tap.txt
           count=$(sed -n 's/^# pass \([0-9][0-9]*\)$/\1/p' tap.txt | head -1)
           if [ -z "$count" ] || [ "$count" -le 0 ]; then
             echo "could not read a pass count out of the TAP output" >&2

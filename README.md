@@ -211,6 +211,10 @@ scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
 test/                       1,112 tests, node:test, no dependencies
+  pipeline/                 scoring, classification, healing, verification
+  web/                      the console's modules, run in a vm context
+  mcp/                      protocol, tools, injection resistance
+  tools/                    the evidence report
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the demo target — three variants of the same shop page
 collectors.json             targets and per-field validators
@@ -605,7 +609,7 @@ closes anything.
 `NOTHING_CAME_BACK`, integrity is unchanged, and `resolved` stays `false` — the incident
 is still open, still visible on the console, still counted against us. A heal that
 silently produced no data cannot mark itself done.
-`node --test test/heal-that-lies.test.js`
+`node --test test/pipeline/heal-that-lies.test.js`
 
 **The heal returns garbage that looks like data.** This is the failure mode that defeats
 a schema check: a price that reads back as the string `undefined`, a rating of `9000`.
@@ -620,7 +624,7 @@ scan: `node tools/evidence-report.js inc_002`
 receipt names which field returned and which is still failing, and `resolved` is still
 `false`. A partial repair is a real improvement and it is still not a closed incident; the
 ledger says both things at once rather than rounding up.
-`node --test test/verify.test.js`
+`node --test test/pipeline/verify.test.js`
 
 **The heal actually works.** Every broken field comes back live, integrity clears the
 threshold, the verdict is `EVERY_FIELD_BACK`, and only now does `resolved` flip to `true`.
@@ -639,7 +643,7 @@ collector is repaired but not yet confirmed. The benefit is that no number on th
 can be wrong in our favour: every `resolved: true` in the ledger is backed by a scrape
 that happened after the repair and returned data that passed its validators.
 
-The four cases above are the four stories in `test/heal-that-lies.test.js`. They build
+The four cases above are the four stories in `test/pipeline/heal-that-lies.test.js`. They build
 real rows, push them through the same scoring code the cron uses, and assert the verdict
 and the `resolved` flag that fall out.
 

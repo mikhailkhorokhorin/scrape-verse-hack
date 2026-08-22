@@ -95,7 +95,7 @@ taken *after* the repair, never from the heal's own report; populated-but-wrong 
 caught by the per-field validators in `collectors.json` and scored `INFECTED` at half
 credit. The four failure modes — nothing back, garbage back, partial, real — are walked in
 the README under *"What happens when the heal itself lies"* and asserted in
-`test/heal-that-lies.test.js`. One command prints the whole trail for any incident, with
+`test/pipeline/heal-that-lies.test.js`. One command prints the whole trail for any incident, with
 SHA-256 digests recomputed from disk at call time:
 `node tools/evidence-report.js inc_003`.
 
