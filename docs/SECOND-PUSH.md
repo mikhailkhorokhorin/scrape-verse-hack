@@ -246,7 +246,7 @@ the sweep hand is moving; a staged single-spider mutation animates exactly one p
 reduced motion kills the impact frame outright; and the reconciler has tests, because it
 is a JS contract, not a style.
 
-### S3-B · MOVE 4 — the press (UI-59 + UI-72; first to cut if the clock says so)
+### S3-B · MOVE 4 — the press — **DONE 22 Aug** (UI-59 + UI-72)
 
 Scroll-driven CMYK: each section prints as it enters the viewport — cyan, then magenta,
 then black, misregistered until the last pass snaps them into register.
@@ -261,6 +261,12 @@ die with it.
 
 **Done when:** Chromium shows the passes; Firefox shows the printed page with zero
 console noise; the 375 frame rate holds; capture and print are unaffected.
+
+**Done.** Verified mid-print in Chromium — plates 5.49px apart and closing, section at
+.48 opacity climbing. Reduced motion and `?capture=1` both render the fully printed page:
+zero animations, zero shadows, opacity 1. A section's floor is .34 rather than 0, so a
+timeline that fails to attach leaves a pale section rather than an invisible one. UI-60
+and UI-73 stay unbuilt — the press argues on its own.
 
 ---
 
