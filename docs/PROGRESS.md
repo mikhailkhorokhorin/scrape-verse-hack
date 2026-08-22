@@ -48,8 +48,9 @@ three are extraction-vs-validator mismatches that only real data could expose. D
       `"In stock (19 available) In stock In stock In stock…"`, 77 chars against a 60-char
       max, so it read `infected`. The selector was matching a container rather than the
       per-row element — classified `DRIFTED` and fixed by a manual heal. ATLAS has scanned
-      at 100% since `06:59:24Z`. Logged in `COLLECTORS.md`; **no incident record**, the
-      heal predates the incident loop
+      at 100% since `06:59:24Z`. Logged in `COLLECTORS.md`. The heal predates the
+      incident loop, so `inc_002` was reconstructed afterwards from the scan log and
+      says so in its own `summary`
 - [x] **KESTREL returned 30 rows with every field `null`** — *healed, 0% → 100%, same collector id.* — Integrity 0, `CRITICAL`. Rows
       are being found but no field extracts, which usually means the row selector matches
       and the field selectors do not. Confirm the collector finished creating before
@@ -103,7 +104,7 @@ edited by hand at any point.
       BODEGA `c_mt2lkwxa1bb5uz223s`, ATLAS `c_mt2fnqqngikv29od5`, KESTREL
       `c_mt2fnt3p2k4n644701`. All three have produced real scans, and all three are
       extracting cleanly — BODEGA 100%, ATLAS 100% after its heal, KESTREL 100% after
-      its heal. `RUNBOOK-T02.md` is now a historical record, not work outstanding
+      its heal. `docs/runbooks/RUNBOOK-T02.md` is now a historical record, not work outstanding
 - [x] **T-04** CI cron, every 30 min — **done on GitHub Actions, not GitLab.**
       `.github/workflows/watch.yml` carries the `*/30 * * * *` schedule in the file, so
       there is no UI step and no second token: the `scan` job commits `data/` back with
@@ -129,20 +130,19 @@ edited by hand at any point.
 
 - [x] **Break the demo page on purpose** — happened, though not as a rehearsal. BODEGA
       scanned `CRITICAL` at 0% four times from `07:02:55Z` (all four fields `dead`),
-      `repair.js` opened `inc_002` unattended at `07:48:20Z` with strain `THROTTLED`, and
-      the collector was back at 100% by `09:13:59Z` on the same
-      `c_mt2lkwxa1bb5uz223s`. **The incident was never closed** — `inc_002` stops at
-      `REWEAVING` with `resolved: false` and `closed_at: null`, so the console still shows
-      it open. The recovery is in `data/history.json`; the closing write is what is
-      missing. Not repaired by hand: writing that record after the fact would be
-      manufacturing evidence
+      `repair.js` opened the incident unattended at `07:48:20Z` with strain `THROTTLED`,
+      and the collector was back at 100% by `09:13:59Z` on the same
+      `c_mt2lkwxa1bb5uz223s`. It is `inc_003` in `data/incidents.json` — closed at
+      `09:13:59Z` with `resolved: true` and all four stages written. **The heal itself
+      fixed nothing**: the target had never broken and the bug was in our own `rowsOf`
+      parser, so the recorded diagnosis is wrong and stays on disk unedited. That record
+      is what the No-Prize on the console reads from
 - [x] **T-06** Wire repair into the cron — `.github/workflows/watch.yml` runs
       `node scripts/repair.js` in the `scan` job, after the health check, guarded with
       `|| true` so a failed heal is recorded as data instead of reddening the pipeline.
-      **Partially proven end to end** — it opened `inc_002` against BODEGA unattended,
-      which is further than the tests alone go, but it never wrote the closing stage, so
-      the full round trip has still not completed. The decision logic is covered by the
-      test suite
+      **Proven end to end** — it opened `inc_003` against BODEGA unattended and the
+      record carries all four stages through `VERIFIED`, which is further than the tests
+      alone go. The decision logic is covered by the test suite
 - [x] **T-09** Console reads the real JSON — `web/js/app.js` `loadLive()` fetches both
       files by relative path with `cache: "no-store"`, refreshes every 60s, and routes
       parse/HTTP failures into honest error plates rather than fixtures. `?mock=1` is the
@@ -219,11 +219,11 @@ and they ship. Listed here so nobody re-cuts a feature that already exists.
 - [x] **T-11** Spider Detail — `web/js/sheet.js`. Per-field run tracks with fill rates,
       expectations, collector ID, streak, times healed and the last sample. Opens on
       panel click, closes on Escape or backdrop
-- [x] **Refactor into modules** — the single ported file became 47 JS modules and 39
+- [x] **Refactor into modules** — the single ported file became 53 JS modules and 46
       stylesheets under `web/`, each small enough to read. No build step, no framework.
       The UI-ideas pass below is most of the growth from the original 19 and 17
-- [x] **Test suite** — **886 tests, `npm test`, `node:test`, zero dependencies.**
-      Thirty-seven files under `test/`: `classify` and its exact boundaries, integrity
+- [x] **Test suite** — **1,022 tests, `npm test`, `node:test`, zero dependencies.**
+      Fifty-five files under `test/`: `classify` and its exact boundaries, integrity
       `scoring`, `payload` shapes, strain `diagnosis`, the `heal` decision, `repair` gating
       (two consecutive bad scans, 2h cooldown), atomic JSON `storage`, the MCP server —
       `mcp` (protocol), `mcp-tools` (the four read tools), `mcp-actions` (the two
@@ -328,7 +328,7 @@ top; the table in `TASKS.md` is the index.
       count needs no new data — only the sentence on the incident card and the tick during
       replay
 - [x] **T-33** Field heatmap — per-field tracks in the detail sheet (`css/track.css`)
-- [x] **T-38** Heal trigger endpoint — Cloudflare Worker in `endpoint/`, token stays server-side, button hides itself until an endpoint is configured
+- [ ] **T-38** Heal trigger endpoint — designed, not built. The Cloudflare Worker was never written and there is no `endpoint/` directory in the tree; the console has no heal button
 - [x] **T-17** Page-level symbiote — fleet-wide treatment in `css/fleet.css`
 
 ## Cut

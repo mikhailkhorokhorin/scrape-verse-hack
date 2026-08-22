@@ -5,10 +5,10 @@ Four waves produced eighty-two ideas, fifty-nine of them in the three waves writ
 things get half-built.
 
 This file is the product decision. It names one spine, one image, one interaction, and
-six moves. `UI-IDEAS-INDEX.md` carries every id and its fate; everything in
+six moves. `docs/UI-IDEAS-INDEX.md` carries every id and its fate; everything in
 `UI-IDEAS*.md` is either folded into a move here or dead.
 
-**The moves are scheduled in `SECOND-PUSH.md`** — that file is the execution pipeline:
+**The moves are scheduled in `docs/SECOND-PUSH.md`** — that file is the execution pipeline:
 which move runs when, in which lane, with what done-when, and the twelve-audit battery
 that checks the result. This file decides *what*; that file decides *how and in what
 order*.
@@ -96,6 +96,12 @@ tool.
 ## 4 · The six moves
 
 Each move absorbs ideas from earlier waves. The ids are kept so nothing gets re-proposed.
+
+**State, 22 Aug.** MOVE 1, MOVE 2, MOVE 3 and MOVE 6 shipped and are live on the page,
+along with the UI-44 chore. MOVE 5 is in progress; MOVE 4 has not started and is still the
+first thing to cut. UI-62, the flinch that rode along with MOVE 2, was cut as the move
+allowed. The per-id record is in `docs/UI-IDEAS-INDEX.md`; the descriptions below are the
+briefs the moves were built from and are left in their original tense.
 
 ### MOVE 1 · The open
 *absorbs UI-50 (canon event), UI-51 (bullpen), UI-65 (while you were asleep)*

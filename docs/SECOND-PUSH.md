@@ -17,7 +17,10 @@ serves that sentence or it is maintenance that keeps the page true.
 
 ## Standing constraints (unchanged, restated once)
 
-Zero comments in code · max 250 lines per file · vanilla globals via ordered `<script>`,
+Zero comments in code · max 250 lines per file (the cap is an ESLint rule over JS;
+`web/index.html` sits at 265 and is exempt by construction — it is 58 script tags and 49
+stylesheets, one line per module, and the only way to shorten it is to merge files, which
+would break the "CSS split by meaning" rule it exists to serve) · vanilla globals via ordered `<script>`,
 no modules, no build · CSS split by meaning · `npm test` green and `npx eslint .` clean
 at every commit · DESIGN-SPEC section 8 banned patterns checked before any CSS lands ·
 every new animation ships its `prefers-reduced-motion` end state **in the same commit** ·

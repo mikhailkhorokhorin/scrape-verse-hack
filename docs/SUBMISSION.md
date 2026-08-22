@@ -9,7 +9,7 @@ Status as of Aug 21, evening. Re-check every box on the morning of the 23rd — 
 depend on a cron that may have stopped.
 
 **Where it stands:** everything technical is done and evidenced. Three collectors, three
-incidents, three complete records each carrying a per-field verification object, 821
+incidents, three complete records each carrying a per-field verification object, 959
 tests, zero dependencies, ESLint in CI, an MCP server, a deployed console and a cron that
 commits its own scans. **Two things are outstanding and both are recording tasks, not
 engineering:** the demo video and the LinkedIn post.
@@ -32,7 +32,7 @@ Three things, in this order, each under two minutes.
    `printf '%s\n%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}' '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}' | node mcp/server.js`
    It prints every phase beside the unchanged `collector_id`, then the per-field
    verification table. No API key, no network, no credit.
-3. **`npm test`** — 886 tests, `node:test`, zero dependencies, offline, spends nothing.
+3. **`npm test`** — 1,022 tests, `node:test`, zero dependencies, offline, spends nothing.
 
 ---
 
@@ -43,7 +43,7 @@ The things a submission is rejected or discounted for missing.
 | # | Requirement | Status | Where it lives |
 |---|---|---|---|
 | 1 | Public repository, anonymously cloneable | **done** | https://github.com/mikhailkhorokhorin/scrape-verse-hack — public, MIT |
-| 2 | Bright Data Scraper Studio used for real — real `create` / `run` / `heal`, never mocked | **done** | `scripts/health-check.js`, `scripts/repair.js`; 45 real scans recorded in `data/history.json` |
+| 2 | Bright Data Scraper Studio used for real — real `create` / `run` / `heal`, never mocked | **done** | `scripts/health-check.js`, `scripts/repair.js`; 81 real scans recorded in `data/history.json` |
 | 3 | Collector IDs listed openly in the submission | **done** | `collectors.json`, `docs/COLLECTORS.md` — `c_mt2lkwxa1bb5uz223s` (BODEGA), `c_mt2fnqqngikv29od5` (ATLAS), `c_mt2fnt3p2k4n644701` (KESTREL) |
 | 4 | **Collector ID unchanged across a heal** | **done and evidenced ×3** | All three healed on their own unchanged ID; see below |
 | 5 | Public data only, no login or paywall, not in Bright Data's pre-built library | **done** | books.toscrape.com and news.ycombinator.com, both robots-checked Aug 21; see `docs/COLLECTORS.md` |
@@ -188,7 +188,7 @@ scan. It passes every null check ever written. The `pattern` validator is what c
 **BODEGA, THROTTLED, 0 → 100, opened by the cron with nobody watching.** See above — the
 heal failed, the bug was ours, and the false diagnosis stays on disk.
 
-Artifacts: `data/incidents.json` (three complete records), `data/history.json` (45 real
+Artifacts: `data/incidents.json` (three complete records), `data/history.json` (81 real
 scans across 3 collectors), `docs/COLLECTORS.md` (heal history table), and the **Chaos
 Lab** at `demo-target/` — the page ships as three separate files (`index.html`,
 `broken-renamed.html`, `broken-drifted.html`) with a switcher, so a judge can break the
@@ -240,7 +240,7 @@ in `web/js/`, assembled by the `build` job in `.github/workflows/watch.yml`.
 | App repository | **done** | public, MIT — https://github.com/mikhailkhorokhorin/scrape-verse-hack |
 | Docs repository | **done** | public, on GitLab |
 | `README.md` | **done** | pitch, setup, tests, CI, Chaos Lab, architecture, Collector IDs, healing walkthrough |
-| Test suite | **done** | 886 tests, `npm test`, `node:test`, zero dependencies, offline |
+| Test suite | **done** | 1,022 tests, `npm test`, `node:test`, zero dependencies, offline |
 | MCP server | **done** | `mcp/` — six tools over stdio JSON-RPC, no SDK |
 | Demo video | **not recorded** | `docs/VIDEO-SCRIPT.md` |
 | Video link in README | **not done** | add the moment the video is uploaded |
@@ -259,16 +259,16 @@ collector, `repair.js` heals anything broken twice, and the job commits `data/` 
 repo as `thwip watch <ci@thwip.local>`.
 
 **The public commit history is the evidence.** `git log --author="thwip watch"` returns
-seven commits authored by the workflow, not by a person:
+nineteen commits authored by the workflow, not by a person. The seven most recent:
 
 ```
-3f4c5a4 data: scan 2026-08-21T16:07:31Z
-ddc43c7 data: scan 2026-08-21T13:52:14Z
-0bd3d5e data: scan 2026-08-21T12:51:05Z
-afa94a8 data: scan 2026-08-21T12:02:45Z
-6364fbd data: scan 2026-08-21T11:42:39Z
-cf51279 data: scan 2026-08-21T08:44:18Z
-aa80e0d data: scan 2026-08-21T07:49:43Z
+ce73398 data: scan 2026-08-22T03:53:07Z
+6bfb0ee data: scan 2026-08-22T02:41:52Z
+57c3614 data: scan 2026-08-22T01:09:26Z
+7723284 data: scan 2026-08-21T23:55:30Z
+bbbde2b data: scan 2026-08-21T23:27:00Z
+eaca911 data: scan 2026-08-21T22:58:15Z
+023956c data: scan 2026-08-21T22:28:00Z
 ```
 
 The automation is not claimed, it is in the log. `inc_003` was opened inside one of those
@@ -321,6 +321,9 @@ finds an unstated gap discounts everything else; a stated one costs nothing.
   population, and the population is small
 - **`data/meta.json` is regenerated by CI on each build**, so between a local change and
   the next CI run it can lag the working tree. Run `npm test` for the live number
+- **The heal-trigger endpoint was never built.** The console reads and explains; it has no
+  button that spends credit. Healing runs from the cron or from the two MCP action tools,
+  which is the honest surface and the one under test
 
 None of these touch requirement 4, which is the one that matters most: three heals, three
 unchanged Collector IDs, all three verifiable from the committed JSON with no API key.

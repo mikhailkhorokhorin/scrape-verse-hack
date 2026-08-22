@@ -10,6 +10,7 @@ one interaction, six moves.
 
 | Status | Meaning |
 |---|---|
+| **SHIPPED** | Built and live on the page. The move that carried it is done |
 | **MOVE n** | Alive. Folded into that move of the play |
 | **KILLED** | Dead with a reason. Do not re-propose |
 | **DEFER** | Not dead, not scheduled. Rides on a move that is not committed yet |
@@ -30,7 +31,7 @@ which is how a list of chores gets written by accident.
 | UI-26 | The barcode is the commit sha | KILLED |
 | UI-27 | Printer's crop marks and CMYK bar in the margin | KILLED |
 | UI-28 | Page numbers and an incident spine down the margin | KILLED |
-| **UI-29** | **The ad page — period ad selling our own MCP server** | **MOVE 6** |
+| **UI-29** | **The ad page — period ad selling our own MCP server** | **SHIPPED** · MOVE 6 |
 | UI-30 | The letters page (heal prompts as a letters column) | KILLED — reworked as UI-52, also killed |
 | UI-31 | `NEXT ISSUE` teaser carrying the roadmap | KILLED |
 | UI-32 | The 404 is a taken page | KILLED |
@@ -45,7 +46,7 @@ which is how a list of chores gets written by accident.
 | UI-41 | The cast roster | KILLED |
 | UI-42 | Every Spider has a record | KILLED |
 | UI-43 | The symbiote's origin panel | KILLED — its job is done physically by MOVE 2 |
-| UI-44 | The link preview — `og:image` | **CHORE** — a defect in `<head>`, not an idea |
+| UI-44 | The link preview — `og:image` | **SHIPPED** · CHORE — the `og:`/`twitter:` block is in `<head>` |
 | UI-45 | Film mode — the page plays itself for the video | KILLED |
 | UI-46 | Judge tour | KILLED |
 | UI-47 | Per-issue link previews | KILLED — needs a build step we do not have |
@@ -59,23 +60,23 @@ Written against the one test wave two passed. Twenty ideas.
 
 | Id | Idea | Status |
 |---|---|---|
-| **UI-49** | **The No-Prize — inc_003, the heal that fixed nothing, framed as the award comics gave readers who caught a mistake and explained it** | **MOVE 3** |
-| **UI-50** | **A break is a canon event — the thesis panel** | **MOVE 1** |
-| **UI-51** | **The bullpen — the cron's editor page, `0 humans since`** | **MOVE 1** |
+| **UI-49** | **The No-Prize — inc_003, the heal that fixed nothing, framed as the award comics gave readers who caught a mistake and explained it** | **SHIPPED** · MOVE 3 |
+| **UI-50** | **A break is a canon event — the thesis panel** | **SHIPPED** · MOVE 1 |
+| **UI-51** | **The bullpen — the cron's editor page, `0 humans since`** | **SHIPPED** · MOVE 1 |
 | UI-52 | Letters from the fleet — Spiders complaining, heal prompt as the editor's reply | KILLED — same trick as MOVE 1 and MOVE 3, and the third instance turns a device into a tic |
 | UI-53 | In memoriam — obituaries for dead fields | KILLED — same reason |
 | UI-54 | Continuity footnotes — `*see ISSUE #3 —ed.` | KILLED — same reason |
-| **UI-55** | **The mail-in order form behind the ad** | **MOVE 6** |
+| **UI-55** | **The mail-in order form behind the ad** | **SHIPPED** · MOVE 6 |
 | UI-56 | The slab — fleet Integrity as a collector's grade | KILLED — a collector joke for an audience of collectors |
 | UI-57 | The paper ages with the data | KILLED — right idea, wrong deadline; it changes a shipped state and re-opens a contrast check |
 | UI-58 | Variant covers | KILLED |
 | UI-59 | The page comes off the press on load | **MOVE 4** — folded into the scroll version |
 | UI-60 | Hold a key and the CMYK plates come apart | **DEFER** — free once MOVE 4 exists, worthless before it |
-| **UI-61** | **Scratch the symbiote off — the headline** | **MOVE 2** |
-| **UI-62** | **It does not like being watched — the flinch** | **MOVE 2** |
+| **UI-61** | **Scratch the symbiote off — the headline** | **SHIPPED** · MOVE 2 |
+| **UI-62** | **It does not like being watched — the flinch** | **KILLED** — the optional rider on MOVE 2; cut because it fights the turbulence filter, as the play allowed |
 | UI-63 | Konami | KILLED — an easter egg nobody finds in ninety seconds |
 | UI-64 | The multiverse page | KILLED — more scroll is not more product |
-| **UI-65** | **While you were asleep — the overnight numbers** | **MOVE 1** |
+| **UI-65** | **While you were asleep — the overnight numbers** | **SHIPPED** · MOVE 1 |
 | UI-66 | Trading cards | KILLED — same |
 | UI-67 | The Daily Bugle | KILLED — a second art direction inside one page |
 | UI-68 | The origin, in four panels | KILLED — same |
@@ -111,22 +112,25 @@ is what the table never covered. Fourteen ideas.
 | | Count |
 |---|---|
 | Ideas written in waves two to four | 59 |
-| Alive, folded into the six moves | 17 |
+| Shipped — built and live on the page | 8 |
+| Alive, folded into the moves not yet shipped | 9 |
 | Deferred — ride on MOVE 4's timeline | 2 |
-| Reclassified as a chore | 1 |
-| Killed with a reason | 39 |
+| Killed with a reason | 40 |
 
-Thirty-nine of fifty-nine died, and that is the point of the exercise. The three waves are
+Of the eight shipped, seven are ideas (UI-29, UI-49, UI-50, UI-51, UI-55, UI-61, UI-65) and
+one is the UI-44 chore. UI-62 joined the killed column when MOVE 2 shipped without it.
+
+Forty of fifty-nine died, and that is the point of the exercise. The three waves are
 kept in full because the reasoning is what stops the same ground being re-walked on the
 last day.
 
 ## The six moves, and what each one is made of
 
-| Move | What it is | Built from |
-|---|---|---|
-| **MOVE 1 · The open** | `NOBODY HAS LOOKED AT THIS FLEET IN 4h 12m`, the overnight numbers, the canon-event line | UI-50, UI-51, UI-65 |
-| **MOVE 2 · The scratch** | Drag the black off a panel, find the value that actually came back | UI-61, UI-62 |
-| **MOVE 3 · The No-Prize** | Our own false positive, framed as the medium's award, in a closed envelope | UI-49 |
-| **MOVE 4 · The press** | The page prints as you scroll it, three plates, misregistered until they snap | UI-59, UI-72 |
-| **MOVE 5 · Stillness** | Only damage moves; one arc turns at the real cron rate; the flash gets fixed | UI-82, UI-80, UI-69, UI-74, UI-71, UI-78, UI-79 |
-| **MOVE 6 · The ad** | The period ad and its order form | UI-29, UI-55 |
+| Move | What it is | Built from | State |
+|---|---|---|---|
+| **MOVE 1 · The open** | `NOBODY HAS LOOKED AT THIS FLEET IN 4h 12m`, the overnight numbers, the canon-event line | UI-50, UI-51, UI-65 | **SHIPPED** 22 Aug |
+| **MOVE 2 · The scratch** | Drag the black off a panel, find the value that actually came back | UI-61, UI-62 | **SHIPPED** 22 Aug (UI-62 cut) |
+| **MOVE 3 · The No-Prize** | Our own false positive, framed as the medium's award, in a closed envelope | UI-49 | **SHIPPED** 22 Aug |
+| **MOVE 4 · The press** | The page prints as you scroll it, three plates, misregistered until they snap | UI-59, UI-72 | not started |
+| **MOVE 5 · Stillness** | Only damage moves; one arc turns at the real cron rate; the flash gets fixed | UI-82, UI-80, UI-69, UI-74, UI-71, UI-78, UI-79 | in progress |
+| **MOVE 6 · The ad** | The period ad and its order form | UI-29, UI-55 | **SHIPPED** 22 Aug |

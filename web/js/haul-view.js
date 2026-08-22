@@ -110,7 +110,11 @@ function haulSpreadHTML(h) {
   const sp = h.spread;
   if (!sp) return "";
   const unit = sp.unit || { prefix: "", suffix: "" };
-  const fmt = (n) => unit.prefix + String(Math.round(n * 100) / 100) + unit.suffix;
+  const money = Boolean(unit.prefix || unit.suffix);
+  const fmt = (n) => {
+    const rounded = Math.round(n * 100) / 100;
+    return unit.prefix + (money ? rounded.toFixed(2) : String(rounded)) + unit.suffix;
+  };
   return (
     '<div class="spreadstat">' +
       '<span class="spreadstat__tag">Across the haul</span>' +

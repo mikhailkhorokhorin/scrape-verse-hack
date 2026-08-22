@@ -101,7 +101,6 @@ function setSample(id, n) {
   if (!n) return;
   const span = document.createElement("span");
   span.className = "readout__n";
-  span.className = "readout__n";
   span.textContent = n === 1 ? "from 1 re-weave" : "mean of " + n + " re-weaves";
   span.title = n === 1
     ? "a single sample — this is that one span, not an average"
@@ -113,7 +112,6 @@ function setStaleNote(id, ts) {
   const el = document.getElementById(id);
   if (!el) return;
   const span = document.createElement("span");
-  span.className = "readout__n";
   span.className = "readout__n";
   span.textContent = "as of " + agoOf(ts) + " — not current";
   span.title = "every Spider is past the " + UNWATCHED_MS / 3600000 +
