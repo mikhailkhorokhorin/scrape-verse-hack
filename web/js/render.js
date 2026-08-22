@@ -32,15 +32,19 @@ function renderGrid() {
 
   const avg = Math.round(SPIDERS.reduce((a, s) => a + integrityOf(s), 0) / SPIDERS.length);
 
-  grid.innerHTML =
-    (ERRORS.history ? failPlate(ERRORS.history) : "") + SPIDERS.map(panelHTML).join("");
+  reconcileCells(
+    grid,
+    SPIDERS.map(panelHTML),
+    ERRORS.history ? failPlate(ERRORS.history) : ""
+  );
 
   markTallCells(grid);
   if (typeof scratchMount === "function") scratchMount();
+  if (typeof sweepPaint === "function") { sweepPaint(); sweepStart(); }
 
   const allStale = SPIDERS.every((sp) => sp.unwatched);
   setFleetSpread(allStale ? null : avg);
-  setReadout("fleet", avg + "%", allStale ? COLOR.unwatched : COLOR[gradeOf(avg)]);
+  setOdometer("fleet", avg + "%", allStale ? COLOR.unwatched : COLOR[gradeOf(avg)]);
   setDelta("fleet", allStale ? null : fleetTrend(avg));
   setSample("fleet", 0);
   if (allStale) setStaleNote("fleet", SPIDERS[0].ts);

@@ -52,13 +52,16 @@ function panelHTML(sp, idx) {
       "</div>";
 
   const rest = compact ? restHTML(sp, st) : "";
+  const sweepTs = Date.parse(sp.ts);
 
   return (
-    '<div class="cell cell--' + st + '">' +
+    '<div class="cell cell--' + st + '" data-cid="' + esc(sp.cid || sp.code) + '">' +
     '<button class="panel' + (compact ? " panel--compact" : big ? " panel--big" : "") + ' is-' + st +
       '" aria-label="' + esc(panelLabel(sp, st, readout)) + '" data-idx="' + idx +
       '"' + (sp.healed ? ' data-healed="' + (sp.healed > 9 ? "9+" : sp.healed) + '"' : "") +
+      (Number.isFinite(sweepTs) ? ' data-sweep-ts="' + sweepTs + '"' : "") +
       ' style="--spread:' + (sp.unwatched ? 0 : spread) + '"' + (!sp.unwatched && Number(spread) > PAPER_SPREAD ? ' data-drowned="1"' : '') + '>' +
+      (Number.isFinite(sweepTs) ? sweepHTML() : "") +
       (compact ? "" : '<div class="rig-mark" aria-hidden="true">' + rigSVG(sp, st) + "</div>") +
       (showSymbiote ? symbioteHTML(sp.unwatched ? 0 : shown) : "") +
       '<span class="panel__no" aria-hidden="true">' + (idx + 1) + "</span>" +
@@ -67,6 +70,15 @@ function panelHTML(sp, idx) {
     "</button>" +
     rest +
     "</div>"
+  );
+}
+
+function sweepHTML() {
+  return (
+    '<svg class="sweep" aria-hidden="true">' +
+      '<rect class="sweep__track" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)"/>' +
+      '<rect class="sweep__hand" x="1" y="1" width="calc(100% - 2px)" height="calc(100% - 2px)"/>' +
+    "</svg>"
   );
 }
 

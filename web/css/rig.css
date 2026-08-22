@@ -7,6 +7,8 @@
 .rig__leg[data-state="live"]{
   stroke:var(--paper);
   transform-box:fill-box;transform-origin:center;
+}
+.rig--restless .rig__leg[data-state="live"]{
   animation:rig-plant var(--rig-sway,11s) ease-in-out infinite;
   animation-delay:calc(var(--rig-delay,6s) * -1);
 }
@@ -37,7 +39,8 @@
 .rig[data-status="reweaving"]{color:var(--reweaving);}
 .rig[data-status="unwatched"]{color:var(--unwatched);opacity:.55;}
 
-.rig__body{animation:rig-weight var(--rig-sway,11s) ease-in-out infinite;transform-origin:center;}
+.rig__body{transform-origin:center;}
+.rig--restless .rig__body{animation:rig-weight var(--rig-sway,11s) ease-in-out infinite;}
 
 @keyframes rig-plant{
   0%,100%{transform:translateY(0);}
