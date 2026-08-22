@@ -1,10 +1,7 @@
 "use strict";
 
-const SCRATCH_RADIUS = 34;
 const SCRATCH_REGROW_MS = 4200;
 const SCRATCH_HINT_KEY = "thwip.scratch.found";
-const SCRATCH_INK = "#050408";
-const SCRATCH_ROW_H = 22;
 
 function scratchReduced() {
   return typeof matchMedia === "function" &&
@@ -27,11 +24,6 @@ function scratchLinesOf(sp) {
   }));
 }
 
-function scratchColorFor(state) {
-  if (state === "dead") return "#FF1E1E";
-  if (state === "infected") return "#C24BFF";
-  return "#F4EFE4";
-}
 
 function scratchSpreadOf(panel) {
   const raw = panel.style.getPropertyValue("--spread");
@@ -39,44 +31,22 @@ function scratchSpreadOf(panel) {
   return Number.isFinite(n) ? n : 0;
 }
 
-function scratchRowsTop(lines, h, top) {
-  const block = lines.length * SCRATCH_ROW_H;
-  return top + (h - top) / 2 - block / 2 + SCRATCH_ROW_H / 2;
-}
 
-function scratchPaintUnder(ctx, lines, w, h, top) {
-  ctx.textBaseline = "middle";
-  ctx.font = "600 13px 'IBM Plex Mono',monospace";
-  let y = scratchRowsTop(lines, h, top);
-  lines.forEach((line) => {
-    ctx.fillStyle = scratchColorFor(line.state);
-    ctx.fillText(line.text, 18, y, w - 36);
-    y += SCRATCH_ROW_H;
-  });
-}
 
-function scratchCarve(ctx, holes) {
-  ctx.globalCompositeOperation = "destination-out";
-  holes.forEach((hole) => {
-    const g = ctx.createRadialGradient(hole.x, hole.y, 0, hole.x, hole.y, SCRATCH_RADIUS);
-    g.addColorStop(0, "rgba(0,0,0,1)");
-    g.addColorStop(0.62, "rgba(0,0,0,1)");
-    g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(hole.x, hole.y, SCRATCH_RADIUS, 0, Math.PI * 2);
-    ctx.fill();
-  });
+
+
+function scratchReveal(state, strokes) {
+  const ctx = state.ctx;
+  const w = state.canvas.width;
+  const h = state.canvas.height;
+  const top = h * (1 - state.spread);
+  ctx.save();
+  scratchClipTo(ctx, strokes);
   ctx.globalCompositeOperation = "source-over";
-}
-
-function scratchClip(ctx, holes) {
-  ctx.beginPath();
-  holes.forEach((hole) => {
-    ctx.moveTo(hole.x + SCRATCH_RADIUS * 0.68, hole.y);
-    ctx.arc(hole.x, hole.y, SCRATCH_RADIUS * 0.68, 0, Math.PI * 2);
-  });
-  ctx.clip();
+  ctx.fillStyle = SCRATCH_UNDER;
+  ctx.fillRect(0, top, w, h - top);
+  scratchPaintValues(ctx, state.lines, w, h, top);
+  ctx.restore();
 }
 
 function scratchRepaint(state) {
@@ -87,13 +57,9 @@ function scratchRepaint(state) {
   ctx.globalCompositeOperation = "source-over";
   ctx.clearRect(0, 0, w, h);
   symbioteFillBody(ctx, w, h, top, SCRATCH_INK);
-  scratchCarve(ctx, state.holes);
-  if (state.holes.length === 0) return;
-  ctx.save();
-  scratchClip(ctx, state.holes);
-  symbioteFillBody(ctx, w, h, top, SCRATCH_INK);
-  scratchPaintUnder(ctx, state.lines, w, h, top);
-  ctx.restore();
+  scratchPaintGhost(ctx, state.lines, w, h, top);
+  if (!state.strokes.some((s) => s.length)) return;
+  scratchReveal(state, state.strokes);
 }
 
 function scratchSize(state) {
@@ -114,7 +80,7 @@ function scratchStateFor(panel) {
     panel: panel,
     canvas: canvas,
     ctx: canvas.getContext("2d"),
-    holes: [],
+    strokes: [],
     lines: [],
     spread: 0,
     timer: null,
@@ -124,11 +90,24 @@ function scratchStateFor(panel) {
 }
 
 function scratchSet(state, point) {
-  if (point) state.holes.push(point);
-  else state.holes = [];
-  if (!point) state.timer = null;
-  scratchRepaint(state);
-  state.panel.classList.toggle("is-scratched", state.holes.length > 0);
+  if (!point) {
+    state.strokes = [];
+    state.timer = null;
+    scratchRepaint(state);
+    state.panel.classList.remove("is-scratched");
+    return;
+  }
+  const current = state.strokes[state.strokes.length - 1] || [];
+  const added = scratchInterpolate(current, point);
+  const from = current.length ? [current[current.length - 1]] : [];
+  if (!state.strokes.length) state.strokes.push([]);
+  state.strokes[state.strokes.length - 1] = current.concat(added);
+  scratchReveal(state, [from.concat(added)]);
+  state.panel.classList.add("is-scratched");
+}
+
+function scratchOpen(state) {
+  state.strokes.push([]);
 }
 
 function scratchRegrow(state) {
@@ -170,7 +149,7 @@ function scratchTouch(panel, e, dragging) {
   const point = scratchPointIn(state, e.clientX, e.clientY);
   if (!point) return;
   if (dragging) state.dragged = true;
-  const off = !dragging && scratchReduced() && state.holes.length > 0;
+  const off = !dragging && scratchReduced() && state.strokes.some((k) => k.length);
   scratchSet(state, off ? null : point);
   scratchMarkFound();
   scratchRegrow(state);
@@ -180,6 +159,7 @@ function scratchOnDown(e) {
   const panel = e.target.closest && e.target.closest(".panel.has-scratch");
   if (!panel) return;
   panel.classList.add("is-scratching");
+  if (panel.__scratch) scratchOpen(panel.__scratch);
   scratchTouch(panel, e, false);
 }
 
@@ -210,7 +190,7 @@ function scratchMountPanel(panel, sp) {
   const state = scratchStateFor(panel);
   state.lines = lines;
   state.spread = spread;
-  state.holes = [];
+  state.strokes = [];
   if (scratchSize(state)) scratchRepaint(state);
 }
 
