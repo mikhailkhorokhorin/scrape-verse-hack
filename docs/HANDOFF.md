@@ -5,33 +5,30 @@ against the repository as of this commit, not from memory.
 
 ## State in one paragraph
 
-Three real collectors, all 100% healthy. Three real incidents in `data/incidents.json`,
-all resolved, all on unchanged collector ids — one of them (`inc_003`) was opened by the
-cron **autonomously** and records a heal that honestly failed, because the fault was in
-our own payload parser, not the target. 1,149 tests green via `npm test`, `npx eslint .`
-clean, both run in CI on every push. The console is live and honest at
-https://mikhailkhorokhorin.github.io/scrape-verse-hack/ — 18/18 audits from
-`docs/AUDIT-PIPELINE.md` are done.
+Three real collectors, all 100% healthy. **Four** real incidents in `data/incidents.json`,
+all resolved, all on unchanged collector ids. `inc_003` was opened by the cron
+autonomously and records a heal that honestly failed, because the fault was in our own
+payload parser rather than the target — the false diagnosis is still on disk. `inc_004`,
+on 22 Aug, is the one with **no human in any phase**: a committed redesign of our own demo
+page, then detection, a second confirming scan, diagnosis, re-weave and verification
+against a fresh scrape, 11m 56s end to end, `price: null → £18.00`, `rating: null → 4.4`.
+1,149 tests green via `npm test`, `npx eslint .` clean, both run in a dedicated `ci`
+workflow on every push and pull request across Node 20 and 22. The console is live at
+https://mikhailkhorokhorin.github.io/scrape-verse-hack/ with a second page at
+`/manual.html`.
 
-## The one thing left to DO: the live-break rehearsal (T-12)
+## T-12, the live break — **DONE 22 Aug 08:08 UTC**
 
-This is the last missing artifact — a fourth incident where **no phase is touched by a
-human**. It was prepared and blocked only on a human decision. Three commands:
+The last missing artifact is no longer missing. The break was committed at 07:05, the
+cron saw Integrity fall to 50% at 07:28, waited for a second consecutive bad scan rather
+than reacting to one, opened `inc_004` at 07:56, diagnosed `RENAMED`, re-wove and verified
+at 08:08. Cost: roughly 50-60 credits, as budgeted.
 
-```bash
-cp demo-target/broken-renamed.html demo-target/index.html
-git add demo-target/index.html
-git commit -m "chaos: the shop ships a redesign under the fleet" && git push github main:main
-```
+The redesigned markup stays as the permanent `demo-target/index.html` — the healed scraper
+now matches it. **Do not revert it**, or the collector breaks against the old classes
+again.
 
-Then wait. The cron (`*/30`, drifts to ~hourly) does everything: scan one sees the drop,
-scan two confirms, `repair.js` heals in the same run, verifies with a fresh scan, and
-closes the incident. Budget ~50-60 credits. The console will honestly show BODEGA as
-CRITICAL for an hour or two — that is the product working, not a problem.
-
-After the heal verifies, the redesigned markup stays as the permanent page (the healed
-scraper now matches it). Do not revert `index.html` afterwards or the scraper breaks
-against the old classes again.
+Print the trail with `node tools/evidence-report.js inc_004`.
 
 ## What the user still owns
 
