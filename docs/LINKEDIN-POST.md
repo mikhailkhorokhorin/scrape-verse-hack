@@ -73,10 +73,11 @@ links are already filled in.
 > breakage by throwing away the broken thing and building a new one hasn't fixed
 > anything — it's just moved the problem somewhere your IDs don't survive.
 >
-> It also runs inside a coding agent. There's an MCP server — six tools over stdio
+> It also runs inside a coding agent. There's an MCP server — eight tools over stdio
 > JSON-RPC, no SDK — so the whole loop happens in conversation: *is anything broken? what
 > broke? fix it. prove it.* The last one returns a timestamped receipt with the unchanged
-> collector ID on it.
+> collector ID on it, and one more prints the whole evidence trail with SHA-256 digests
+> recomputed from disk, so none of this has to be taken on my word.
 >
 > The console itself is drawn as a comic page, because the hackathon theme is
 > Into the Scrape-Verse and the metaphor turned out to be load-bearing rather than

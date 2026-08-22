@@ -31,7 +31,7 @@ Everything below is on disk and checkable. Nothing is invented for camera.
 | **Two of the three breaks were on sites we do not control** | `web/js/wild.js` computes it; the note renders above the feed |
 | Nineteen cron commits authored by `thwip watch` | `git log --author="thwip watch"` |
 | Six MCP tools over stdio JSON-RPC, no SDK | `mcp/registry.js` |
-| 1,022 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
+| 1,112 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
 
 **The strongest asset in this list is `inc_003`, and it is the one that failed.** The cron
 opened it alone, diagnosed THROTTLED, healed — and the heal did not work, because nothing
@@ -164,8 +164,8 @@ lost" — it shows the states side by side. Do not promise black on a live panel
 
 **Say:**
 
-> The whole fleet is also an MCP server — six tools over stdio JSON-RPC, hand-written, no
-> SDK. So the loop runs in conversation.
+> The whole fleet is also an MCP server — eight tools over stdio JSON-RPC, hand-written,
+> no SDK. So the loop runs in conversation.
 
 **Type:** `Anything wrong with my scrapers?`
 
@@ -193,7 +193,7 @@ ID frames.** Hold it a beat.
 
 **Say over it:**
 
-> Four of the six tools read recorded data — instant, free, no network, no API key. The
+> Six of the eight tools read recorded data — instant, free, no network, no API key. The
 > other two spend real Bright Data credits and say so in their own tool descriptions, so
 > the agent has to ask before it runs a live scrape or a heal. That's the guardrail: the
 > model can't quietly bill you.
@@ -203,7 +203,7 @@ calling them is stronger than calling them, and it is the truthful reason.
 
 ---
 
-## Section 4 — Question 3, part one: the Chaos Lab · 1:22–1:40
+## Section 4 — Question 3, part one: the demo target · 1:22–1:40
 
 **Screen:** Tab B — `demo-target/broken-renamed.html`.
 
@@ -342,6 +342,38 @@ beside the `collector_id` line. If you trim anything for time, trim elsewhere.
 
 ---
 
+## Section 6c — What stops a heal from lying · insert after Section 6 if the runtime allows
+
+This is the answer to the obvious objection, and the objection a judge who has seen other
+entries will already have: *the healer reports its own success, so why believe it?* Worth
+20 seconds if you have them; cut it before the scratch if you do not.
+
+**Screen:** Terminal. Run it live, do not pre-record the output:
+
+```
+node tools/evidence-report.js inc_003
+```
+
+**Say over the output scrolling:**
+
+> Nothing here trusts the repair's own report. After every re-weave the system runs a
+> fresh scrape and scores what actually came back, field by field, against the validators.
+> The incident closes only if that new run passes. If the heal returns nothing, the
+> incident stays open. If it returns values that are populated and wrong — a rating of
+> nine thousand — the validators catch it, it scores as infected at half credit, and the
+> incident stays open.
+
+**Direction:** Let the FIELDS table and the DIGESTS block be legible for two seconds each.
+The `collector_id ... -> ... (identical)` line is the third Collector ID frame — if
+Section 3's or Section 6's frame came out unreadable, this one is the backup.
+
+**Say to close:**
+
+> Those digests are recomputed from the files on disk every time the command runs. They
+> are a check, not a claim.
+
+---
+
 ## Section 6b — The scratch · insert before Section 7 if the runtime allows
 
 **Screen:** Tab A, scrolled to any panel showing black. Press and drag across it.
@@ -398,6 +430,7 @@ Cut in this order and stop as soon as you are under 3:00:
    agent control (−10s)
 4. Section 2's character explanation — the legend is visible anyway (−10s)
 5. Section 6's `backfilled` note — it is in `SUBMISSION.md` in writing (−9s)
+6. Section 6c entirely — the evidence report is one command in the README (−20s)
 
 **Never cut:** the `heal_receipt` collector-ID frame, the `inc_003` failed-heal paragraph,
 the "our own page, broken on purpose" line, the "two of the three were not staged" line, or
