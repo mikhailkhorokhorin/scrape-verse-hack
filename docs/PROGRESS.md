@@ -331,6 +331,34 @@ top; the table in `TASKS.md` is the index.
 - [ ] **T-38** Heal trigger endpoint — designed, not built. The Cloudflare Worker was never written and there is no `endpoint/` directory in the tree; the console has no heal button
 - [x] **T-17** Page-level symbiote — fleet-wide treatment in `css/fleet.css`
 
+## The second push — 22 Aug
+
+The six moves from `BEST-UI-THE-PLAY.md`, plus the audit battery. Full detail and the
+done-when for each is in `SECOND-PUSH.md`; this is the ledger.
+
+- [x] **S0** Closed the first push — audit 3's replay/receipt work restored, the receipt
+      scrolls inside itself at 375, og/twitter tags added (UI-44), and the deploy now
+      copies `assets/` so the link card is not a 404
+- [x] **MOVE 1** The open (UI-50/51/65) — the page opens on `NOBODY HAS LOOKED AT THIS
+      FLEET IN <gap>`, every figure derived, the line absent when the field is
+- [x] **MOVE 2** The scratch (UI-61) — drag the black off a taken panel and read what
+      actually came back. The headline, and the one image this project has
+- [x] **MOVE 3** The No-Prize (UI-49) — inc_003 framed as the award for catching our own
+      mistake, its summary byte-identical to the committed JSON
+- [x] **MOVE 4** The press (UI-59/72) — sections print as they enter, CMYK plates sliding
+      into register. Pure CSS; the fallback is the printed page
+- [x] **MOVE 5** Stillness (UI-82/80/69/74/78) — the grid reconciles instead of
+      re-entering, motion is reserved for damage, and the sweep hand runs a real interval
+- [x] **MOVE 6** The ad and coupon (UI-29/55) — six tools read from the registry, the
+      test count read from `meta.json`
+- [x] **Battery Lane III** — every rendered number recomputed from the JSON; the docs
+      corrected where they contradicted the data
+- [x] **Battery Lane II** — console, keyboard, print and routing matrices; `#inc_003`
+      brought back to one printed page
+- [ ] **Battery Lane I** — move regression, the intro, the overlap sweep, composited
+      contrast
+- [ ] **S5** The final gate: impeccable scorecard, UI-09 pass 2, the hero shot, the ship
+
 ## Cut
 
 Not in the build. Listed so they stop being reconsidered:
