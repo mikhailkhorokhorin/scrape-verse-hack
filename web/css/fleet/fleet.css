@@ -2,6 +2,11 @@
   position:fixed;inset:-20px;z-index:0;pointer-events:none;
   filter:url(#symbiote-turbulence) drop-shadow(0 0 30px var(--symbiote-edge));
   opacity:.72;
+  animation:fleet-breathe 14s ease-in-out infinite;
+}
+@keyframes fleet-breathe{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-14px);}
 }
 .fleet-symbiote__body{
   position:absolute;inset:0;background:var(--symbiote);
@@ -12,9 +17,9 @@
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
   transition:-webkit-mask-image 1100ms cubic-bezier(.22,1,.36,1),
              mask-image 1100ms cubic-bezier(.22,1,.36,1);
-  animation:symbiote-breathe 14s ease-in-out infinite;
 }
 
 @media(prefers-reduced-motion:reduce){
-  .fleet-symbiote__body{animation:none;transition:none;}
+  .fleet-symbiote{animation:none;}
+  .fleet-symbiote__body{transition:none;}
 }

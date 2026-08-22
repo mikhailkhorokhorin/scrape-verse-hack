@@ -38,6 +38,9 @@
   .readouts{width:100%;}
   .readout{flex:1 1 132px;min-width:0;}
 }
+@media(max-width:600px){
+  .readout{flex:1 1 46%;padding-right:var(--s3);}
+}
 .readout:last-child{border-right:0;}
 .readout__value--word{font-size:1.05rem;}
 .readout__value{

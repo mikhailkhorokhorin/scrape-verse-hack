@@ -144,7 +144,6 @@ grid.addEventListener("keydown", (e) => {
     if (frame) sparkHide(frame);
   }
 });
-mountIntroControl();
 document.getElementById("sheet-close").addEventListener("click", closeSheet);
 document.getElementById("modal").addEventListener("click", (e) => {
   if (e.target.id === "modal") closeSheet();

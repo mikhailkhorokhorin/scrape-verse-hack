@@ -20,3 +20,19 @@
   position:absolute;width:1px;height:1px;padding:0;margin:-1px;
   overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0;
 }
+
+.spark--replay{animation:spark-replay 420ms cubic-bezier(.22,1,.36,1) both;}
+
+@keyframes spark-replay{
+  0%{opacity:.25;}
+  40%{opacity:1;}
+  100%{opacity:1;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .spark--replay{animation:none;}
+}
+
+.is-capture .spark--replay{animation:none;}
+
+@media print{.spark--replay{animation:none;}}

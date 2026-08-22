@@ -2,15 +2,20 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadWebModule, readFixture, plain } = require('../../web-loader.js');
+const fs = require('node:fs');
+const path = require('node:path');
+const { loadWebModule, modulePath, cssPath, plain } = require('../../web-loader.js');
 
 const context = loadWebModule(['config.js', 'format.js', 'intro-plan.js']);
 const {
-  introIncidentOf, introBeats, introSpreadOf, introDecision,
-  introSeen, introMarkSeen, INTRO_SPAN_MS, INTRO_FLAG, MAX_VISIBLE_SPREAD,
+  introDecision, introSeen, introMarkSeen, introStageAt, introStageDelay,
+  introLastBeat, INTRO_FLAG, INTRO_STAGES, INTRO_STAGGER_MS, INTRO_STAGGER_MAX,
 } = context;
 
-const INCIDENTS = readFixture('incidents.json');
+const ROOT = path.join(__dirname, '..', '..', '..');
+const INDEX = fs.readFileSync(path.join(ROOT, 'web', 'index.html'), 'utf8');
+const INTRO_JS = fs.readFileSync(modulePath('intro.js'), 'utf8');
+const INTRO_CSS = fs.readFileSync(cssPath('intro.css'), 'utf8');
 
 function memoryStore() {
   const map = new Map();
@@ -20,125 +25,49 @@ function memoryStore() {
   };
 }
 
-test('the named incident inc_003 is the one the sequence plays', () => {
-  const inc = introIncidentOf(INCIDENTS);
-  assert.equal(inc.id, 'inc_003');
+test('the replay control is gone from the page entirely', () => {
+  assert.doesNotMatch(INDEX, /intro-replay/,
+    'the button the visitor never asked for must not exist');
+  assert.doesNotMatch(INDEX, /REPLAY INTRO/);
 });
 
-test('inc_003 is a real record with the before and after the sequence needs', () => {
-  const inc = introIncidentOf(INCIDENTS);
-  assert.equal(inc.spider, 'BODEGA');
-  assert.equal(inc.integrity_before, 0);
-  assert.equal(inc.integrity_after, 100);
-  assert.equal(inc.strain, 'THROTTLED');
+test('nothing in the scripts or styles still reaches for the replay control', () => {
+  assert.doesNotMatch(INTRO_JS, /intro-replay|introReplay|introSyncButton|mountIntroControl/);
+  assert.doesNotMatch(INTRO_CSS, /intro-replay/);
+  const app = fs.readFileSync(modulePath('app.js'), 'utf8');
+  assert.doesNotMatch(app, /mountIntroControl/,
+    'the removed handler must not be mounted');
 });
 
-test('with inc_003 absent it falls back to the most severe real incident', () => {
-  const without = INCIDENTS.filter((inc) => inc.id !== 'inc_003');
-  const inc = introIncidentOf(without);
-  assert.ok(inc);
-  assert.notEqual(inc.id, 'inc_003');
-  const worst = Math.min(...without.map((r) => r.integrity_before));
-  assert.equal(inc.integrity_before, worst);
+test('a first ever visit plays the intro', () => {
+  const decision = introDecision({ reducedMotion: false, capture: false, seen: false });
+  assert.deepEqual(plain(decision), { play: true, why: 'first-visit' });
 });
 
-test('the fallback is deterministic when two incidents tie on severity', () => {
-  const tied = [
-    { id: 'inc_b', spider: 'B', integrity_before: 5, integrity_after: 100 },
-    { id: 'inc_a', spider: 'A', integrity_before: 5, integrity_after: 100 },
-  ];
-  assert.equal(introIncidentOf(tied).id, introIncidentOf(tied.slice().reverse()).id);
-});
-
-test('no incidents at all means nothing to play back', () => {
-  assert.equal(introIncidentOf([]), null);
-  assert.equal(introIncidentOf(null), null);
-});
-
-test('the schedule is the six beats of the brief, in order, ending live at 6s', () => {
-  const beats = introBeats(introIncidentOf(INCIDENTS));
-  assert.deepEqual(plain(beats.map((b) => b.at)), [0, 800, 1600, 2600, 3400, 4600, 5400, 6000]);
-  assert.deepEqual(plain(beats.map((b) => b.name)),
-    ['healthy', 'snap', 'crack', 'hold', 'weave', 'purge', 'thwip', 'live']);
-  assert.equal(beats[beats.length - 1].at, INTRO_SPAN_MS);
-});
-
-test('every onomatopoeia the brief names is fired exactly once', () => {
-  const words = introBeats(introIncidentOf(INCIDENTS)).map((b) => b.word).filter(Boolean);
-  assert.deepEqual(plain(words), ['SNAP!', 'CRACK!', 'WEAVE…', 'PURGE!', 'THWIP!']);
-});
-
-test('nothing is painted or spoken during the hold — it is a genuine pause', () => {
-  const beats = introBeats(introIncidentOf(INCIDENTS));
-  const crack = beats.find((b) => b.name === 'crack');
-  const hold = beats.find((b) => b.name === 'hold');
-  assert.equal(hold.word, null);
-  assert.equal(hold.integrity, crack.integrity);
-});
-
-test('the sequence runs the real before and after integrity, not synthetic numbers', () => {
-  const inc = introIncidentOf(INCIDENTS);
-  const beats = introBeats(inc);
-  assert.equal(beats.find((b) => b.name === 'crack').integrity, inc.integrity_before);
-  assert.equal(beats.find((b) => b.name === 'thwip').integrity, inc.integrity_after);
-  assert.equal(beats.find((b) => b.name === 'live').integrity, inc.integrity_after);
-});
-
-test('integrity falls to the break then climbs back, never wandering', () => {
-  const beats = introBeats(introIncidentOf(INCIDENTS));
-  const values = beats.map((b) => b.integrity);
-  const low = values.indexOf(Math.min(...values));
-  for (let i = 1; i <= low; i += 1) assert.ok(values[i] <= values[i - 1]);
-  for (let i = low + 1; i < values.length; i += 1) assert.ok(values[i] >= values[i - 1]);
-});
-
-test('the last beat is exactly the state a plain load reaches', () => {
-  const inc = introIncidentOf(INCIDENTS);
-  const beats = introBeats(inc);
-  const live = beats[beats.length - 1];
-  assert.equal(live.word, null);
-  assert.equal(live.integrity, inc.integrity_after);
-});
-
-test('spread is the missing integrity, clamped to what a panel can show', () => {
-  assert.equal(Number(introSpreadOf(100)), 0);
-  assert.equal(Number(introSpreadOf(70)), 0.3);
-  assert.equal(Number(introSpreadOf(0)), MAX_VISIBLE_SPREAD);
-});
-
-test('spread never exceeds the clamp at any beat', () => {
-  for (const beat of introBeats(introIncidentOf(INCIDENTS))) {
-    assert.ok(Number(introSpreadOf(beat.integrity)) <= MAX_VISIBLE_SPREAD);
-  }
-});
-
-test('a fresh tab plays the sequence', () => {
-  const decision = introDecision({ reducedMotion: false, forced: false, seen: false, hasIncident: true });
-  assert.deepEqual(plain(decision), { play: true, why: 'first-load' });
-});
-
-test('a second load in the same tab does not replay', () => {
-  assert.equal(introDecision({ reducedMotion: false, forced: false, seen: true, hasIncident: true }).play, false);
-});
-
-test('reduced motion skips straight to the live end state', () => {
-  const decision = introDecision({ reducedMotion: true, forced: true, seen: false, hasIncident: true });
+test('every later visit skips it, because the flag persists across loads', () => {
+  const decision = introDecision({ reducedMotion: false, capture: false, seen: true });
   assert.equal(decision.play, false);
-  assert.equal(decision.why, 'reduced-motion');
+  assert.equal(decision.why, 'seen-before');
 });
 
-test('an explicit request beats the session flag but never reduced motion', () => {
-  assert.equal(introDecision({ reducedMotion: false, forced: true, seen: true, hasIncident: true }).play, true);
-  assert.equal(introDecision({ reducedMotion: true, forced: true, seen: true, hasIncident: true }).play, false);
+test('reduced motion suppresses the intro outright, first visit or not', () => {
+  assert.equal(introDecision({ reducedMotion: true, capture: false, seen: false }).play, false);
+  assert.equal(introDecision({ reducedMotion: true, capture: false, seen: false }).why,
+    'reduced-motion');
 });
 
-test('with no real incident on record there is nothing to demonstrate', () => {
-  const decision = introDecision({ reducedMotion: false, forced: false, seen: false, hasIncident: false });
+test('a capture run never plays the intro, so a screenshot catches the settled page', () => {
+  const decision = introDecision({ reducedMotion: false, capture: true, seen: false });
   assert.equal(decision.play, false);
-  assert.equal(decision.why, 'no-incident');
+  assert.equal(decision.why, 'capture');
 });
 
-test('the session flag round-trips through storage', () => {
+test('reduced motion outranks every other reason', () => {
+  assert.equal(introDecision({ reducedMotion: true, capture: true, seen: true }).why,
+    'reduced-motion');
+});
+
+test('the flag round-trips through storage', () => {
   const store = memoryStore();
   assert.equal(introSeen(store), false);
   introMarkSeen(store);
@@ -146,11 +75,118 @@ test('the session flag round-trips through storage', () => {
   assert.equal(store.getItem(INTRO_FLAG), '1');
 });
 
-test('storage that throws is treated as already seen rather than replaying forever', () => {
+test('the flag lives in localStorage, so the intro is once ever and not once per tab', () => {
+  assert.match(INTRO_JS, /localStorage/);
+  assert.doesNotMatch(INTRO_JS, /sessionStorage/,
+    'a session flag replayed the intro in every new tab');
+});
+
+test('storage that throws is treated as already seen, so the page never breaks', () => {
   const blocked = {
     getItem: () => { throw new Error('denied'); },
     setItem: () => { throw new Error('denied'); },
   };
   assert.equal(introSeen(blocked), true);
   assert.doesNotThrow(() => introMarkSeen(blocked));
+});
+
+test('every reach for storage in the intro is wrapped in a catch', () => {
+  const reads = INTRO_JS.split('localStorage').length - 1;
+  assert.ok(reads > 0);
+  assert.match(INTRO_JS, /try\s*\{[\s\S]*localStorage[\s\S]*\}\s*catch/,
+    'a private window throws on the property access itself');
+});
+
+test('the stages run masthead first, then the panels, then the feed', () => {
+  const names = INTRO_STAGES.map((s) => s.name);
+  assert.deepEqual(plain(names), ['masthead', 'readouts', 'open', 'panels', 'feed']);
+  const times = INTRO_STAGES.map((s) => s.at);
+  for (let i = 1; i < times.length; i += 1) {
+    assert.ok(times[i] > times[i - 1], 'each stage begins after the one before it');
+  }
+});
+
+test('the masthead settles first, at no delay at all', () => {
+  assert.equal(introStageAt('masthead').at, 0);
+});
+
+test('items inside a stage stagger, but the stagger is capped so nothing lags', () => {
+  const stage = introStageAt('panels');
+  assert.equal(introStageDelay(stage, 0), stage.at);
+  assert.equal(introStageDelay(stage, 1), stage.at + INTRO_STAGGER_MS);
+  assert.equal(introStageDelay(stage, 50), introStageDelay(stage, INTRO_STAGGER_MAX),
+    'a long feed must not push the last item minutes into the future');
+});
+
+test('an unknown stage name yields nothing rather than throwing', () => {
+  assert.equal(introStageAt('nonsense'), null);
+});
+
+test('the whole intro is over in a couple of seconds', () => {
+  assert.ok(introLastBeat() < 2000, 'the visitor is not made to wait');
+});
+
+test('the intro animates over content, never gating its visibility', () => {
+  assert.doesNotMatch(INTRO_CSS, /visibility\s*:\s*hidden/,
+    'a headless renderer or background tab would ship a blank page');
+  assert.doesNotMatch(INTRO_CSS, /display\s*:\s*none(?![^{]*is-capture)/);
+  assert.doesNotMatch(INTRO_JS, /visibility|display\s*=/,
+    'the intro must not hide anything from script either');
+});
+
+test('no stylesheet hides page furniture while the intro runs', () => {
+  ['open.css', 'pagenav.css'].forEach((name) => {
+    const css = fs.readFileSync(cssPath(name), 'utf8');
+    assert.doesNotMatch(css, /\.intro-running[^{]*\{[^}]*(visibility\s*:\s*hidden|display\s*:\s*none)/,
+      name + ' made the interface vanish when the intro started');
+  });
+});
+
+test('the reveal is built from transform, opacity and filter only', () => {
+  const frames = INTRO_CSS.slice(INTRO_CSS.indexOf('@keyframes intro-settle'));
+  const body = frames.slice(0, frames.indexOf('}\n}') + 3);
+  assert.match(body, /opacity/);
+  assert.match(body, /transform/);
+  assert.doesNotMatch(body, /width|height|margin|top:|left:/,
+    'animating layout would jank and reflow the page');
+});
+
+test('the curve eases out and never overshoots into a bounce', () => {
+  assert.match(INTRO_CSS, /cubic-bezier\(\.22,1,\.36,1\)/);
+  assert.doesNotMatch(INTRO_CSS, /cubic-bezier\([^)]*,\s*-/,
+    'a negative control point is a bounce');
+});
+
+test('reduced motion kills the animation in the stylesheet as well', () => {
+  const at = INTRO_CSS.indexOf('prefers-reduced-motion');
+  assert.ok(at > -1, 'the stylesheet honours the preference');
+  assert.match(INTRO_CSS.slice(at, at + 260), /animation:none/);
+});
+
+test('print and capture both land on the settled page, with no animation', () => {
+  const print = INTRO_CSS.indexOf('@media print');
+  assert.ok(print > -1);
+  assert.match(INTRO_CSS.slice(print, print + 220), /animation:none/);
+  const capture = INTRO_CSS.indexOf('.is-capture');
+  assert.ok(capture > -1, 'the capture convention is honoured');
+  assert.match(INTRO_CSS.slice(capture, capture + 220), /animation:none/);
+});
+
+test('the running class is set only when the intro actually plays', () => {
+  const play = INTRO_JS.slice(INTRO_JS.indexOf('function introPlay'));
+  assert.match(play.slice(0, 400), /classList\.add\("intro-running"\)/);
+  const maybe = INTRO_JS.slice(INTRO_JS.indexOf('function introMaybePlay'));
+  assert.doesNotMatch(maybe, /classList\.add\("intro-running"\)/,
+    'setting it on the skip path would leave the bubbles dead on the common visit');
+});
+
+test('the decision is taken once, so a repeated poll cannot restart the intro', () => {
+  assert.match(INTRO_JS, /INTRO\.decided/);
+});
+
+test('finishing removes the running class and every stage mark it added', () => {
+  const finish = INTRO_JS.slice(INTRO_JS.indexOf('function introFinish'));
+  assert.match(finish.slice(0, 300), /classList\.remove\("intro-running"\)/);
+  assert.match(INTRO_JS, /classList\.remove\("intro-stage"\)/,
+    'a stage mark left behind would freeze that element mid-animation');
 });

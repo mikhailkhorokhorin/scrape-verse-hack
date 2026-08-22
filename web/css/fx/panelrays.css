@@ -1,0 +1,36 @@
+.panelrays{
+  position:fixed;inset:0;z-index:1;
+  width:100%;height:100%;
+  pointer-events:none;
+  overflow:visible;
+}
+
+.panelrays__ray{
+  fill:var(--paper);
+  opacity:0;
+  transform-box:view-box;
+  transform-origin:var(--o,center);
+  will-change:transform,opacity;
+  animation:panelrays-hit 460ms cubic-bezier(.12,.78,.3,1) both;
+  animation-delay:var(--d,0ms);
+}
+
+.panelrays__ray--cyan{fill:var(--cyan);}
+.panelrays__ray--pink{fill:var(--pink);}
+
+@keyframes panelrays-hit{
+  0%{opacity:0;transform:scale(.12);}
+  22%{opacity:.4;}
+  55%{opacity:.2;transform:scale(1);}
+  100%{opacity:0;transform:scale(1.24);}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .panelrays{display:none !important;}
+}
+
+@media print{
+  .panelrays{display:none !important;}
+}
+
+.is-capture .panelrays{display:none !important;}

@@ -1,31 +1,33 @@
-.intro-replay{
-  font-family:"IBM Plex Mono",monospace;font-size:var(--t-micro);font-weight:600;
-  letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;
-  padding:7px 11px 6px;margin-top:var(--s2);
-  color:var(--paper);background:var(--void-2);
-  border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
-  cursor:pointer;align-self:flex-start;
-}
-.intro-replay:hover:not(:disabled){box-shadow:5px 5px 0 var(--ink);color:var(--cyan);}
-.intro-replay:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;}
-.intro-replay:disabled{cursor:default;color:var(--dimmer);box-shadow:3px 3px 0 var(--ink);}
-
-@media(pointer:coarse){
-  .intro-replay{padding:11px 13px 10px;min-height:44px;}
+.intro-stage{
+  animation:intro-settle 620ms cubic-bezier(.22,1,.36,1) both;
+  animation-delay:var(--intro-delay,0ms);
+  will-change:transform,opacity,filter;
 }
 
-.intro-running .panel .symbiote__body{
-  transition:-webkit-mask-image 700ms cubic-bezier(.22,1,.36,1),mask-image 700ms cubic-bezier(.22,1,.36,1);
+@keyframes intro-settle{
+  from{opacity:.12;transform:translateY(16px) scale(.985);filter:blur(3px);}
+  60%{opacity:1;filter:blur(0);}
+  to{opacity:1;transform:translateY(0) scale(1);filter:blur(0);}
 }
-.intro-running .panel .bar__fill{
-  transition:width 520ms cubic-bezier(.22,1,.36,1),background-color 240ms linear;
+
+.intro-running .masthead .wordmark__word{
+  animation:intro-strike 720ms cubic-bezier(.22,1,.36,1) both;
+}
+
+@keyframes intro-strike{
+  from{letter-spacing:.22em;opacity:.2;}
+  to{letter-spacing:normal;opacity:1;}
 }
 
 @media(prefers-reduced-motion:reduce){
-  .intro-running .panel .symbiote__body,
-  .intro-running .panel .bar__fill{transition:none;}
+  .intro-stage,
+  .intro-running .masthead .wordmark__word{animation:none !important;}
 }
 
-@media(pointer:coarse){
-  .intro-replay{padding-top:12px;padding-bottom:11px;}
+@media print{
+  .intro-stage,
+  .intro-running .masthead .wordmark__word{animation:none !important;}
 }
+
+.is-capture .intro-stage,
+.is-capture .intro-running .masthead .wordmark__word{animation:none !important;}

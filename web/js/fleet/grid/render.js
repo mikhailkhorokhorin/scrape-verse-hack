@@ -40,6 +40,7 @@ function renderGrid() {
 
   markTallCells(grid);
   if (typeof scratchMount === "function") scratchMount();
+  if (typeof mountRigRest === "function") mountRigRest();
   if (typeof sweepPaint === "function") { sweepPaint(); sweepStart(); }
 
   const allStale = SPIDERS.every((sp) => sp.unwatched);
