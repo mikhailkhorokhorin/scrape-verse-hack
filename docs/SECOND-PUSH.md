@@ -335,7 +335,31 @@ its register, suite green, pushed, live verified.
 
 ---
 
-## S5 · The final gate and the ship
+## S5 · The final gate and the ship — **DONE 22 Aug**
+
+### The scorecard: 19/20
+
+| # | Dimension | Score | Key finding |
+|---|---|---|---|
+| 1 | Accessibility | 4 | Eight touch targets under 44px on a phone — **fixed**. No missing alt, no unlabelled control, no heading skip across 28 headings, 13 landmarks |
+| 2 | Performance | 4 | 95fps median at 375 with turbulence, five sweep hands and the press active. One `transition:width` on a 311x17 bar inside `overflow:hidden` — **P3, accepted** |
+| 3 | Theming | 4 | Two greys were written out by hand fourteen times — **fixed** as `--ink-2` / `--ink-3`. Zero hard-coded hexes outside `tokens.css` |
+| 4 | Responsive | 4 | Zero horizontal overflow at 1440/1024/768/375, exact to the pixel |
+| 5 | Anti-patterns | 3 | Sixteen detector warnings, fourteen verified false. The two real ones are the bar transition (P3) and the bubble's bounce easing (deliberate — a speech bubble that eases like a drawer is not a speech bubble) |
+
+**Zero P0. Zero P1.** Two P3 accepted with reasons, both recorded above.
+
+**On the fourteen false positives.** The detector flags `border-left` and `border-right`
+above 1px as the side-tab tell. Six hits are structural: the dividers between masthead
+readouts, between facts in the detail sheet, the pulse's own badge frames, the scrollbar
+track, and the blockquote rule on the No-Prize letter. All ink, all structural, none an
+accent stripe on a card. `pagenav.css` is flagged for a bottom border on a strip that
+explicitly sets `border-radius:0`. "Overused font" fires on Space Grotesk, which is the
+body face of a four-face system whose display face is Anton — the same scan also reports
+"single font" from reading only the first `@font-face`. Recorded so the next pass does
+not re-litigate them.
+
+
 
 1. **Impeccable scorecard** over the finished surface — Accessibility, Performance,
    Theming, Responsive, Anti-patterns, each 0–4. Target **18/20 or better, zero P0, zero

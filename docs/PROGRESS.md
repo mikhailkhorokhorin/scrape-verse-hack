@@ -355,9 +355,13 @@ done-when for each is in `SECOND-PUSH.md`; this is the ledger.
       corrected where they contradicted the data
 - [x] **Battery Lane II** — console, keyboard, print and routing matrices; `#inc_003`
       brought back to one printed page
-- [ ] **Battery Lane I** — move regression, the intro, the overlap sweep, composited
-      contrast
-- [ ] **S5** The final gate: impeccable scorecard, UI-09 pass 2, the hero shot, the ship
+- [x] **Battery Lane I** — move regression, the intro, the overlap sweep, composited
+      contrast. Found the one that mattered: `scratchReduced()` was written and tested
+      but never called, so the scratch regrew under `prefers-reduced-motion`
+- [x] **S5** The final gate — **19/20**, zero P0, zero P1. UI-09 pass 2 closed at 95fps
+      on a 375 viewport with no horizontal scroll; the hero is now the mid-scratch frame;
+      two greys became `--ink-2`/`--ink-3`; eight touch targets grew to 44px on coarse
+      pointers
 
 ## Cut
 
