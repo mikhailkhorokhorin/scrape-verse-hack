@@ -1,11 +1,8 @@
 name: watch
 
 on:
-  # The schedule is off while the Bright Data account is being moved. The three
-  # collector IDs belong to the old account, so every scheduled scan returns
-  # 404 Collector not found. Restore this line once collectors.json holds the
-  # new IDs and BRIGHTDATA_API_KEY is the matching key.
-  #   - cron: '*/30 * * * *'
+  schedule:
+    - cron: '0 */6 * * *'
   workflow_dispatch:
   push:
     branches: [main, develop]
@@ -59,12 +56,16 @@ jobs:
           fi
 
   build:
-    if: github.ref == 'refs/heads/main' || github.event_name == 'schedule'
+    needs: scan
+    if: |
+      always() &&
+      (github.ref == 'refs/heads/main' || github.event_name == 'schedule')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: main
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
