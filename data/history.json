@@ -3910,5 +3910,102 @@
       "comments": 4,
       "author": "altmanaltman"
     }
+  },
+  {
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-22T14:17:37.205Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": "£18.00",
+      "rating": "4.4",
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-22T14:28:48.143Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 20,
+    "rows_expected": 20,
+    "sample": {
+      "title": "Sapiens: A Brief History of Humankind",
+      "price": {
+        "value": 54.23,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Five",
+      "image_url": "https://books.toscrape.com/media/cache/ce/5f/ce5f052c65cc963cf4422be096e915c9.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-22T14:28:56.598Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "rows_expected": 30,
+    "sample": {
+      "title": "A Kantian Critique of \"Sorry\" by Justin Bieber",
+      "points": 47,
+      "comments": 5,
+      "author": "altmanaltman"
+    }
   }
 ]
