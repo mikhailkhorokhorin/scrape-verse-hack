@@ -1,11 +1,17 @@
-.is-critical{animation:glitch-slice 3.2s steps(1) infinite;filter:saturate(.45);}
-.is-degraded{animation:glitch-slice 7s steps(1) infinite;filter:saturate(.82);}
+.is-critical{filter:saturate(.78);}
+.is-degraded{filter:saturate(.92);}
+.is-critical::after,.is-degraded::after{
+  content:"";position:absolute;inset:0;z-index:5;pointer-events:none;
+  background:var(--pink);mix-blend-mode:screen;opacity:0;
+}
+.is-critical::after{animation:glitch-slice 17s linear infinite;}
+.is-degraded::after{animation:glitch-slice 41s linear infinite;}
 @keyframes glitch-slice{
-  0%,87%,100%{clip-path:inset(0 0 0 0);transform:translate(0);}
-  89%{clip-path:inset(18% 0 62% 0);transform:translate(-5px);}
-  92%{clip-path:inset(54% 0 26% 0);transform:translate(5px);}
-  95%{clip-path:inset(36% 0 44% 0);transform:translate(-3px);}
-  98%{clip-path:inset(72% 0 12% 0);transform:translate(3px);}
+  0%,96.4%,100%{opacity:0;clip-path:inset(0 0 100% 0);}
+  96.6%{opacity:.5;clip-path:inset(22% 0 70% 0);}
+  96.9%{opacity:0;clip-path:inset(22% 0 70% 0);}
+  97.4%{opacity:.38;clip-path:inset(58% 0 34% 0);}
+  97.8%{opacity:0;clip-path:inset(58% 0 34% 0);}
 }
 .is-reweaving{border-color:var(--cyan);animation:reweave 1.2s ease-in-out infinite;}
 @keyframes reweave{0%,100%{box-shadow:6px 6px 0 var(--ink);}50%{box-shadow:6px 6px 0 var(--ink),0 0 26px var(--cyan);}}
