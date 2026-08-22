@@ -17,7 +17,7 @@ const globals = {
 
 module.exports = [
   {
-    files: ['scripts/**/*.js', 'endpoint/**/*.js', 'test/**/*.js'],
+    files: ['scripts/**/*.js', 'endpoint/**/*.js', 'test/**/*.js', 'tools/**/*.js', 'mcp/**/*.js'],
     languageOptions: {
       ecmaVersion: 2023,
       sourceType: 'commonjs',
