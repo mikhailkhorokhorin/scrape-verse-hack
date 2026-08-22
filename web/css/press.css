@@ -1,0 +1,75 @@
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sechead,
+    .legend,
+    .haul,
+    .replay,
+    .feed,
+    #wildnote,
+    #ad-slot,
+    #noprize-slot{
+      animation:press-register linear both;
+      animation-timeline:view();
+      animation-range:entry 8% cover 32%;
+    }
+
+    .sechead h2,
+    .legend__title,
+    .haulcard .codename,
+    .incident .issue__name{
+      animation:press-plates linear both;
+      animation-timeline:view();
+      animation-range:entry 8% cover 34%;
+    }
+  }
+}
+
+@keyframes press-register{
+  0%{opacity:.34;transform:translateY(9px);}
+  46%{opacity:1;}
+  100%{opacity:1;transform:translateY(0);}
+}
+
+@keyframes press-plates{
+  0%{
+    text-shadow:
+      -7px 0 0 var(--cyan),
+      7px 0 0 var(--pink),
+      0 5px 0 rgba(5,4,8,.55);
+  }
+  55%{
+    text-shadow:
+      -3px 0 0 var(--cyan),
+      3px 0 0 var(--pink),
+      0 2px 0 rgba(5,4,8,.4);
+  }
+  100%{text-shadow:none;}
+}
+
+.is-capture .sechead,
+.is-capture .legend,
+.is-capture .haul,
+.is-capture .replay,
+.is-capture .feed,
+.is-capture #wildnote,
+.is-capture #ad-slot,
+.is-capture #noprize-slot,
+.is-capture .sechead h2,
+.is-capture .legend__title,
+.is-capture .haulcard .codename,
+.is-capture .incident .issue__name{
+  animation:none !important;
+  opacity:1 !important;
+  transform:none !important;
+  text-shadow:none !important;
+}
+
+@media print{
+  .sechead,.legend,.haul,.replay,.feed,#wildnote,#ad-slot,#noprize-slot,
+  .sechead h2,.legend__title,.haulcard .codename,.incident .issue__name{
+    animation:none !important;
+    opacity:1 !important;
+    transform:none !important;
+    text-shadow:none !important;
+  }
+}

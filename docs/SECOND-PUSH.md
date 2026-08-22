@@ -208,7 +208,7 @@ parked for S5.
 
 ## S3 · Motion — MOVE 5, then MOVE 4 (one agent each, sequential)
 
-### S3-A · MOVE 5 — stillness (UI-82 fix + UI-80 + UI-69 + UI-71 live half + UI-74 + UI-78/79)
+### S3-A · MOVE 5 — stillness — **DONE 22 Aug** (UI-82 fix + UI-80 + UI-69 + UI-71 live half + UI-74 + UI-78/79)
 
 The order inside this move is fixed.
 
