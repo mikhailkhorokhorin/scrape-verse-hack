@@ -143,7 +143,7 @@
   display:flex;align-items:center;justify-content:center;width:24px;height:24px;flex:none;
   border:3px solid var(--ink);background:var(--paper);
   font-family:"IBM Plex Mono",ui-monospace,monospace;
-  font-size:1rem;line-height:1;color:var(--critical);
+  font-size:1rem;line-height:1;color:var(--ink);
 }
 .ad__box--empty{
   width:17px;height:17px;border-width:2px;display:inline-flex;vertical-align:-3px;margin-left:5px;
@@ -170,7 +170,7 @@
 
 .ad__no{
   font-family:"IBM Plex Mono",ui-monospace,monospace;
-  font-size:var(--t-tick);font-weight:600;color:#8A7F6B;text-align:right;padding-top:4px;
+  font-size:var(--t-tick);font-weight:600;color:var(--ink-3);text-align:right;padding-top:4px;
 }
 
 .ad__lines{
