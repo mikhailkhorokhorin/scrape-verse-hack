@@ -55,6 +55,27 @@ The `create` envelope for each is committed
 [`create-kestrel.json`](docs/evidence/create-kestrel.json)), and the registry with
 creation dates and every heal since is [`docs/COLLECTORS.md`](docs/COLLECTORS.md).
 
+### The platform and the product can disagree, and that is the point
+
+Bright Data's own dashboard reports ATLAS at a **6.67% success rate** — 2,450 pages
+attempted, 34,300 errors. Our console reports the same collector at **100% Integrity, 20
+rows of 20 expected**, scan after scan. Both numbers are correct, and the gap between them
+is the thesis of this project.
+
+ATLAS is a discovery collector: it lands on the catalogue page, finds twenty books, and
+then follows each product link. The platform counts every one of those fetches as a page,
+so fourteen failed child fetches out of fifteen reads as 6.67% — one page in fifteen. But
+every field we contracted for is already on the catalogue page, so all twenty rows come
+back with a real title, price, rating and availability, and every one of them passes its
+validator.
+
+A platform-level success rate measures **how many requests completed**. Integrity measures
+**how much of what you promised came back real**. A pipeline can be green while the data
+rots, and — as here — it can look alarming while the data is perfect. That is exactly why
+the number on this page is computed from the values themselves rather than inherited from
+the fetch layer.
+
+
 Scraper Studio decides *how* to extract. What counts as a **correct** value is ours, and it
 is declared per field in `collectors.json` — `price` must parse as a number, `image` must be
 an absolute URL, `rating` must fall in range. That split is what makes the rest of the

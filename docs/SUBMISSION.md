@@ -110,6 +110,16 @@ the README under *"What happens when the heal itself lies"* and asserted in
 SHA-256 digests recomputed from disk at call time:
 `node tools/evidence-report.js inc_003`.
 
+**A note on the platform's own success rate.** Bright Data's dashboard reports ATLAS at
+6.67% (2,450 pages, 34,300 errors) while our console reports it at 100% Integrity, 20 rows
+of 20, scan after scan. Both are right. ATLAS follows each product link, so the platform
+counts fourteen failed child fetches per catalogue page — one page in fifteen is 6.67%. But
+every contracted field is already on the catalogue page (20 `price_color`, 20
+`instock availability`, 20 `thumbnail`, 20 `star-rating` — check the HTML yourself), so
+every row comes back complete and passes its validators. A platform success rate measures
+how many requests completed; Integrity measures how much of what you promised came back
+real. The gap between those two numbers is the entire argument for this product.
+
 ### The verification object — per-field proof, not a status flag
 
 Every incident carries a `verification` object: a field-by-field re-check of the run
