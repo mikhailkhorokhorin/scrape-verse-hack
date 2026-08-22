@@ -1,16 +1,15 @@
 'use strict';
 
 const fs = require('node:fs');
-const path = require('node:path');
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadWebModule } = require('../web-loader.js');
+const { loadWebModule, cssPath } = require('../web-loader.js');
 
 const context = loadWebModule(['config.js', 'format.js', 'rig-parts.js', 'rig.js']);
 const { rigRestless, rigSVG } = context;
 
 const CSS = fs.readFileSync(
-  path.join(__dirname, '..', '..', 'web', 'css', 'rig.css'), 'utf8'
+  cssPath('rig.css'), 'utf8'
 );
 
 const SPIDER = {

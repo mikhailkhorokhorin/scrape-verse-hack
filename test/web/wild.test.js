@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadWebModule, setGlobal, plain, modulePath } = require('../web-loader.js');
+const { loadWebModule, setGlobal, plain, modulePath, cssPath } = require('../web-loader.js');
 
 function load(spiders, incidents) {
   const context = loadWebModule(['config.js', 'format.js', 'wild.js']);
@@ -127,9 +127,8 @@ test('the incident cover asks for the badge, so the claim on the page is rendere
 
 test('the press effect reaches the incident headline the page actually renders', () => {
   const fs = require('node:fs');
-  const path = require('node:path');
   const press = fs.readFileSync(
-    path.join(__dirname, '..', '..', 'web', 'css', 'press.css'), 'utf8');
+    cssPath('press.css'), 'utf8');
   assert.match(press, /\.incident \.issue__who/);
   assert.doesNotMatch(press, /\.incident \.issue__name/);
 });
