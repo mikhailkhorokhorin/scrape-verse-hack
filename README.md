@@ -27,7 +27,7 @@ the field chips read, not a caption written for the reveal.*
 |---|---|---|
 | **How was the scraper designed?** | Three Bright Data Scraper Studio collectors, created with `bdata scraper create` from a plain-English field description; per-field validators live in `collectors.json` | [The collectors](#the-collectors) |
 | **How is it driven from an agent?** | An MCP server with eight tools — status, history, incidents, heal receipts, evidence trails, a numbers audit, and two that scan and heal for real | [MCP server](#mcp-server--the-fleet-in-your-agent) |
-| **What happened when the site changed?** | Three real breaks, two of them on sites we do not control. Each was healed on the same Collector ID, and each carries a per-field receipt of the value before and after | [It already caught a real one](#it-already-caught-a-real-one) |
+| **What happened when the site changed?** | Four real breaks, two of them on sites we do not control, and one with no human in any phase. Each was healed on the same Collector ID, and each carries a per-field receipt of the value before and after | [It already caught a real one](#it-already-caught-a-real-one) |
 | **What did the output actually give you?** | Real rows on screen, each stamped with the collector, the scan time, and the Integrity the Spider was at when the row was captured | [THE HAUL](#the-haul--the-data-itself) |
 
 Full specs, the collector registry with every heal logged, and the eighteen-audit
@@ -129,11 +129,20 @@ the scheduled pipeline is the backend, and the structured output is the database
 
 ## It already caught a real one
 
-Not a staged break. **Three of them happened to us during the build, and two were on sites
-we do not control** — books.toscrape.com and news.ycombinator.com. All three are in
+Not a staged break. **Four are on the record, and two of them happened on sites we do not
+control** — books.toscrape.com and news.ycombinator.com. All four are in
 `data/incidents.json` with a per-field receipt of the value before and after the heal; the
-long version is [above](#what-it-did-when-the-site-changed-under-it). This is the one worth
-reading first.
+long version is [above](#what-it-did-when-the-site-changed-under-it). Two are worth reading
+first: the one below, and `inc_004`.
+
+**`inc_004` — the one with no human in it.** On 22 Aug we committed a redesign of our own
+demo page, moving the class names the way a real redesign moves them, and then touched
+nothing. The cron saw Integrity fall to 50%, waited for a **second** consecutive bad scan
+rather than reacting to one, opened the incident, diagnosed the strain as `RENAMED`,
+re-wove the collector and verified against a fresh scrape — **11m 56s from detection to
+verification**, `price: null → £18.00` and `rating: null → 4.4`, on an unchanged Collector
+ID. Nobody ran a command, approved a repair, or edited a record.
+Print the whole trail: `node tools/evidence-report.js inc_004`.
 
 `KESTREL` scrapes the Hacker News front page. A scan came back with **30 rows and an
 Integrity of 0**. Rows were being found, so from the outside nothing looked broken — but
@@ -172,7 +181,7 @@ stranger inherits, counted from the tree rather than remembered:
 
 | | |
 |---|---|
-| Tests | **1,136**, across 60 files in `test/{pipeline,web,mcp,tools}/` |
+| Tests | **1,149**, across 60 files in `test/{pipeline,web,mcp,tools}/` |
 | Dependencies | **zero** — `dependencies` and `devDependencies` are both empty objects |
 | Source files | 141 JS + 51 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
 | Comments | **zero, as policy** — `grep -c '^\s*//'` across `web/js`, `scripts` and `tools` returns 0 |
@@ -217,7 +226,7 @@ web/                        the console — no build step, no framework
   css/{base,fleet,sheets,fx,print,mock}/   the same anatomy, one level
   manual.html               the back page: install, tools, judge path
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       1,136 tests, node:test, no dependencies
+test/                       1,149 tests, node:test, no dependencies
   pipeline/                 scoring, classification, healing, verification
   web/                      mirrors web/js, folder for folder
   mcp/                      protocol, tools, injection resistance
@@ -296,13 +305,12 @@ line, is in [`docs/ideas/`](docs/ideas/).
 
 **The manual.** The console is the product; the manual is its back page.
 [`web/manual.html`](web/manual.html) — live at
-<https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html> — carries the four
-things a stranger needs in one place: the three commands that get the watch running, all
-eight MCP tools with the free/paid split made explicit, the six-step path a judge should
-take, and the three clicks that break a Spider in the Chaos Lab. Every command on it is
-one that actually runs, and a test asserts the page, this README and `SUBMISSION.md` all
-still agree with the committed `meta.json`, so none of them can drift. It prints cleanly
-if you would rather read it on paper.
+<https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html> — opens with the
+newspaper ad the console used to carry: eight tools split six-free / two-paid, the
+iron-clad guarantee, and a cut-out coupon whose three lines are the install. Its test
+count is read from `data/meta.json` at page load, so it is right now rather than when it
+was typed. Below it: the six-step judge path as numbered tickets, and the Chaos Lab
+poster. The console keeps its sixth message slot as a one-panel teaser pointing here.
 
 ## Break it yourself (ten seconds, no install)
 
@@ -408,7 +416,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-1,136 tests, `node:test`, no dependencies and no test framework to install:
+1,149 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
@@ -456,9 +464,10 @@ node tools/numbers-audit.js                        # every number the console sh
 npm test                                           # the whole suite, offline
 ```
 
-As of this writing that is **22 bot commits** between 21 Aug 07:49 and 22 Aug 06:00 UTC,
-**90 scans** over **1,876 rows**, **3 incidents** and **3 heals**, with `unchangedIds`
-reading `true` — the collector IDs going into every repair are the IDs coming out.
+As of this writing that is **25 bot commits** between 21 Aug 07:49 and 22 Aug 08:08 UTC,
+**100 scans** over **2,074 rows**, **4 incidents** and **4 heals**, with `unchangedIds`
+reading `true` — the collector IDs going into every repair are the IDs coming out. One of
+those four, `inc_004`, had no human in any phase.
 
 The bot commits are also readable in the browser, no clone required:
 [commits by `thwip watch`](https://github.com/mikhailkhorokhorin/scrape-verse-hack/commits/main?author=thwip%20watch).
@@ -507,16 +516,19 @@ against its ID in [`docs/COLLECTORS.md`](docs/COLLECTORS.md), with creation date
 
 Stated plainly rather than left for you to find:
 
-- **The automated repair path is proven in part, not end to end.** Two of the three heals
-  (`inc_001` KESTREL, `inc_002` ATLAS) were invoked by hand. `repair.js` did open
-  `inc_003` autonomously during a scheduled run — but the heal it fired fixed nothing,
-  because nothing on the target was broken; the watcher's own payload parser was. The
-  record keeps that false `THROTTLED` diagnosis rather than tidying it away
+- **The automated repair path is now proven end to end — it was not, until 22 Aug.** Two
+  of the four heals (`inc_001` KESTREL, `inc_002` ATLAS) were invoked by hand. `inc_003`
+  was opened autonomously but its heal fixed nothing, because nothing on the target had
+  broken; the watcher's own payload parser was at fault, and the record keeps that false
+  `THROTTLED` diagnosis rather than tidying it away. `inc_004` is the one that closes the
+  gap: detection, diagnosis, re-weave, verification and closure all ran unattended, and
+  the field values came back real. Two of four are still hand-invoked, and this line says
+  so
 - **A wrong diagnosis is in the log on purpose.** See `inc_003` above and
   [`docs/COLLECTORS.md`](docs/COLLECTORS.md), which states the provenance of each record.
   Manufacturing cleaner evidence is precisely the failure this project exists to expose
-- **MTTR is a mean of three samples.** `renderMttr()` averages `closed_at − opened_at`
-  across `data/incidents.json`. Three heals is enough to display honestly and not enough
+- **MTTR is a mean of four samples.** `renderMttr()` averages `closed_at − opened_at`
+  across `data/incidents.json`. Four heals is enough to display honestly and not enough
   to be a trend. It reads `--` when there are none
 - **`REWEAVING` is a state the console can render and nothing writes.** `repair.js` runs
   to completion inside one CI job, so no mid-heal record is ever persisted. The branch in

@@ -13,7 +13,7 @@ them, and each answer lands in under 60 seconds with an artifact on screen.
 |---|---|---|---|
 | 1 | How did you design the scraper in Scraper Studio? | 2 | `collectors.json` — three collectors, per-field validators |
 | 2 | How did you drive it from a coding agent? | 3 | the MCP server answering inside Claude Code |
-| 3 | What happened when the site changed underneath it? | 4–6 | three incidents, Chaos Lab, `heal_receipt` |
+| 3 | What happened when the site changed underneath it? | 4–6 | four incidents, Chaos Lab, `heal_receipt` |
 | 4 | What did the structured output become? | 7 | THE HAUL on the live console |
 
 ## The facts this script stands on
@@ -28,10 +28,10 @@ Everything below is on disk and checkable. Nothing is invented for camera.
 | BODEGA `c_mt2lkwxa1bb5uz223s`, THROTTLED, 0 → 100, **opened by the cron itself** | `data/incidents.json` `inc_003` |
 | Collector ID identical before and after, all three | same `c_*` in every record above |
 | A per-field `verification` object on every incident | `scripts/verify.js`, rendered by `web/js/sheets/issue/receipt.js`, printed by `heal_receipt` |
-| **Two of the three breaks were on sites we do not control** | `web/js/fleet/vitals/wild.js` computes it; the note renders above the feed |
+| **Two of the four breaks were on sites we do not control** | `web/js/fleet/vitals/wild.js` computes it; the note renders above the feed |
 | Nineteen cron commits authored by `thwip watch` | `git log --author="thwip watch"` |
 | Six MCP tools over stdio JSON-RPC, no SDK | `mcp/registry.js` |
-| 1,136 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
+| 1,149 tests, zero dependencies, ESLint in CI | `npm test`, `.github/workflows/watch.yml` |
 
 **The strongest asset in this list is `inc_003`, and it is the one that failed.** The cron
 opened it alone, diagnosed THROTTLED, healed — and the heal did not work, because nothing
@@ -40,7 +40,7 @@ rows. That is written into the incident summary and it stays in the video. A sys
 only ever reports its successes is a system nobody can audit.
 
 **The second strongest is the one nobody else can claim.** Most of the field demos
-self-healing on a fixture page they broke themselves. Two of our three incidents are on
+self-healing on a fixture page they broke themselves. Two of our four incidents are on
 somebody else's HTML — Hacker News and books.toscrape.com. Section 5 says so out loud and
 the console says so on screen.
 
@@ -189,7 +189,7 @@ ID frames.** Hold it a beat.
 
 **Type:** `What has broken so far?`
 
-**Screen:** Claude calls `incident_log` — three incidents, all resolved.
+**Screen:** Claude calls `incident_log` — four incidents, all resolved.
 
 **Say over it:**
 
@@ -210,7 +210,7 @@ calling them is stronger than calling them, and it is the truthful reason.
 **Say — this line is required, do not paraphrase it away:**
 
 > To show a break on camera I'm using our own demo page, and I'm saying that out loud so
-> nobody has to wonder whether it was staged. This one is. The three real incidents are
+> nobody has to wonder whether it was staged. This one is. The four real incidents are
 > next, and two of those happened on sites I don't control.
 
 **Screen:** Click through the variant switcher — healthy, renamed, drifted.
@@ -227,7 +227,7 @@ seconds.
 
 ---
 
-## Section 5 — Question 3, part two: three real incidents, two in the wild · 1:40–2:22
+## Section 5 — Question 3, part two: four real incidents, two in the wild · 1:40–2:22
 
 **Screen:** Back to the console, Incident Feed. Three cards. **The note above the feed
 counts the breaks on sites we do not control and names them** — get it in frame before you
@@ -235,7 +235,7 @@ speak, and let the **IN THE WILD** badges on the KESTREL and ATLAS cards be visi
 
 **Say — this is the competitive line, do not rush it:**
 
-> Three real breaks, three real repairs. And two of the three happened on sites I don't
+> Four real breaks, four real repairs. And two of the four happened on sites I don't
 > own — Hacker News and books.toscrape.com. Nobody staged those. The page decides when it
 > changes, not me.
 
@@ -283,6 +283,41 @@ frame in the video after the collector ID.
 
 **Direction:** Have the `summary` field of `inc_003` legible on screen for the last two
 sentences. That text is the evidence.
+
+---
+
+## Section 5b — the one with no human in it · insert directly after Section 5
+
+**This is the strongest thirty seconds in the video.** Everything else can be told; this
+one can only be shown, because it happened while nobody was looking.
+
+**Screen:** the incident feed, on `inc_004`. Then the terminal running
+`node tools/evidence-report.js inc_004` live.
+
+**Say:**
+
+> The fourth one is the one I would judge this project on. This morning I committed a
+> redesign of our own demo page — moved the class names, the way a real redesign moves
+> them — and then I did nothing at all. No command, no approval, no watching.
+>
+> The cron saw Integrity fall to fifty percent. It did not react to that: one bad scan is
+> usually a blip, so it waited for a second. When the second came it opened the incident,
+> read the field states, called the strain RENAMED, re-wove the collector, and then — this
+> is the part that matters — it verified by scraping the site again and scoring what came
+> back, not by believing the repair's own report.
+>
+> Eleven minutes fifty-six from detection to verification. Price came back from null to
+> eighteen pounds, rating from null to four point four, on a Collector ID that never
+> changed. Every one of those numbers is in the repository, and that command prints them
+> with digests you can recompute yourself.
+
+**Direction:** let the TIMELINE block and the FIELDS table sit legibly for two seconds
+each. The `collector_id ... (identical)` line is a Collector ID frame — this is the
+easiest of the three to read on camera because there is no page chrome around it.
+
+**Do not oversell it.** Say the facts flat and stop. The restraint is what makes it land;
+every other entry in this hackathon narrates a win, and this is the only one where the
+system did the work with nobody in the room.
 
 ---
 
