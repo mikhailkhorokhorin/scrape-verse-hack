@@ -379,7 +379,8 @@ beside the `collector_id` line. If you trim anything for time, trim elsewhere.
 
 ## Section 6b — The scratch · insert before Section 7 if the runtime allows
 
-**Screen:** Tab A, scrolled to any panel showing black. Press and drag across it.
+**Screen:** Tab A, scrolled to the **diptych** — HELD and TAKEN, the same Spider on the
+same day. Press and drag across the black half.
 
 **Say:**
 
@@ -391,9 +392,12 @@ a literal `"undefined"` in violet — and it closes over again after four second
 nothing else over it. This is the single image the project has, and the gesture explains
 itself faster than any sentence.
 
-**If the live fleet is at 100%** there is no black to scratch. Use `?mock=1` for this
-shot and say "this is the mock fixture" once, or cut the section — an honest empty page
-beats a staged one.
+**Scratch the diptych, not the grid.** The TAKEN half is a frozen historical scan, so it
+carries black whatever the live fleet is doing — and after `inc_004` the live fleet is
+healthy, which is the point of the product and would leave the grid with nothing to
+scratch. The diptych panel is deliberately inert: it reveals and does not open a sheet, so
+a stray click cannot navigate away mid-take. If a live panel does happen to be degraded
+when you record, either works.
 
 ---
 

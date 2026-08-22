@@ -1062,3 +1062,47 @@ behind is the best run's vsync-locked 59.9fps, and it does **not** reproduce the
 earlier audit recorded. Structurally the page is sound — no layout thrash, no
 backdrop-filter, no blurred shadows, no images to lazy-load — but **the number should be
 re-measured on a quiet machine before anyone quotes it.**
+
+---
+
+# The style and concept review — 22 Aug, before the recording
+
+A second reviewer read the console, the CHAOS LAB and the manual as a designed object
+rather than as a checklist. Three findings mattered; all three are now closed.
+
+**1 · The symbiote's leading edge was a ruled line.** `scratchRepaint` painted the
+substance with `ctx.fillRect` — a plain rectangle — and because `scratch.css` sets
+`.panel.has-scratch > .symbiote{opacity:0}`, the CSS symbiote with its turbulence filter
+and teeth was switched **off** on exactly the panels that carry the argument. The result
+read as a redaction bar. DESIGN-SPEC §4.6 names this failure precisely: *a flat gradient
+reads as a progress bar, a torn edge reads as something alive*. Fixed with
+`symbioteEdgePath` / `symbioteFillBody` in `symbiote.js` — a deterministic three-term sine
+sum, amplitude clamped to `min(16, max(8, w*0.03))` so it survives 375px.
+
+**2 · The scratch could vanish from the live page entirely.** `scratchMount` walked only
+`#grid`, so the reveal existed only while a live Spider was degraded. With the fleet at
+100% — which is the normal, healthy, and after `inc_004` the *expected* state — the
+headline interaction and its discovery hint were simply absent, and a judge arriving at a
+quiet moment would never learn the page had a hidden layer. The scratch now also mounts on
+the **diptych's TAKEN panel**, which is frozen historical data and therefore always shows
+a break. `diptychInert` still runs first, so the panel keeps its `disabled` state and its
+missing `data-idx`: it reveals, it does not navigate. Three tests hold that ordering.
+
+**3 · The evidence line ended in a bare truncated id.** `100 scans · 2,198 rows · 1,152
+tests · c_mt2f…` — every other segment carries a unit, so the last one read as a rendering
+fault rather than as proof. Now labelled `collector c_mt2f…` at full width. On the terse
+phone variant the label is dropped rather than added, because measuring showed the line
+clipping by 9px inside its `overflow:hidden` container — a labelled id that gets cut in
+half is worse than an unlabelled one.
+
+**What the reviewer left, and was right to leave.** The legend block ("HOW TO READ A
+SPIDER") teaches what the diptych has already demonstrated, and arrives before the reader
+has seen much black — a real ordering weakness, but restructuring the page's teaching
+section hours before a recording is the wrong trade. The `0%` CRITICAL readout at 40px in
+`--critical` is hard to read, and deliberately so: §2 permits `--critical` for large type
+and loud damage is the stated intent.
+
+Judgement worth recording: the metaphor is doing information work rather than decoration —
+the diptych, the field chips and the No-Prize are the metaphor *as* the data — and the
+copy stays flat and factual throughout, with `inc_003`'s admission that the watcher's own
+parser was at fault named as the project's strongest credibility move.
