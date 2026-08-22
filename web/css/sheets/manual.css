@@ -17,7 +17,7 @@
   color:var(--ink);background:var(--infected);
   border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);
 }
-.manual-page .ad__chaosnote{font-weight:400;letter-spacing:.06em;text-transform:none;color:var(--ink-2);}
+.manual-page .ad__chaosnote{font-weight:400;letter-spacing:.06em;text-transform:none;color:var(--ink);}
 .manual-page .ad__chaos:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--ink);}
 .manual-page .ad__chaos:focus-visible{outline:3px solid var(--cyan);outline-offset:2px;}
 @media (pointer: coarse){
