@@ -3716,5 +3716,102 @@
       "comments": 222,
       "author": "backlit4034"
     }
+  },
+  {
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-22T13:28:42.440Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": "£18.00",
+      "rating": "4.4",
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-22T13:45:31.297Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 20,
+    "rows_expected": 20,
+    "sample": {
+      "title": "Tipping the Velvet",
+      "price": {
+        "value": 53.74,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "One",
+      "image_url": "https://books.toscrape.com/media/cache/08/e9/08e94f3731d7d6b760dfbfbc02ca5c62.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-22T13:45:34.575Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "rows_expected": 30,
+    "sample": {
+      "title": "Munder Difflin – Agent harness to run an office of your clones",
+      "points": 88,
+      "comments": 30,
+      "author": "simonpure"
+    }
   }
 ]
