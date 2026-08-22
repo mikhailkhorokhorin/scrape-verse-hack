@@ -90,7 +90,7 @@ proves nothing about a scraper surviving the real web:
 | `inc_002` | ATLAS | books.toscrape.com | **no** | `DRIFTED` | 90 → 100 |
 | `inc_003` | BODEGA | our demo page | yes | `THROTTLED` | 0 → 100 |
 
-The console marks the first two **IN THE WILD** (`web/js/wild.js`) and says so on the page:
+The console marks the first two **IN THE WILD** (`web/js/fleet/wild.js`) and says so on the page:
 nobody staged them.
 
 Each incident carries a per-field `verification` block naming the value received **before**
@@ -106,7 +106,7 @@ the heal and the value received **after** — not a pass/fail flag, the actual d
 
 That block is written by `scripts/verify.js` from a fresh run after the heal, not from the
 heal's own report — a heal that claims success and still returns nulls is exactly the
-silent failure being guarded against. It is rendered by `web/js/receipt.js` and returned by
+silent failure being guarded against. It is rendered by `web/js/sheets/receipt.js` and returned by
 the `heal_receipt` MCP tool.
 
 `inc_003` is kept even though the diagnosis was wrong: `repair.js` opened it autonomously
@@ -261,12 +261,12 @@ The console is drawn as a comic page, and the drawing is the readout rather than
 beside it:
 
 - **A character per collector.** One inline-SVG spider is authored once and parameterised
-  (`web/js/rig.js`, `rig-parts.js`). **Each expected field owns a mirrored pair of legs**, so
+  (`web/js/fleet/rig.js`, `rig-parts.js`). **Each expected field owns a mirrored pair of legs**, so
   a Spider at half Integrity is standing on half its legs, and **eight eyes light by
   Integrity band**. The same rig appears in the detail sheet with a named chip per field, so
   the leg-to-field mapping is stated explicitly where a judge would go to check it
 - **It reacts to real events only.** The console re-fetches every 60s; one shared diff
-  (`web/js/delta.js`, pinned by its own test file) compares the previous render to the new
+  (`web/js/data/delta.js`, pinned by its own test file) compares the previous render to the new
   one. A Spider steps and turns when a record lands, `THWIP!` is reserved for records
   carrying `after_heal`, and speech bubbles fire on genuine field transitions — nothing
   speaks unless something changed
@@ -353,7 +353,7 @@ Hacker News.
 
 It is built from the `sample` on every history record, so it is the committed data and not
 a fixture — the same JSON the pipeline wrote. A row captured at 90% Integrity carries that
-number, which is the point: provenance travels with the data. `web/js/haul-data.js`
+number, which is the point: provenance travels with the data. `web/js/data/haul-data.js`
 resolves the rows, `haul-view.js` renders them.
 
 ## MCP server — the fleet, in your agent
@@ -519,7 +519,7 @@ Stated plainly rather than left for you to find:
   to be a trend. It reads `--` when there are none
 - **`REWEAVING` is a state the console can render and nothing writes.** `repair.js` runs
   to completion inside one CI job, so no mid-heal record is ever persisted. The branch in
-  `web/js/adapter.js` is reachable only from mock data
+  `web/js/data/adapter.js` is reachable only from mock data
 - **The phone pass has not been run.** The responsive contract is specified in
   `docs/DESIGN-SPEC.md` and the layout collapses to a single column, but nobody has walked
   the console at 375px since the character rig landed. It is the one item on the UI list
