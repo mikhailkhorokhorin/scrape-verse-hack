@@ -36,7 +36,7 @@ Triage letters, same as `AUDIT-PIPELINE.md`, applied the moment a finding appear
 
 ---
 
-## S0 · Close the first push (lead, sequential)
+## S0 · Close the first push (lead, sequential) — **DONE 22 Aug**
 
 Nothing new builds on an open wound.
 
@@ -62,6 +62,13 @@ Nothing new builds on an open wound.
 
 **Done when:** suite green, stash empty, a `curl` of the deployed head shows the og
 block, and the receipt scrolls inside itself at 375 while the page does not.
+
+**Done.** 889 tests green, lint clean. Receipt: 430px table scrolling inside a 289px
+labelled region, page still. Replay keyboard walk verified end to end, handler bound
+once. HAUL at 375: zero overflow. og/twitter tags added — and the deploy did not copy
+`assets/`, so the card image would have 404'd; the workflow copies it now (`data/`
+backed up first). The red test was asserting the old `cleanValue` source; replaced by
+three covering broken value, verified value, and the no-verification fallback.
 
 ---
 
@@ -139,6 +146,14 @@ Drag the black off a taken panel and underneath is the value that actually came 
 This is the one image and the one interaction; everything else this weekend supports it.
 The play says it is worth an afternoon, and it gets one.
 
+**Mechanism, after one rejected approach.** The first attempt dug holes into the
+symbiote's existing `mask-image` by stacking radial gradients on it — cheap, no second
+layer, and the turbulence filter kept working. It is recorded here because it looked
+right and is not: `.symbiote` carries `filter:url(#symbiote-turbulence)`, which creates
+its own stacking context, so a hole in the mask reveals the panel background rather
+than anything placed behind the layer. Verified in the browser — 8 holes present in the
+computed mask, nothing visible through them. The canvas below is the way.
+
 **Mechanism:** a `<canvas>` over the symbiote layer, `destination-out` under the pointer
 (mouse **and** touch — a judge on a phone is the likely case, not the edge case), with
 the received values rendered beneath from the same per-field expected-versus-received
@@ -190,7 +205,12 @@ The order inside this move is fixed.
    scan re-animates all three panels — it reads as a page refresh, which is precisely
    what a live console must not read as, and it makes UI-03's landing mark meaningless.
    Reconcile instead: `delta.js` already names the changed collectors, so re-render only
-   their cells and leave the rest of the DOM untouched. The stamp (UI-79, a 90ms
+   their cells and leave the rest of the DOM untouched. **Groundwork, checked 22 Aug:**
+   `panel.js` line 57 emits `<div class="cell cell--STATUS">` with **no key**, so the
+   first edit is to stamp `data-cid` on that wrapper; `renderGrid` then builds each
+   cell's HTML as it does now but writes only where the markup for that cid differs,
+   instead of assigning `grid.innerHTML` wholesale. Keep the wholesale path for the
+   empty state and for a fleet-size change — reconciling is for the steady case. The stamp (UI-79, a 90ms
    press-in) becomes the arrival mark on the changed panel alone. **Verify:** mutate one
    spider and a `MutationObserver` on the other two cells records **zero** childList
    changes.

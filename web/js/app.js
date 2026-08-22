@@ -121,10 +121,13 @@ applyCapture();
 const grid = document.getElementById("grid");
 bindReveals(grid);
 bindSparkHover(grid);
+if (typeof scratchBind === "function") scratchBind();
 grid.addEventListener("click", (e) => {
   if (e.target.closest(".chip--reveals")) return;
   const p = e.target.closest(".panel");
-  if (p) openSheet(Number(p.dataset.idx));
+  if (!p) return;
+  if (typeof scratchSwallowsClick === "function" && scratchSwallowsClick(p)) return;
+  openSheet(Number(p.dataset.idx));
 });
 grid.addEventListener("keydown", (e) => {
   if (e.target.closest(".chip--reveals")) return;
