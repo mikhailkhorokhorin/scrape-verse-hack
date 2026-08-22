@@ -1,3 +1,5 @@
+.is-capture .is-critical::after,.is-capture .is-degraded::after{display:none;}
+
 .is-capture .demobar,
 .is-capture .note{display:none !important;}
 .is-capture .pulse{animation:none;opacity:1;}

@@ -11,12 +11,14 @@
 .rig--restless .rig__leg[data-state="live"]{
   animation:rig-plant var(--rig-sway,11s) ease-in-out infinite;
   animation-delay:calc(var(--rig-delay,6s) * -1);
+  will-change:transform;
 }
 .rig__leg[data-state="infected"]{
   stroke:var(--infected);
   transform-box:fill-box;transform-origin:center;
-  animation:rig-twitch 2s steps(6,end) infinite;
+  animation:rig-twitch 6.5s steps(6,end) infinite;
   animation-delay:calc(var(--rig-delay,6s) * -1);
+  will-change:transform;
 }
 .rig__leg[data-state="dead"]{stroke:var(--symbiote-edge);opacity:.9;}
 
@@ -31,6 +33,7 @@
 .rig__eye[data-lit="1"]{
   fill:currentColor;
   animation:rig-blink var(--rig-blink,6s) ease-in-out infinite;
+  will-change:transform;
 }
 
 .rig[data-status="healthy"]{color:var(--healthy);}
@@ -40,7 +43,9 @@
 .rig[data-status="unwatched"]{color:var(--unwatched);opacity:.55;}
 
 .rig__body{transform-origin:center;}
-.rig--restless .rig__body{animation:rig-weight var(--rig-sway,11s) ease-in-out infinite;}
+.rig--restless .rig__body{
+  animation:rig-weight var(--rig-sway,11s) ease-in-out infinite;will-change:transform;
+}
 
 @keyframes rig-plant{
   0%,100%{transform:translateY(0);}

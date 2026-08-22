@@ -1,4 +1,5 @@
 @media print{
+  .is-critical::after,.is-degraded::after{display:none !important;}
   @page{margin:10mm;size:A4 portrait;}
 
   html,body{background:#fff;color:#000;overflow:visible;height:auto;min-height:0;}
