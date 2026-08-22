@@ -65,7 +65,7 @@ function scratchRepaint(state) {
 function scratchSize(state) {
   const box = state.panel.getBoundingClientRect();
   if (box.width === 0 || box.height === 0) return false;
-  const shown = Math.min(1, Math.max(0, state.spread));
+  const shown = Math.min(1, Math.max(0, state.spread)) * 0.82;
   const height = Math.round(box.height * shown);
   if (height < SCRATCH_ROW_H) return false;
   state.canvas.width = Math.round(box.width);
@@ -141,8 +141,9 @@ function scratchWasFound() {
 }
 
 function scratchPointIn(state, clientX, clientY) {
-  const box = state.panel.getBoundingClientRect();
+  const box = state.canvas.getBoundingClientRect();
   if (box.width === 0 || box.height === 0) return null;
+  if (clientY < box.top - SCRATCH_RADIUS) return null;
   return {
     x: ((clientX - box.left) / box.width) * state.canvas.width,
     y: ((clientY - box.top) / box.height) * state.canvas.height,
