@@ -21,3 +21,7 @@
   .intro-running .panel .symbiote__body,
   .intro-running .panel .bar__fill{transition:none;}
 }
+
+@media(pointer:coarse){
+  .intro-replay{padding-top:12px;padding-bottom:11px;}
+}

@@ -79,3 +79,12 @@
   .issue__cover{margin:calc(var(--s3) * -1) calc(var(--s3) * -1) var(--s2);padding-bottom:var(--s2);}
   .issue__rig{width:70%;}
 }
+
+@media(pointer:coarse){
+  .issue__link{position:relative;}
+  .issue__link::after{
+    content:"";position:absolute;left:50%;top:50%;
+    width:100%;min-width:44px;height:44px;
+    transform:translate(-50%,-50%);
+  }
+}
