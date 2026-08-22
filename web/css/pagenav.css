@@ -68,3 +68,12 @@ html{scroll-padding-top:64px;}
 @media(prefers-reduced-motion:reduce){
   .pagenav{transition:none;}
 }
+
+@media(pointer:coarse){
+  .pagenav__link{position:relative;}
+  .pagenav__link::after{
+    content:"";position:absolute;left:50%;top:50%;
+    width:100%;min-width:44px;height:44px;
+    transform:translate(-50%,-50%);
+  }
+}
