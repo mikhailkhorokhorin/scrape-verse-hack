@@ -1,0 +1,135 @@
+# RESTRUCTURE — architecture, dead code, and a second page
+
+Written 22 Aug ~07:00 UTC. Video records ~11:20 UTC. D1 (the live break) is pushed and
+running on the cron's wall clock — nothing below touches `demo-target/`, `scripts/` or
+`.github/` except the one glob noted in R2.
+
+**The shape of it.** Three flat piles — 59 test files, 58 `web/js` files, 50 `web/css`
+files — pass every numeric gate and still read as a heap. The fix is folders that mirror
+the product's own anatomy, a dead-code sweep before anything moves (no point relocating
+corpses), and one new page for the material that never belonged inside the comic. The
+console itself stays one page: it is drawn as a single comic issue, the intro, the
+scroll-press effects and `?capture=1` all assume one continuous page, and no judge asked
+us to shatter it. What reads as "все в кучу" is the *repo*, not the *site* — so the repo
+is what gets the architecture.
+
+Ground rules unchanged: zero comments · ≤250 lines · vanilla globals, ordered script
+tags · every stage ends with `npm test` + `npx eslint .` green, console clean in the
+browser, and a live-page check after each push · max 2 agents, disjoint lanes · pushes
+in safe windows with rebase · **no `bdata`, no credits — the D1 cycle is the cron's**.
+
+---
+
+## R1 · Dead-code sweep — before anything moves *(Agent A, ~1h)*
+
+Method, not vibes:
+1. Build the cross-reference: every top-level function/const in `web/js/*.js` grepped
+   against all of `web/` (js + index.html); every CSS class in `web/css` against js/html
+   use sites; every export in `scripts/lib`, `tools/`, `mcp/` against its requires.
+2. Check the false-flag registry in `SECOND-PUSH.md` first — `.fleet-symbiote`, the
+   odometer reel, rtick's ::before hit area and friends are *intentional* and stay.
+3. Delete in small batches, full gate after each. A deleted function takes its tests
+   with it; the suite count may go *down* and that is honest.
+4. Also: stale doc references (`docs/NEXT-PROMPT.md`-era paths), `test/tap.txt`-style
+   artifacts if any, unused fixtures.
+
+Done when: zero provably-unreferenced functions/selectors remain, and the sweep's one
+paragraph (what was removed, why it was safe) lands at the bottom of this file.
+
+## R2 · `test/` grows an anatomy *(lead, ~40min)*
+
+```
+test/
+  pipeline/   scoring, classify, payload, storage, repair, verify, heal, diagnosis, heal-that-lies
+  web/        every web-*.test.js, renamed to drop the web- prefix
+  mcp/        mcp-*.test.js
+  tools/      evidence-report, numbers-audit's tests
+  web-loader.js stays at test/ root (both loaders' paths keep one '..')
+```
+
+Contracts to update in the same commit:
+- `test/run.js` — readdirSync goes recursive (walk subdirs, keep the flat-file filter).
+- `.github/workflows/watch.yml:71` — `test/*.test.js` → `test/` (node's runner recurses
+  a directory). **Cron ritual applies**: back up `data/`, edit in a safe window, watch
+  the next scheduled run count 1112 before touching anything else.
+- Each moved file's relative `require` paths (`./web-loader` → `../web-loader`).
+- Doc references: README's test paths, `VIDEO-SCRIPT.md`'s
+  `node --test test/heal-that-lies.test.js` line.
+
+Done when: `npm test` prints the same total from the new tree, CI's next run agrees.
+
+## R3 · `web/js` and `web/css` mirror the product *(Agent A after R1, ~1-1.5h)*
+
+Grouping principle: a folder per *surface*, not per *pattern* —
+
+```
+web/js/
+  app.js            stays at root: the assembly point
+  data/             config, format, adapter, from-record, value, delta, scars,
+                    haul-data, replay-data, issue-route
+  fleet/            render, panel, received, symbiote, infection, webs, ground,
+                    heatmap, sparkline, sparkhover, pulse, reconcile, reconcile-dom,
+                    scratch, rig*, landing, bubble, speech, caption, odometer,
+                    sweep, impact, heal, open, wild
+  sheets/           issue, sheet*, receipt, diptych, haul, haul-view, replay*,
+                    noprize, masthead, pagenav, intro*, finish, ad
+  mock/             fixtures, haul-fixtures, replay-fixtures
+web/css/            mirrors: base/ (tokens, layout, sizes, states, scrollbar),
+                    fleet/, sheets/, fx/ (press, reveal, landing, impact...),
+                    print/ (print, print-artefacts, capture), mock/
+```
+
+The exact file-to-folder map is decided at execution time from the script-tag order in
+`index.html` — the order *is* the dependency graph and **must not change**, only the
+paths. One mechanical pass rewrites the 108 src/href attributes; the web-loader's
+`WEB_DIR` gains the subdir in its file list, not its base.
+
+Gate is stricter here: screenshot-diff the page at 1440 and 375 against before (pixel
+churn = a path died silently), console clean, full suite, deployed check.
+
+**Condition: start R3 only if ≥1.5h remain before the video and everything else is
+green. It is the largest diff for the least judge-visible gain — legibility for the
+Clean Code reviewer who opens the tree, nothing for the one watching the site.**
+
+## R4 · The second page: THE MANUAL *(Agent B, ~45min)*
+
+`web/manual.html` — the comic's back page, built from the same tokens and vocabulary
+(paper, ink, one accent), no new design direction:
+- **Get the watch** — clone → `npm test` → `claude mcp add thwip -- node mcp/server.js`,
+  the three commands verbatim;
+- **Drive it from an agent** — the eight tools, one line each, free/paid split;
+- **Judge it in ten minutes** — the six-step path from `SUBMISSION.md`;
+- **Break it yourself** — the CHAOS LAB link and the three clicks.
+
+The console's nav gains one `MANUAL` link (pagenav vocabulary, verified at both
+widths); README's install section points at the live page. `?capture=1`, print and the
+intro are untouched — different document. Deploy already copies `web/` wholesale.
+
+This answers "страницы на сайте" the honest way: the watch stays one issue; the manual
+— which was only ever README material — becomes the site's second surface.
+
+## R5 · Re-sync and the last gate *(lead, ~20min)*
+
+Numbers re-counted from the tree into README/SUBMISSION (file counts change in R2/R3),
+`meta.json` untouched (the cron owns it now), full suite + lint + live check, one push
+in a safe window. If R3 moved files the video script references on screen, re-check
+`VIDEO-SCRIPT.md`'s terminal moments against reality.
+
+---
+
+## Order and the clock
+
+| When | Lane A (agent) | Lane B (agent) | Lead |
+|---|---|---|---|
+| now → ~08:00 | R1 sweep | R4 manual page | R2 test tree, merges |
+| ~08:00 → ~08:30 | R1 gate + report | R4 browser pass | D1 watch: cron should open the incident |
+| ~08:30 → ~10:00 | R3 (only if green + time) | — | R5, screenshots, safe-window pushes |
+| ~10:00 → video | frozen | frozen | verify live page, D1 incident closed, receipts |
+
+Priority if the day compresses: **R1 → R4 → R2 → R3.** R3 is cut first, whole, without
+apology — a flat-but-alive tree beats a half-moved one.
+
+Done-when for the whole file: a stranger opening the repo sees folders that name the
+product's parts; every file still ≤250 lines, zero comments, suite green; the site
+gained a manual and lost nothing; and no number anywhere describes a tree that no
+longer exists.
