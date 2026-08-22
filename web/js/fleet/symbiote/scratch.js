@@ -39,7 +39,7 @@ function scratchReveal(state, strokes) {
   const ctx = state.ctx;
   const w = state.canvas.width;
   const h = state.canvas.height;
-  const top = h * (1 - state.spread);
+  const top = 0;
   ctx.save();
   scratchClipTo(ctx, strokes);
   ctx.globalCompositeOperation = "source-over";
@@ -53,7 +53,7 @@ function scratchRepaint(state) {
   const ctx = state.ctx;
   const w = state.canvas.width;
   const h = state.canvas.height;
-  const top = h * (1 - state.spread);
+  const top = 0;
   ctx.globalCompositeOperation = "source-over";
   ctx.clearRect(0, 0, w, h);
   symbioteFillBody(ctx, w, h, top, SCRATCH_INK);
@@ -65,8 +65,14 @@ function scratchRepaint(state) {
 function scratchSize(state) {
   const box = state.panel.getBoundingClientRect();
   if (box.width === 0 || box.height === 0) return false;
+  const shown = Math.min(1, Math.max(0, state.spread));
+  const height = Math.round(box.height * shown);
+  if (height < SCRATCH_ROW_H) return false;
   state.canvas.width = Math.round(box.width);
-  state.canvas.height = Math.round(box.height);
+  state.canvas.height = height;
+  state.canvas.style.top = "auto";
+  state.canvas.style.bottom = "0";
+  state.canvas.style.height = Math.round(box.height * shown) + "px";
   return true;
 }
 
