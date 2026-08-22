@@ -1,5 +1,13 @@
+.mockflag{
+  position:sticky;top:0;z-index:60;display:block;width:100%;box-sizing:border-box;
+  padding:.55rem 1rem;background:var(--infected);color:var(--ink);
+  font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  font-size:var(--t-micro);text-align:center;border-bottom:3px solid var(--ink);
+}
+
 .demobar{
   position:relative;z-index:20;margin:var(--s4) 0 var(--s3);
+  scroll-margin-top:96px;
   background:var(--paper);color:var(--ink);
   border:4px solid var(--ink);
   box-shadow:10px 10px 0 var(--infected);

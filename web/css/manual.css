@@ -177,7 +177,7 @@
 
 @media print{
   @page{margin:12mm;size:A4 portrait;}
-  html,body{background:#fff;color:#000;overflow:visible;}
+  html,body,.manual-page{background:#fff;color:#000;overflow:visible;}
   body::before{display:none !important;}
   .pagenav{display:none !important;}
   .wrap{max-width:none;padding:0;margin:0;}
@@ -225,17 +225,17 @@
   .ad{border:1.5pt solid #000;box-shadow:none;background:#fff;color:#000;padding:3mm;}
   .ad::before,.ad__burst{display:none !important;}
   .ad__pitch{max-width:none;}
-  .ad__title,.ad__formhead{color:#000;text-shadow:none;font-size:16pt;}
+  .ad__title,.ad__formhead,.ad__titleline{color:#000;text-shadow:none;font-size:16pt;}
   .ad__lede,.ad__toolwhat,.ad__small,.ad__formsub,.ad__colnote{color:#000;}
   .ad__cols{grid-template-columns:minmax(0,1fr);}
-  .ad__toolname{background:none;border:.75pt solid #000;color:#000;}
+  .ad__toolname,.ad__tool--paid .ad__toolname{background:none;border:.75pt solid #000;color:#000;}
   .ad__guarantee{background:none;color:#000;border:1pt solid #000;}
   .ad__guarantee b,.ad__guarantee i,.ad__actnow{color:#000;background:none;border:0;transform:none;}
   .ad__form{border:1pt solid #000;box-shadow:none;}
   .ad__cmd{background:#fff;color:#000;border:.75pt solid #000;white-space:pre-wrap;overflow:visible;}
   .ad__cmdtext{white-space:pre-wrap;overflow-wrap:anywhere;}
   .ad__prompt{color:#000;}
-  .ad__chaos{background:none;color:#000;border:.75pt solid #000;box-shadow:none;}
+  .manual-page .ad__chaos{background:none;color:#000;border:.75pt solid #000;box-shadow:none;}
 
   .man__link{color:#000;border-bottom:.75pt solid #000;}
   .manfoot{border-top:1.5pt solid #000;}

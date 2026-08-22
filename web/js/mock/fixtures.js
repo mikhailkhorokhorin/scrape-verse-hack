@@ -66,11 +66,6 @@ function mountMockBanner() {
   const flag = document.createElement("div");
   flag.className = "mockflag";
   flag.setAttribute("role", "status");
-  flag.style.cssText =
-    "position:sticky;top:0;z-index:9999;display:block;width:100%;box-sizing:border-box;" +
-    "padding:.55rem 1rem;background:#C24BFF;color:#0B0614;font-weight:800;" +
-    "letter-spacing:.12em;text-transform:uppercase;font-size:.72rem;text-align:center;" +
-    "border-bottom:3px solid #0B0614";
   flag.textContent =
     "Synthetic data — ?mock=1 fixtures, not a live fleet. Drop the query string for the real watch.";
   document.body.insertBefore(flag, document.body.firstChild);

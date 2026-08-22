@@ -111,3 +111,20 @@ test('the chaos lab tag carries a full touch target on a coarse pointer', () => 
   assert.match(coarse, /\.ad__chaos::after/);
   assert.match(coarse, /height:44px/);
 });
+
+test('the mock banner wears its styling in css, not in a javascript string', () => {
+  assert.doesNotMatch(fixtures, /style\.cssText/);
+  assert.match(mockCss, /\.mockflag\{/);
+});
+
+test('the chaos lab clears the sticky banner when a link scrolls to it', () => {
+  const block = mockCss.slice(mockCss.indexOf('.demobar{'), mockCss.indexOf('.demobar::before'));
+  assert.match(block, /scroll-margin-top:/);
+});
+
+test('the banner sits above the nav without reaching for a five figure z-index', () => {
+  const flag = mockCss.slice(mockCss.indexOf('.mockflag{'), mockCss.indexOf('}', mockCss.indexOf('.mockflag{')));
+  const z = Number((flag.match(/z-index:(\d+)/) || [])[1]);
+  assert.ok(z > 45, 'the banner must clear the page nav');
+  assert.ok(z < 100, 'z-index 9999 is a smell, not a layer');
+});
