@@ -12,7 +12,7 @@ payload parser rather than the target — the false diagnosis is still on disk. 
 on 22 Aug, is the one with **no human in any phase**: a committed redesign of our own demo
 page, then detection, a second confirming scan, diagnosis, re-weave and verification
 against a fresh scrape, 11m 56s end to end, `price: null → £18.00`, `rating: null → 4.4`.
-1,149 tests green via `npm test`, `npx eslint .` clean, both run in a dedicated `ci`
+1,152 tests green via `npm test`, `npx eslint .` clean, both run in a dedicated `ci`
 workflow on every push and pull request across Node 20 and 22. The console is live at
 https://mikhailkhorokhorin.github.io/scrape-verse-hack/ with a second page at
 `/manual.html`.
@@ -44,7 +44,7 @@ Print the trail with `node tools/evidence-report.js inc_004`.
 - `docs/` holds every spec: `PRODUCT.md` (why), `DESIGN-SPEC.md` (visual contract, §8
   Banned is non-negotiable), `COLLECTORS.md` (heal registry — submission evidence),
   `AUDIT-PIPELINE.md` (the 18 audits and their verdicts), `STRATEGY.md`.
-- `npm test` — 1,149 tests, zero dependencies, node:test. `npm run lint`.
+- `npm test` — 1,152 tests, zero dependencies, node:test. `npm run lint`.
 - `node mcp/server.js` — the MCP server; `mcp/README.md` shows the wiring and a real
   conversation. The example output is captured from the real tools, do not invent.
 - `demo-target/` — the Chaos Lab: `index.html` (healthy), `broken-renamed.html`,

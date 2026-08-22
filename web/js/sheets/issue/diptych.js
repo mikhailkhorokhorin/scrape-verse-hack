@@ -116,6 +116,19 @@ function diptychInert(body) {
   });
 }
 
+function diptychScratch(body) {
+  if (typeof scratchMountPanel !== "function") return;
+  const pair = pickDiptych(RAW_HISTORY, RAW_INCIDENTS);
+  if (!pair) return;
+  const sp = spiderFromRecord(pair.hurt, RAW_HISTORY);
+  const panel = body.querySelectorAll(".dip__panel .panel")[1];
+  if (!sp || !panel) return;
+  scratchMountPanel(panel, sp);
+  if (panel.classList.contains("has-scratch") && typeof scratchHint === "function") {
+    scratchHint(panel);
+  }
+}
+
 function renderDiptych() {
   const section = document.getElementById("diptych");
   const body = document.getElementById("diptych-body");
@@ -123,5 +136,7 @@ function renderDiptych() {
   const html = diptychHTML(RAW_HISTORY, RAW_INCIDENTS);
   body.innerHTML = html;
   section.hidden = html === "";
-  if (html !== "") diptychInert(body);
+  if (html === "") return;
+  diptychInert(body);
+  diptychScratch(body);
 }
