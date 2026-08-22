@@ -103,6 +103,18 @@ settles there is no black on any panel. That is the honest state and it is the r
 open, but it means you cannot gesture at "the symbiote" over this shot. It arrives in
 Section 5's incident cards.
 
+**What the intro settles onto, added 22 Aug:** the page now opens on a thesis panel
+rather than the grid — `NOBODY HAS LOOKED AT THIS FLEET IN <gap>`, then the
+while-you-were-away counters, then `YOU DO NOT PREVENT THE BREAK. YOU COME BACK FROM IT,
+AND YOU RECORD IT.` Every figure in it is computed from the committed JSON; the gap
+climbs while the camera is on it. Hold the shot one extra beat so the number is legible —
+it is the line the whole product argues, and it accuses the viewer, which is the point.
+
+**One more thing on screen now:** each panel carries a thin arc along its top edge. That
+is the sweep hand, and its duration is `lastScan + 30 min − now` — the only timing on the
+page that is a real interval rather than a chosen one. If you sit still it visibly moves.
+Do not narrate it; let someone notice.
+
 ---
 
 ## Section 2 — Question 1: how the scraper was designed · 0:14–0:48
@@ -327,6 +339,26 @@ the frame you hold.
 
 **Direction:** This is the required second Collector ID frame. Hold it with the cursor
 beside the `collector_id` line. If you trim anything for time, trim elsewhere.
+
+---
+
+## Section 6b — The scratch · insert before Section 7 if the runtime allows
+
+**Screen:** Tab A, scrolled to any panel showing black. Press and drag across it.
+
+**Say:**
+
+> The black covers exactly what the scraper lost. You can drag it off.
+
+**Direction:** One slow horizontal drag, then lift. The substance tears open under the
+pointer and the values that actually came back are underneath — `price: null` in red,
+a literal `"undefined"` in violet — and it closes over again after four seconds. Say
+nothing else over it. This is the single image the project has, and the gesture explains
+itself faster than any sentence.
+
+**If the live fleet is at 100%** there is no black to scratch. Use `?mock=1` for this
+shot and say "this is the mock fixture" once, or cut the section — an honest empty page
+beats a staged one.
 
 ---
 

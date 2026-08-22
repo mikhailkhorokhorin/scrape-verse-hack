@@ -2,11 +2,14 @@
 
 Separate prize (Daily Bugle track). No competition for developer hours.
 
-**Attach:** one screenshot of THE WATCH — the full grid, taken with `?capture=1` so no
-control bar is in frame. A short screen recording of the symbiote climbing a panel works
-better if you have one, but do not spend build time producing it.
+**Attach: the mid-scratch frame.** A taken panel with the black torn open under the
+cursor and the received values legible in the gap — that is the one image this project
+has, and it is what the post's second-to-last paragraph describes. A short screen
+recording of the same gesture is better if the video exists; a plain full-grid shot
+taken with `?capture=1` is the fallback.
 
-**Before posting:** replace `<REPO>` and `<VIDEO>` with the real links.
+**Before posting:** replace `<VIDEO>` with the real link. The repo and live-console
+links are already filled in.
 
 ---
 
@@ -83,6 +86,12 @@ better if you have one, but do not spend build time producing it.
 > itself while its behaviour is quietly replaced. That is precisely what a broken
 > scraper is, and it turned out to be the clearest way to draw it: you can read fleet
 > health across the whole page without reading a single number.
+>
+> And you can drag the black off. Hold the pointer down on a panel that has been taken
+> and the substance tears away under it, showing the values that actually came back:
+> `price: null` in red, `rating: "undefined"` in violet. Lift off and it closes over
+> again. Nothing there is written for the reveal — it is the same data the field chips
+> read, which is the only reason the gesture is worth anything.
 >
 > Live console: https://mikhailkhorokhorin.github.io/scrape-verse-hack/
 > Code: https://github.com/mikhailkhorokhorin/scrape-verse-hack
