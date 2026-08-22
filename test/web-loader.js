@@ -52,10 +52,32 @@ function exposeLexicals(source) {
   return '\n' + names.map((n) => 'globalThis.' + n + ' = ' + n + ';').join('\n');
 }
 
+function findModule(dir, wanted) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      const deeper = findModule(full, wanted);
+      if (deeper) return deeper;
+    } else if (entry.name === wanted) {
+      return full;
+    }
+  }
+  return null;
+}
+
+function modulePath(name) {
+  const wanted = name.endsWith('.js') ? name : name + '.js';
+  const direct = path.join(WEB_DIR, wanted);
+  if (fs.existsSync(direct)) return direct;
+  const found = findModule(WEB_DIR, path.basename(wanted));
+  if (!found) throw new Error('no web module named ' + wanted);
+  return found;
+}
+
 function loadWebModule(names, extra) {
   const context = vm.createContext(Object.assign({}, BASE_GLOBALS, extra || {}));
   for (const name of names) {
-    const file = path.join(WEB_DIR, name.endsWith('.js') ? name : name + '.js');
+    const file = modulePath(name);
     const source = fs.readFileSync(file, 'utf8');
     vm.runInContext(source + exposeLexicals(source), context, { filename: name });
   }
