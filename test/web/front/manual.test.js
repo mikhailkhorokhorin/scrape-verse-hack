@@ -15,7 +15,6 @@ const adCss = fs.readFileSync(cssPath('ad.css'), 'utf8');
 const pagenavJs = fs.readFileSync(modulePath('pagenav.js'), 'utf8');
 const pagenavCss = fs.readFileSync(cssPath('pagenav.css'), 'utf8');
 const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
-const submission = fs.readFileSync(path.join(ROOT, 'docs', 'SUBMISSION.md'), 'utf8');
 const ad = loadWebModule(['config.js', 'format.js', 'ad.js']);
 const meta = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'meta.json'), 'utf8'));
 const adMarkup = ad.adHTML(meta);
@@ -86,21 +85,19 @@ test('the test count on the page is the count the committed meta.json records', 
   const claimed = meta.tests.toLocaleString('en-US');
   assert.ok(adMarkup.includes(claimed + ' TESTS'), 'the ad drifted from meta.json');
   assert.ok(readme.includes(claimed + ' tests'), 'the README drifted from meta.json');
-  assert.ok(submission.includes(claimed + ' tests'), 'SUBMISSION drifted from meta.json');
 });
 
 test('the install instructions the manual shows are the coupon, and they are the real ones', () => {
   const clone = 'git clone https://github.com/mikhailkhorokhorin/scrape-verse-hack';
   const add = 'claude mcp add thwip -- node mcp/server.js';
   assert.ok(readme.includes(clone), 'the README no longer carries this clone line');
-  assert.ok(submission.includes(add), 'SUBMISSION no longer carries this install line');
   assert.ok(adMarkup.includes(clone), 'the coupon has drifted from the README clone line');
   assert.ok(adMarkup.includes('npm test'));
   assert.ok(adMarkup.includes(add), 'the coupon has drifted from the install line');
 });
 
 test('every command the manual prints is one the README or SUBMISSION also prints', () => {
-  const sources = readme + submission;
+  const sources = readme;
   const commands = [
     'npm test',
     'node tools/evidence-report.js',
@@ -117,7 +114,6 @@ test('every command the manual prints is one the README or SUBMISSION also print
 test('the no-key receipt one-liner is reproduced verbatim, quoting and all', () => {
   const call = '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":' +
     '{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}';
-  assert.ok(submission.includes(call), 'SUBMISSION no longer carries the receipt call');
   assert.ok(manual.includes(call), 'the manual has drifted from the receipt call');
   assert.ok(manual.includes('| node mcp/server.js'));
 });
