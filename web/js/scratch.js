@@ -125,20 +125,19 @@ function scratchStateFor(panel) {
   return panel.__scratch;
 }
 
-function scratchDig(state, point) {
-  state.holes.push(point);
+function scratchSet(state, point) {
+  if (point) state.holes.push(point);
+  else state.holes = [];
+  if (!point) state.timer = null;
   scratchRepaint(state);
-  state.panel.classList.add("is-scratched");
+  state.panel.classList.toggle("is-scratched", state.holes.length > 0);
 }
 
 function scratchRegrow(state) {
   if (state.timer) clearTimeout(state.timer);
-  state.timer = setTimeout(() => {
-    state.holes = [];
-    scratchRepaint(state);
-    state.panel.classList.remove("is-scratched");
-    state.timer = null;
-  }, SCRATCH_REGROW_MS);
+  state.timer = scratchReduced()
+    ? null
+    : setTimeout(() => scratchSet(state, null), SCRATCH_REGROW_MS);
 }
 
 function scratchMarkFound() {
@@ -173,7 +172,8 @@ function scratchTouch(panel, e, dragging) {
   const point = scratchPointIn(state, e.clientX, e.clientY);
   if (!point) return;
   if (dragging) state.dragged = true;
-  scratchDig(state, point);
+  const off = !dragging && scratchReduced() && state.holes.length > 0;
+  scratchSet(state, off ? null : point);
   scratchMarkFound();
   scratchRegrow(state);
 }
