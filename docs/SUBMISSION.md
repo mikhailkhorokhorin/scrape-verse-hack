@@ -22,8 +22,8 @@ repository nobody looked at.
 
 ## What a judge should do first
 
-Six things, in this order. The first three take under two minutes each; the last three are
-one command apiece.
+Seven things, in this order. The first three take under two minutes each; the last three
+are one command apiece.
 
 1. **Open the console** — https://mikhailkhorokhorin.github.io/scrape-verse-hack/. The
    opening sequence replays `inc_003`, a real recorded incident, not a mock. Scroll to
@@ -34,17 +34,23 @@ one command apiece.
    It prints every phase beside the unchanged `collector_id`, then the per-field
    verification table. No API key, no network, no credit.
 3. **`npm test`** — 1,149 tests, `node:test`, zero dependencies, offline, spends nothing.
-4. **Break one yourself, in the browser, in ten seconds.**
+4. **Or read the back page instead of this file.**
+   <https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html> carries the same
+   six steps as numbered tickets, all eight MCP tools with the free/paid split, and a
+   cut-out coupon whose three lines are the install. Its test count is read from
+   `data/meta.json` at page load rather than typed, and it prints cleanly if you would
+   rather hold it on paper.
+5. **Break one yourself, in the browser, in ten seconds.**
    https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1 opens the **CHAOS LAB**:
    press **BREAK BODEGA** and the substance climbs the panel; drag across it and the black
    tears away, showing the values that actually came back; press **RE-WEAVE** and the
    receipt prints. The fleet in that mode is synthetic and the page says so at the top —
    the mechanics running it are the same code the live console uses.
-5. **Print the evidence trail** — `node tools/evidence-report.js` prints, for each
+6. **Print the evidence trail** — `node tools/evidence-report.js` prints, for each
    incident, the collector id on both sides of the repair (asserted identical), the stage
    durations, the value every field held before and after, the verdict, and SHA-256
    digests recomputed from the committed files at call time.
-6. **Count what no human did** — `git log --author="thwip watch" --oneline | wc -l`, and
+7. **Count what no human did** — `git log --author="thwip watch" --oneline | wc -l`, and
    `node tools/numbers-audit.js` to recompute every number the console shows from the
    committed JSON, by a second implementation that shares no code with the console.
 

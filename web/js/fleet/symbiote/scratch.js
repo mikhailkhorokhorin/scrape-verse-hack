@@ -86,14 +86,12 @@ function scratchRepaint(state) {
   const top = h * (1 - state.spread);
   ctx.globalCompositeOperation = "source-over";
   ctx.clearRect(0, 0, w, h);
-  ctx.fillStyle = SCRATCH_INK;
-  ctx.fillRect(0, top, w, h - top);
+  symbioteFillBody(ctx, w, h, top, SCRATCH_INK);
   scratchCarve(ctx, state.holes);
   if (state.holes.length === 0) return;
   ctx.save();
   scratchClip(ctx, state.holes);
-  ctx.fillStyle = SCRATCH_INK;
-  ctx.fillRect(0, top, w, h - top);
+  symbioteFillBody(ctx, w, h, top, SCRATCH_INK);
   scratchPaintUnder(ctx, state.lines, w, h, top);
   ctx.restore();
 }
