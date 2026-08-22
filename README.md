@@ -491,10 +491,12 @@ node tools/numbers-audit.js                        # every number the console sh
 npm test                                           # the whole suite, offline
 ```
 
-As of this writing that is **25 bot commits** between 21 Aug 07:49 and 22 Aug 08:08 UTC,
-**100 scans** over **2,074 rows**, **4 incidents** and **4 heals**, with `unchangedIds`
-reading `true` — the collector IDs going into every repair are the IDs coming out. One of
-those four, `inc_004`, had no human in any phase.
+When this paragraph was written those commands printed **27 bot commits** since 21 Aug
+07:49, **106 scans** over **2,198 rows**, **4 incidents** and **4 heals**, with
+`unchangedIds` reading `true` — the collector IDs going into every repair are the IDs
+coming out. The first three of those numbers will be larger by the time you run it,
+because the cron has not stopped; that is the point of quoting the commands rather than
+the totals. One of the four incidents, `inc_004`, had no human in any phase.
 
 The bot commits are also readable in the browser, no clone required:
 [commits by `thwip watch`](https://github.com/mikhailkhorokhorin/scrape-verse-hack/commits/main?author=thwip%20watch).
