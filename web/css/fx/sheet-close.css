@@ -1,15 +1,13 @@
 .sheet.sheet--silenced{animation:none;opacity:0;}
 
 .modal.is-tearing > .sheet,
-.modal.is-tossing > .sheet{visibility:hidden;}
+.modal.is-porting > .sheet{visibility:hidden;}
 
 .modal.is-tearing,
-.modal.is-tossing{pointer-events:none;overflow:hidden;}
+.modal.is-porting{pointer-events:none;overflow:hidden;}
 
 .modal.is-tearing{animation:sheet-close-fade 660ms linear both;}
-.modal.is-tossing{animation:sheet-close-fade 1600ms linear both;}
-.modal.is-tossing .toss__basket,
-.modal.is-tossing .toss__front{animation-fill-mode:both;}
+.modal.is-porting{animation:sheet-close-fade 1200ms linear both;}
 
 @keyframes sheet-close-fade{
   0%{opacity:1;}
@@ -18,32 +16,25 @@
 }
 
 .tear,
-.toss{
+.portal{
   position:fixed;inset:0;z-index:3;pointer-events:none;overflow:hidden;
-}
-
-.tear__half,
-.toss__skin{
-  position:absolute;
-  top:0;left:0;
-  width:var(--sc-w);height:var(--sc-h);
-  margin:0;overflow:hidden;
-  contain:paint;
-}
-
-.tear__half > .sheet,
-.toss__skin > .sheet{
-  position:absolute;left:0;top:var(--sc-crop);
-  width:var(--sc-w);margin:0;
-  animation:none !important;opacity:1;
 }
 
 .tear__half{
   position:fixed;
   top:var(--sc-top);left:var(--sc-left);
+  width:var(--sc-w);height:var(--sc-h);
+  margin:0;overflow:hidden;
+  contain:paint;
   transform-origin:50% 50%;
   will-change:transform,opacity;
   backface-visibility:hidden;
+}
+
+.tear__half > .sheet{
+  position:absolute;left:0;top:var(--sc-crop);
+  width:var(--sc-w);margin:0;
+  animation:none !important;opacity:1;
 }
 
 .tear__half--left{animation:tear-drift-left 660ms cubic-bezier(.22,.68,.3,1) both;}
@@ -71,20 +62,20 @@
 
 @media(prefers-reduced-motion:reduce){
   .modal.is-tearing,
-  .modal.is-tossing,
+  .modal.is-porting,
   .tear__half{animation:none !important;}
   .tear{display:none;}
 }
 
 @media print{
   .modal.is-tearing,
-  .modal.is-tossing,
+  .modal.is-porting,
   .tear__half{animation:none !important;}
   .tear{display:none;}
 }
 
 .is-capture .modal.is-tearing,
-.is-capture .modal.is-tossing,
+.is-capture .modal.is-porting,
 .is-capture .tear__half{animation:none !important;}
 
 .is-capture .tear{display:none;}

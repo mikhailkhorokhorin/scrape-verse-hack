@@ -1,0 +1,93 @@
+.portal__mouth{
+  position:absolute;
+  top:50%;left:50%;
+  width:clamp(200px,34vmin,340px);height:clamp(200px,34vmin,340px);
+  margin:0;
+  transform-origin:50% 50%;
+  will-change:transform,opacity;
+  animation:portal-open 1200ms cubic-bezier(.3,.7,.25,1) both;
+}
+
+.portal__ring{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  overflow:visible;
+}
+
+.portal__glow{stroke:var(--purple);stroke-width:22;opacity:.55;filter:blur(9px);}
+.portal__edge{stroke:var(--cyan);stroke-width:6;}
+.portal__core{stroke:var(--pink);stroke-width:3;opacity:.8;}
+
+@keyframes portal-open{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.06,.04);}
+  12%{opacity:1;transform:translate(-50%,-50%) scale(1.06,.9);}
+  20%{opacity:1;transform:translate(-50%,-50%) scale(1,1);}
+  62%{opacity:1;transform:translate(-50%,-50%) scale(1,1);}
+  74%{opacity:1;transform:translate(-50%,-50%) scale(1.14,1.1);}
+  90%{opacity:1;transform:translate(-50%,-50%) scale(.62,.14);}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(.30,.01);}
+}
+
+.portal__skin{
+  position:fixed;
+  top:var(--sc-top);left:var(--sc-left);
+  width:var(--sc-w);height:var(--sc-h);
+  margin:0;overflow:hidden;
+  contain:paint;
+  z-index:2;
+  transform-origin:50% 50%;
+  will-change:transform,opacity;
+  backface-visibility:hidden;
+  animation:portal-suck 1200ms cubic-bezier(.55,.02,.7,.62) both;
+}
+
+.portal__skin > .sheet{
+  position:absolute;left:0;top:var(--sc-crop);
+  width:var(--sc-w);margin:0;
+  animation:none !important;opacity:1;
+}
+
+@keyframes portal-suck{
+  0%{
+    opacity:1;
+    transform:perspective(1100px) scale(var(--sc-fit)) translate3d(0,0,0) rotate(0);
+  }
+  16%{
+    opacity:1;
+    transform:perspective(1100px) scale(calc(var(--sc-fit) * 1.03)) translate3d(0,1%,0) rotate(0);
+  }
+  52%{
+    opacity:.94;
+    transform:perspective(1100px) scale(calc(var(--sc-fit) * .46))
+      translate3d(0,0,-300px)
+      rotate(calc(var(--portal-spin,24deg) * .5));
+  }
+  78%{
+    opacity:.7;
+    transform:perspective(1100px) scale(calc(var(--sc-fit) * .12))
+      translate3d(0,0,-760px)
+      rotate(var(--portal-spin,24deg));
+  }
+  88%,100%{
+    opacity:0;
+    transform:perspective(1100px) scale(calc(var(--sc-fit) * .01))
+      translate3d(0,0,-980px)
+      rotate(calc(var(--portal-spin,24deg) * 1.4));
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .portal__mouth,.portal__ring,.portal__skin{animation:none !important;}
+  .portal{display:none;}
+}
+
+@media print{
+  .portal__mouth,.portal__ring,.portal__skin{animation:none !important;}
+  .portal{display:none;}
+}
+
+.is-capture .portal__mouth,
+.is-capture .portal__ring,
+.is-capture .portal__skin{animation:none !important;}
+
+.is-capture .portal{display:none;}

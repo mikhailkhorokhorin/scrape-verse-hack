@@ -6,10 +6,10 @@ const fs = require('node:fs');
 const { cssPath, modulePath } = require('../../web-loader.js');
 
 const CSS = fs.readFileSync(cssPath('sheet-close.css'), 'utf8')
-  + '\n' + fs.readFileSync(cssPath('sheet-toss.css'), 'utf8');
+  + '\n' + fs.readFileSync(cssPath('sheet-portal.css'), 'utf8');
 const CORE = fs.readFileSync(modulePath('sheet-close.js'), 'utf8');
 const TEAR = fs.readFileSync(modulePath('sheet-tear.js'), 'utf8');
-const CRUMPLE = fs.readFileSync(modulePath('sheet-crumple.js'), 'utf8');
+const PORTAL = fs.readFileSync(modulePath('sheet-portal.js'), 'utf8');
 
 function keyframes(name) {
   const at = CSS.indexOf('@keyframes ' + name + '{');
@@ -29,7 +29,7 @@ test('the open animation is silenced with a class, never with inline styles', ()
   assert.doesNotMatch(CORE, /style\.animation = /,
     'an inline animation:none would freeze the next open of the shared modal');
   assert.doesNotMatch(CORE, /style\.opacity = /);
-  [TEAR, CRUMPLE].forEach((src) => {
+  [TEAR, PORTAL].forEach((src) => {
     assert.match(src, /sheetCloseSilence\(sheet\)/,
       'every close must silence the original sheet');
   });
@@ -46,6 +46,9 @@ test('a clone never inherits the silence, or it would sit still', () => {
   const tear = TEAR.slice(TEAR.indexOf('function sheetTearClose'));
   assert.ok(tear.indexOf('tearHalf(sheet') < tear.indexOf('sheetCloseSilence(sheet)'),
     'clones must be taken before the original is silenced');
+  const portal = PORTAL.slice(PORTAL.indexOf('function sheetPortalClose'));
+  assert.ok(portal.indexOf('sheetCloseSkin(sheet') < portal.indexOf('sheetCloseSilence(sheet)'),
+    'the portal must take its clone before the original goes quiet too');
 });
 
 test('each tear half travels most of the screen, not a few pixels', () => {
@@ -75,28 +78,24 @@ test('the tear halves visibly rotate apart as well as slide', () => {
   });
 });
 
-test('the crumpled ball shrinks to a ball and flies to the basket', () => {
-  const fly = keyframes('toss-fly');
-  const named = {
-    end: Number(CRUMPLE.match(/CRUMPLE_END = ([\d.]+)/)[1]),
-    mid: Number(CRUMPLE.match(/CRUMPLE_MID = ([\d.]+)/)[1]),
-  };
-  const scales = [...fly.matchAll(/var\(--sc-fit\) \* (?:\.(\d+)|var\(--toss-(end|mid)\))\)/g)]
-    .map((m) => (m[1] ? Number('.' + m[1]) : named[m[2]]));
-  assert.ok(Math.min(...scales) <= 0.1, 'it must end up a small ball');
-  assert.ok(scales.some((s) => s <= 0.35), 'it must crush early, before it flies');
-  assert.match(fly, /translate3d\(var\(--toss-x\),var\(--toss-y\),0\)/,
-    'the last frame must land on the measured basket position');
-  assert.match(fly, /var\(--toss-arc\)/, 'and arc on the way, not slide flat');
+test('the sheet is drawn inward and away, not just faded where it stands', () => {
+  const suck = keyframes('portal-suck');
+  const scales = [...suck.matchAll(/var\(--sc-fit\) \* ([\d.]+)\)/g)].map((m) => Number(m[1]));
+  assert.ok(scales.length >= 3, 'the pull needs several beats to read');
+  assert.ok(Math.min(...scales) <= 0.02, 'it must end as a point inside the mouth');
+  assert.ok(scales.some((s) => s > 0.05 && s < 0.8), 'and pass through the middle on the way');
+  assert.match(suck, /translate3d\(0,0,-\d+px\)/, 'it must recede in z, or it is a plain shrink');
+  assert.match(suck, /perspective\(\d+px\)/, 'depth without perspective renders flat');
 });
 
-test('the paper is actually crushed, not just scaled down uniformly', () => {
-  const crush = keyframes('toss-crush');
-  const pairs = [...crush.matchAll(/scale\(([\d.]+),([\d.]+)\)/g)];
-  assert.ok(pairs.length >= 4, 'a crumple needs several crush beats');
-  assert.ok(pairs.some(([, x, y]) => Math.abs(Number(x) - Number(y)) >= 0.08),
-    'x and y must differ, or it is a shrink and not a crumple');
-  assert.match(crush, /skew\(-?[\d.]+deg,-?[\d.]+deg\)/, 'and skew, so the sheet buckles');
+test('the pull turns the sheet as it goes, by an angle drawn per close', () => {
+  const suck = keyframes('portal-suck');
+  assert.match(suck, /rotate\(var\(--portal-spin/, 'the sheet must twist into the mouth');
+  assert.match(PORTAL, /--portal-spin/, 'and the angle comes from js');
+  assert.match(PORTAL, /sheetCloseRand\(PORTAL_SPIN_LO, PORTAL_SPIN_HI\)/,
+    'a fixed angle would make every close identical');
+  const lo = Number(PORTAL.match(/PORTAL_SPIN_LO = (\d+)/)[1]);
+  assert.ok(lo >= 10, 'a spin under 10deg is invisible against a second of motion');
 });
 
 test('an oversized sheet is scaled down so the whole close fits the viewport', () => {
@@ -116,16 +115,17 @@ test('the stage is centred on the viewport, not left at the sheet scroll offset'
 
 test('both closes stay inside the fast budget', () => {
   assert.match(TEAR, /const TEAR_MS = (\d+)/);
-  assert.match(CRUMPLE, /const CRUMPLE_MS = (\d+)/);
+  assert.match(PORTAL, /const PORTAL_MS = (\d+)/);
   const tearMs = Number(TEAR.match(/const TEAR_MS = (\d+)/)[1]);
-  const tossMs = Number(CRUMPLE.match(/const CRUMPLE_MS = (\d+)/)[1]);
+  const portalMs = Number(PORTAL.match(/const PORTAL_MS = (\d+)/)[1]);
   assert.ok(tearMs >= 400 && tearMs <= 760, tearMs + 'ms is outside the 500-700ms feel');
-  assert.ok(tossMs >= 400 && tossMs <= 1600, tossMs + 'ms leaves no room to read the crush');
+  assert.ok(portalMs >= 1100 && portalMs <= 1300,
+    portalMs + 'ms is outside the 1100-1300ms the pull and the collapse need');
 });
 
 test('every animated part is promoted and animates transform or opacity only', () => {
   const rules = [...CSS.matchAll(/(?:^|\n)([^\n{}]+)\{([^}]*)\}/g)];
-  ['.tear__half', '.toss__ball', '.toss__skin', '.toss__basket'].forEach((sel) => {
+  ['.tear__half', '.portal__skin', '.portal__mouth'].forEach((sel) => {
     const blocks = rules
       .filter((m) => m[1].split(',').some((one) => one.trim() === sel))
       .map((m) => m[2]);
@@ -133,103 +133,60 @@ test('every animated part is promoted and animates transform or opacity only', (
     assert.ok(blocks.some((b) => /will-change:(transform|opacity|transform,opacity)/.test(b)),
       sel + ' must be promoted');
   });
-  ['tear-drift-left', 'tear-drift-right', 'toss-fly', 'toss-crush'].forEach((name) => {
+  ['tear-drift-left', 'tear-drift-right', 'portal-suck', 'portal-open'].forEach((name) => {
     const block = keyframes(name);
     assert.doesNotMatch(block, /\n\s*(top|left|width|height|margin):/,
       name + ' must not animate layout properties');
   });
 });
 
-test('the toss offset is divided by the scale it will be multiplied by', () => {
-  const fn = CRUMPLE.slice(CRUMPLE.indexOf('function tossPath'));
-  const body = fn.slice(0, fn.indexOf('\n}'));
-  assert.match(body, /const end = fit \* CRUMPLE_END/,
-    'scale() precedes translate3d(), so the browser scales the offset too');
-  assert.match(body, /dx \/ end/, 'undo that scaling or the ball stops short of the basket');
-  assert.match(body, /dy \/ end/);
-  assert.match(body, /--toss-mx/, 'the mid keyframe has its own scale and needs its own offset');
-  const fly = keyframes('toss-fly');
-  assert.match(fly, /var\(--sc-fit\) \* var\(--toss-end\)/,
-    'the final scale in toss-fly must come from the shared constant');
-  assert.match(fly, /var\(--sc-fit\) \* var\(--toss-mid\)/,
-    'the mid scale in toss-fly must come from the shared constant');
-  assert.match(CRUMPLE, /"--toss-end", String\(CRUMPLE_END\)/,
-    'the css reads the same CRUMPLE_END the js divides by');
-  assert.match(CRUMPLE, /"--toss-mid", String\(CRUMPLE_MID\)/);
-});
-
-test('every class the crumple builds has a rule, so no layer is born invisible', () => {
-  const built = [...CRUMPLE.matchAll(/className = "([^"]+)"/g)]
+test('every class the portal builds has a rule, so no layer is born invisible', () => {
+  const built = [...PORTAL.matchAll(/class(?:Name = |=)"([^"]+)"/g)]
     .flatMap((m) => m[1].split(' '))
-    .filter((c) => c.startsWith('toss__'))
-    .map((c) => c.replace(/--\d*$/, ''));
-  assert.ok(built.length > 0, 'the crumple must build something');
+    .filter((c) => c.startsWith('portal__'));
+  assert.ok(built.length > 0, 'the portal must build something');
   [...new Set(built)].forEach((cls) => {
     const at = CSS.indexOf('.' + cls + '{');
     assert.ok(at > -1,
       '.' + cls + ' is created in js but owns no css rule, so it hangs in the dom invisible');
     const block = CSS.slice(at, CSS.indexOf('}', at));
-    assert.match(block, /position|animation|background/,
+    assert.match(block, /position|animation|stroke/,
       '.' + cls + ' has a rule but nothing that makes it show or move');
   });
 });
 
-test('the corners fold in one at a time rather than all at once', () => {
-  const delays = [0, 1, 2, 3].map((i) => {
-    const at = CSS.indexOf('.toss__fold--' + i + '{');
-    assert.ok(at > -1, 'missing rule for fold ' + i);
-    const block = CSS.slice(at, CSS.indexOf('}', at));
-    const ms = block.match(/animation-delay:calc\((\d+)ms/);
-    assert.ok(ms, 'fold ' + i + ' needs its own delay, or the corners move together');
-    return Number(ms[1]);
+test('the mouth is a real ring in front of nothing, not a filled disc', () => {
+  ['portal__glow', 'portal__edge', 'portal__core'].forEach((cls) => {
+    assert.match(PORTAL, new RegExp('class="' + cls + '"[^>]*fill="none"'),
+      cls + ' must be a stroked outline, or the portal reads as a solid blob');
   });
-  delays.slice(1).forEach((d, i) => {
-    assert.ok(d > delays[i], 'fold ' + (i + 1) + ' must start after fold ' + i);
-  });
-  assert.ok(delays[3] < 640, 'the last corner must still land inside the 46% crush window');
-});
-
-test('each fold is a quarter of the sheet hinged toward the middle', () => {
-  const base = CSS.slice(CSS.indexOf('.toss__fold{'), CSS.indexOf('}', CSS.indexOf('.toss__fold{')));
-  assert.match(base, /width:50%;height:50%/, 'a fold is one corner quarter, not the whole sheet');
-  assert.match(base, /position:absolute/);
-  const origins = [0, 1, 2, 3].map((i) => {
-    const at = CSS.indexOf('.toss__fold--' + i + '{');
-    return (CSS.slice(at, CSS.indexOf('}', at)).match(/transform-origin:([^;]+)/) || [])[1];
-  });
-  assert.equal(new Set(origins).size, 4, 'each corner hinges on its own inward edge');
-  const fold = keyframes('toss-fold-in');
-  assert.match(fold, /rotate3d\(/, 'the corner turns over in 3d, it does not just fade');
-  assert.match(fold, /var\(--fr/, 'and the angle is jittered per close from js');
-  assert.match(CRUMPLE, /"--fr"/);
-});
-
-test('the folds and the facet shading move only transform and opacity', () => {
-  ['toss-fold-in', 'toss-facet', 'toss-back'].forEach((name) => {
-    const block = keyframes(name);
-    assert.doesNotMatch(block, /\n\s*(top|left|width|height|margin|background):/,
-      name + ' must not animate a paint or layout property');
-  });
-  const base = CSS.slice(CSS.indexOf('.toss__fold{'), CSS.indexOf('}', CSS.indexOf('.toss__fold{')));
-  assert.match(base, /will-change:transform,opacity/, 'the folds need their own layer');
-});
-
-test('the wad silhouette has sharp dents, not an even rounded blob', () => {
-  const fn = CRUMPLE.slice(CRUMPLE.indexOf('function tossClip'));
-  const body = fn.slice(0, fn.indexOf('\n}'));
-  assert.match(body, /dents\.has\(i\)/, 'some points must pull in much closer than the rest');
-  const radii = [...body.matchAll(/sheetCloseRand\((\d+), (\d+)\)/g)]
-    .map((m) => [Number(m[1]), Number(m[2])]);
-  assert.equal(radii.length, 2, 'a dent radius and a hull radius');
-  const [dent, hull] = radii[0][0] < radii[1][0] ? [radii[0], radii[1]] : [radii[1], radii[0]];
-  assert.ok(hull[0] - dent[1] >= 10,
-    'the dent must bite well inside the hull, or the outline still reads round');
-});
-
-test('the basket is on screen, anchored to the viewport corner', () => {
-  const at = CSS.indexOf('.toss__basket{');
+  const at = CSS.indexOf('.portal__mouth{');
   const block = CSS.slice(at, CSS.indexOf('}', at));
-  assert.match(block, /position:absolute/);
-  assert.match(block, /right:clamp\(/, 'pinned to the right edge');
-  assert.match(block, /bottom:clamp\(/, 'and the bottom, so it never falls below the fold');
+  assert.match(block, /top:50%;left:50%/, 'the mouth sits where the sheet is pulled to');
+  assert.match(block, /transform-origin:50% 50%/, 'so the collapse closes on its own centre');
+});
+
+test('the mouth and the sheet share one clock, so the pull lands as the ring shuts', () => {
+  const at = CSS.indexOf('.portal__mouth{');
+  const mouth = CSS.slice(at, CSS.indexOf('}', at));
+  const skinAt = CSS.indexOf('.portal__skin{');
+  const skin = CSS.slice(skinAt, CSS.indexOf('}', skinAt));
+  const ms = (block) => Number((block.match(/animation:[^;]*?(\d+)ms/) || [])[1]);
+  assert.equal(ms(mouth), ms(skin),
+    'a mismatch would leave a ring hanging after the sheet is gone');
+  assert.equal(ms(mouth), Number(PORTAL.match(/PORTAL_MS = (\d+)/)[1]),
+    'and the js timeout must match, or cleanup cuts the animation short');
+});
+
+test('the sheet paints over the ring while it is still outside the mouth', () => {
+  const skinAt = CSS.indexOf('.portal__skin{');
+  const skin = CSS.slice(skinAt, CSS.indexOf('}', skinAt));
+  assert.match(skin, /z-index:\d+/, 'without a z-index the ring could cover the sheet');
+  assert.match(skin, /backface-visibility:hidden/, 'the 3d pull needs the back face suppressed');
+});
+
+test('the ring is one shape only, so the close stays cheap to paint', () => {
+  const built = [...PORTAL.matchAll(/<ellipse class="([^"]+)"/g)].map((m) => m[1]);
+  assert.ok(built.length <= 3, 'a portal is a ring, not a particle system');
+  assert.equal(new Set(built).size, built.length, 'each band of the ring is its own class');
 });

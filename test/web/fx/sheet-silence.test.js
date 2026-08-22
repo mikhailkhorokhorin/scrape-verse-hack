@@ -6,7 +6,7 @@ const fs = require('node:fs');
 const { cssPath, modulePath, loadWebModule } = require('../../web-loader.js');
 
 const CSS = fs.readFileSync(cssPath('sheet-close.css'), 'utf8');
-const SOURCES = ['sheet-close.js', 'sheet-tear.js', 'sheet-wrap.js', 'sheet-crumple.js']
+const SOURCES = ['sheet-close.js', 'sheet-tear.js', 'sheet-wrap.js', 'sheet-portal.js']
   .map((name) => fs.readFileSync(modulePath(name), 'utf8'));
 
 function fakeEl() {

@@ -7,18 +7,18 @@ const { cssPath, modulePath } = require('../../web-loader.js');
 
 const CORE = fs.readFileSync(modulePath('sheet-close.js'), 'utf8');
 const TEAR = fs.readFileSync(modulePath('sheet-tear.js'), 'utf8');
-const CRUMPLE = fs.readFileSync(modulePath('sheet-crumple.js'), 'utf8');
+const PORTAL = fs.readFileSync(modulePath('sheet-portal.js'), 'utf8');
 const CSS = fs.readFileSync(cssPath('sheet-close.css'), 'utf8')
-  + '\n' + fs.readFileSync(cssPath('sheet-toss.css'), 'utf8');
+  + '\n' + fs.readFileSync(cssPath('sheet-portal.css'), 'utf8');
 const PANELCUT = fs.readFileSync(modulePath('panelcut.js'), 'utf8');
 const SHEET = fs.readFileSync(modulePath('sheet.js'), 'utf8');
 
 test('each spider claims its own close, and no two spiders share one', () => {
   assert.match(TEAR, /sheetCloseRegister\("ATLAS", sheetTearClose\)/,
     'the map tears in half');
-  assert.match(CRUMPLE, /sheetCloseRegister\("BODEGA", sheetCrumpleClose\)/,
-    'the receipt gets binned');
-  const codes = [TEAR, CRUMPLE]
+  assert.match(PORTAL, /sheetCloseRegister\("BODEGA", sheetPortalClose\)/,
+    'the receipt is swallowed by a portal');
+  const codes = [TEAR, PORTAL]
     .map((src) => (src.match(/sheetCloseRegister\("([A-Z]+)"/) || [])[1]);
   assert.equal(new Set(codes).size, codes.length, 'a shared code silently overwrites a close');
 });
@@ -96,79 +96,63 @@ test('the halves drift apart, spin and dissipate rather than just vanishing', ()
   assert.match(TEAR, /--tear-spin/, 'and the spin is randomised per half');
 });
 
-test('the crumple crushes before it flies, so it reads as paper not as a shrink', () => {
-  const frames = CSS.slice(CSS.indexOf('@keyframes toss-crush'));
+test('the sheet is pulled into the portal, not merely faded out', () => {
+  const frames = CSS.slice(CSS.indexOf('@keyframes portal-suck'));
   const body = frames.slice(0, frames.indexOf('}\n\n'));
-  assert.match(body, /skew\(/, 'skew is what sells the crush');
-  const scales = body.match(/scale\(([^)]*)\)/g) || [];
-  assert.ok(scales.length >= 4, 'a single scale step is a shrink, not a crumple');
-  assert.match(CSS, /\.toss__crease\{/, 'and creases are drawn over the crushed paper');
+  assert.match(body, /perspective\(/, 'the pull needs depth, or it reads as a flat shrink');
+  assert.match(body, /translate3d\(0,0,-\d+px\)/, 'it must travel away from the viewer');
+  assert.match(body, /var\(--portal-spin/, 'and turn as it goes');
+  assert.match(body, /opacity:0/, 'and be gone by the end');
 });
 
-test('the ball flies out at size and shrinks away into the basket', () => {
-  const frames = CSS.slice(CSS.indexOf('@keyframes toss-fly'));
+test('the sheet shrinks all the way to nothing rather than stopping short', () => {
+  const frames = CSS.slice(CSS.indexOf('@keyframes portal-suck'));
   const body = frames.slice(0, frames.indexOf('}\n\n'));
-  const named = { end: Number(CRUMPLE.match(/CRUMPLE_END = ([\d.]+)/)[1]),
-    mid: Number(CRUMPLE.match(/CRUMPLE_MID = ([\d.]+)/)[1]) };
-  const steps = [...body.matchAll(/var\(--sc-fit\) \* (?:(\.\d+)|var\(--toss-(end|mid)\))\)/g)]
-    .map((m) => (m[1] ? Number(m[1]) : named[m[2]]));
-  assert.ok(steps.length >= 2, 'the ball must change size on the way');
-  assert.ok(steps[0] > steps[steps.length - 1],
-    'it must still be big when it leaves and small when it lands');
-  assert.ok(steps[steps.length - 1] < 0.15, 'it has to end small enough to be inside the can');
-  assert.match(body, /var\(--toss-arc\)/, 'and it arcs rather than sliding flat');
+  const steps = [...body.matchAll(/var\(--sc-fit\) \* ([\d.]+)\)/g)].map((m) => Number(m[1]));
+  assert.ok(steps.length >= 3, 'a single scale step is a cut, not a pull');
+  assert.ok(steps[0] > steps[steps.length - 1], 'it must start big and end small');
+  assert.ok(steps[steps.length - 1] <= 0.02, 'it has to vanish into the mouth, not hover near it');
 });
 
-test('the basket is drawn in the house line-art register, on the right', () => {
-  assert.match(CRUMPLE, /function basketSVG/);
-  assert.match(CRUMPLE, /<svg class="toss__basket"/);
-  assert.match(CSS, /\.toss__can,\s*\n\.toss__rim\{stroke:var\(--paper\);stroke-width:5;\}/,
-    'thick paper strokes, not a filled shape');
-  assert.match(CSS, /\.toss__rib\{stroke:var\(--dim\)/, 'ribs in the dim ink');
-  const rule = CSS.slice(CSS.indexOf('.toss__basket{'), CSS.indexOf('.toss__can'));
-  assert.match(rule, /right:clamp/, 'it stands on the right of the frame');
+test('the ring is drawn in the house palette, never in invented colours', () => {
+  assert.match(PORTAL, /function portalRingSVG/);
+  assert.match(PORTAL, /<svg class="portal__ring"/);
+  ['.portal__glow', '.portal__edge', '.portal__core'].forEach((sel) => {
+    const at = CSS.indexOf(sel + '{');
+    assert.ok(at > -1, sel + ' needs a rule');
+    assert.match(CSS.slice(at, CSS.indexOf('}', at)), /stroke:var\(--(purple|cyan|pink)\)/,
+      sel + ' must take its colour from a token');
+  });
+  const hexes = CSS.slice(CSS.indexOf('.portal__glow')).match(/#[0-9a-fA-F]{3,8}/g) || [];
+  assert.equal(hexes.length, 0, 'a raw hex here would drift from the rest of the site');
 });
 
-test('the basket arrives with the toss and reacts when the ball lands', () => {
-  const frames = CSS.slice(CSS.indexOf('@keyframes toss-basket-in'));
+test('the ring opens before the pull and collapses only after it', () => {
+  const frames = CSS.slice(CSS.indexOf('@keyframes portal-open'));
   const body = frames.slice(0, frames.indexOf('}\n\n'));
-  assert.match(body, /0%\{opacity:0/, 'it is not on the page until the toss');
-  assert.match(body, /90%\{[^}]*scale\(1\.06,\.94\)/, 'it takes the hit just after touchdown');
-  assert.match(body, /100%\{opacity:1/, 'it must still be there when the ball drops in');
-  assert.doesNotMatch(body, /100%\{opacity:0/,
-    'fading at 100% would empty the scene before the landing reads');
+  assert.match(body, /0%\{opacity:0/, 'there is no ring on the page until the close');
+  assert.match(body, /100%\{opacity:0/, 'and none left when it is over');
+  const open = Number((body.match(/\n\s*(\d+)%\{opacity:1/) || [])[1]);
+  assert.ok(open > 0 && open <= 20, 'the mouth must be open early, before the sheet arrives');
+  const shut = [...body.matchAll(/\n\s*(\d+)%\{[^}]*scale\(([\d.]+),([\d.]+)\)/g)]
+    .filter((m) => Number(m[3]) < Number(m[2]) / 2)
+    .map((m) => Number(m[1]))
+    .filter((at) => at > 0);
+  assert.ok(shut.length > 0 && Math.min(...shut) >= 80,
+    'the collapse must wait until the sheet is already inside');
 });
 
-test('the ball is clipped to a randomised wad, never a tidy rectangle or circle', () => {
-  const rule = CSS.slice(CSS.indexOf('.toss__ball{'), CSS.indexOf('@keyframes toss-crush'));
-  assert.match(rule, /clip-path:polygon\(/, 'a crumple needs a silhouette');
-  assert.doesNotMatch(rule, /border-radius:50%/, 'a perfect circle reads as a toy ball, not paper');
-  const points = rule.match(/var\(--tc\d+/g) || [];
-  assert.ok(points.length >= 8, 'the silhouette needs enough points to look crushed');
-  assert.match(CRUMPLE, /--tc/, 'and the points are jittered from js per close');
-});
-
-test('the ball sinks behind the basket front wall instead of fading mid-air', () => {
-  assert.match(CRUMPLE, /class="toss__front"/, 'the front wall is its own element');
-  const front = CSS.slice(CSS.indexOf('.toss__front{'), CSS.indexOf('.toss__can'));
-  const ballRule = CSS.slice(CSS.indexOf('.toss__ball{'), CSS.indexOf('@keyframes toss-crush'));
-  const frontZ = Number((front.match(/z-index:(\d+)/) || [])[1]);
-  const ballZ = Number((ballRule.match(/z-index:(\d+)/) || [])[1]);
-  assert.ok(frontZ > ballZ, 'the wall must paint over the ball');
-  assert.match(CSS, /var\(--toss-dip\)/, 'and the ball dips below the rim at the very end');
-  assert.match(CRUMPLE, /--toss-dip/, 'with the dip measured from the real basket box');
-});
-
-test('the creases flash in with the crush instead of easing in linearly', () => {
-  const frames = CSS.slice(CSS.indexOf('@keyframes toss-crease'));
+test('the collapse squeezes the ring to a line, it does not just fade', () => {
+  const frames = CSS.slice(CSS.indexOf('@keyframes portal-open'));
   const body = frames.slice(0, frames.indexOf('}\n\n'));
-  assert.match(body, /14%\{opacity:0/, 'unlit until the paper actually buckles');
-  assert.match(body, /22%\{opacity:1/, 'then a hard flash, the way a fold catches light');
-  assert.doesNotMatch(body, /100%\{opacity:1;\}/, 'and it settles with the wad, not at full glare');
+  const last = [...body.matchAll(/scale\((\.\d+),(\.\d+)\)/g)].pop();
+  assert.ok(last, 'the ring needs a final squeeze');
+  assert.ok(Number(last[2]) < Number(last[1]) / 2,
+    'height must close much faster than width, or it reads as a shrink not a slit');
 });
 
 test('both closes take the props away again, so nothing is left on the page', () => {
-  [['tear', TEAR], ['toss', CRUMPLE]].forEach(([name, src]) => {
+  [['tear', TEAR], ['portal', PORTAL]].forEach(([name, src]) => {
     const at = src.indexOf('cleanup:');
     assert.ok(at > -1, name + ' must hand back a cleanup');
     const body = src.slice(at, src.indexOf('},', at));
@@ -188,7 +172,7 @@ test('a close that is interrupted by a reopen tidies up first', () => {
 });
 
 test('the clones are inert to assistive tech and cannot take a tab stop', () => {
-  [['tear', TEAR], ['toss', CRUMPLE]].forEach(([name, src]) => {
+  [['tear', TEAR], ['portal', PORTAL]].forEach(([name, src]) => {
     assert.match(src + CORE, /setAttribute\("aria-hidden", "true"\)/, name + ' is decoration');
     assert.match(src + CORE, /tabindex", "-1"/, name + ' must not hold a focus ring');
     assert.match(src + CORE, /removeAttribute\("id"\)/, name + ' must not duplicate an id');
@@ -196,7 +180,7 @@ test('the clones are inert to assistive tech and cannot take a tab stop', () => 
 });
 
 test('the real sheet is hidden while its stunt double plays', () => {
-  assert.match(CSS, /\.modal\.is-tearing > \.sheet,\s*\n\.modal\.is-tossing > \.sheet\{visibility:hidden;\}/,
+  assert.match(CSS, /\.modal\.is-tearing > \.sheet,\s*\n\.modal\.is-porting > \.sheet\{visibility:hidden;\}/,
     'a descendant selector would blank the clones too, leaving empty shapes to animate');
 });
 
@@ -206,13 +190,13 @@ test('nothing in either close loops, so a close cannot cost steady frames', () =
 
 test('everything that moves is promoted, and only transform and opacity move', () => {
   const rules = [...CSS.matchAll(/(?:^|\n)([^\n{}]+)\{([^}]*)\}/g)];
-  ['.tear__half', '.toss__ball', '.toss__skin', '.toss__basket'].forEach((sel) => {
+  ['.tear__half', '.portal__skin', '.portal__mouth'].forEach((sel) => {
     const owned = rules
       .filter((m) => m[1].split(',').some((one) => one.trim() === sel))
       .map((m) => m[2]);
     assert.ok(owned.some((b) => /will-change:/.test(b)), sel + ' needs its own layer');
   });
-  ['tear-drift-left', 'tear-drift-right', 'toss-fly', 'toss-crush'].forEach((name) => {
+  ['tear-drift-left', 'tear-drift-right', 'portal-suck', 'portal-open'].forEach((name) => {
     const frames = CSS.slice(CSS.indexOf('@keyframes ' + name));
     const body = frames.slice(0, frames.indexOf('\n}'));
     assert.doesNotMatch(body, /(?:^|[^-])(?:width|height|margin|top|left):/,
@@ -222,14 +206,14 @@ test('everything that moves is promoted, and only transform and opacity move', (
 
 test('no close outlives the users patience', () => {
   const tearMs = Number(TEAR.match(/TEAR_MS = (\d+)/)[1]);
-  const tossMs = Number(CRUMPLE.match(/CRUMPLE_MS = (\d+)/)[1]);
+  const portalMs = Number(PORTAL.match(/PORTAL_MS = (\d+)/)[1]);
   assert.ok(tearMs <= 700, 'a slow close is a bad close');
-  assert.ok(tossMs <= 1600, 'the crush needs room to read as paper, but not a beat longer');
+  assert.ok(portalMs <= 1300, 'the pull needs room to read, but not a beat longer');
 });
 
-test('the stages are fixed and clipped, so a flying ball cannot widen the page', () => {
+test('the stages are fixed and clipped, so the pull cannot widen the page', () => {
   const rule = CSS.slice(CSS.indexOf('.tear,'), CSS.indexOf('.tear__half,'));
   assert.match(rule, /position:fixed/, 'fixed keeps it out of the flow');
-  assert.match(rule, /overflow:hidden/, 'and clipping keeps the toss inside the viewport');
-  assert.match(CSS, /\.modal\.is-tearing,\s*\n\.modal\.is-tossing\{pointer-events:none;overflow:hidden;\}/);
+  assert.match(rule, /overflow:hidden/, 'and clipping keeps the pull inside the viewport');
+  assert.match(CSS, /\.modal\.is-tearing,\s*\n\.modal\.is-porting\{pointer-events:none;overflow:hidden;\}/);
 });

@@ -8,9 +8,9 @@ const { cssPath, modulePath } = require('../../web-loader.js');
 
 const CORE = fs.readFileSync(modulePath('sheet-close.js'), 'utf8');
 const TEAR = fs.readFileSync(modulePath('sheet-tear.js'), 'utf8');
-const CRUMPLE = fs.readFileSync(modulePath('sheet-crumple.js'), 'utf8');
+const PORTAL = fs.readFileSync(modulePath('sheet-portal.js'), 'utf8');
 const CSS = fs.readFileSync(cssPath('sheet-close.css'), 'utf8')
-  + '\n' + fs.readFileSync(cssPath('sheet-toss.css'), 'utf8');
+  + '\n' + fs.readFileSync(cssPath('sheet-portal.css'), 'utf8');
 const PANELCUT = fs.readFileSync(modulePath('panelcut.js'), 'utf8');
 const SHEET = fs.readFileSync(modulePath('sheet.js'), 'utf8');
 const ROOT = path.join(__dirname, '..', '..', '..');
@@ -20,19 +20,19 @@ test('reduced motion, capture and print each kill both closes outright', () => {
   ['@media(prefers-reduced-motion:reduce)', '@media print'].forEach((guard) => {
     const blocks = [...CSS.matchAll(new RegExp(guard.replace(/[(){}]/g, '\\$&') + '\\{', 'g'))]
       .map((m) => CSS.slice(m.index).slice(0, CSS.slice(m.index).indexOf('\n}\n')));
-    assert.equal(blocks.length, 2, guard + ' must guard the tear file and the toss file');
+    assert.equal(blocks.length, 2, guard + ' must guard the tear file and the portal file');
     blocks.forEach((body) => {
       assert.match(body, /animation:none !important/, guard + ' must stop the motion');
       assert.match(body, /display:none/, guard + ' must hide the props entirely');
     });
     const covered = blocks.join('\n');
-    ['.tear', '.toss'].forEach((prop) => {
+    ['.tear', '.portal'].forEach((prop) => {
       assert.ok(new RegExp('\\' + prop + '\\{display:none;\\}').test(covered),
         prop + ' must not even appear under ' + guard);
     });
   });
   assert.match(CSS, /\.is-capture \.tear\{display:none;\}/);
-  assert.match(CSS, /\.is-capture \.toss\{display:none;\}/);
+  assert.match(CSS, /\.is-capture \.portal\{display:none;\}/);
 });
 
 test('a quiet close still hides the modal, because the guard runs before the routing', () => {
@@ -57,20 +57,20 @@ test('closing still frees focus and inert before any of this plays', () => {
 
 test('the page loads every part of the treatment', () => {
   assert.match(INDEX, /css\/fx\/sheet-close\.css/);
-  assert.match(INDEX, /css\/fx\/sheet-toss\.css/,
-    'the toss half of the close lives in its own sheet and must be linked too');
+  assert.match(INDEX, /css\/fx\/sheet-portal\.css/,
+    'the portal half of the close lives in its own sheet and must be linked too');
   assert.match(INDEX, /js\/fx\/sheet-close\.js/);
   assert.match(INDEX, /js\/fx\/sheet-tear\.js/);
-  assert.match(INDEX, /js\/fx\/sheet-crumple\.js/);
+  assert.match(INDEX, /js\/fx\/sheet-portal\.js/);
   const core = INDEX.indexOf('js/fx/sheet-close.js');
-  ['sheet-tear.js', 'sheet-crumple.js'].forEach((f) => {
+  ['sheet-tear.js', 'sheet-portal.js'].forEach((f) => {
     assert.ok(core < INDEX.indexOf('js/fx/' + f),
       f + ' calls sheetCloseRegister, so the registry must exist first');
   });
 });
 
 test('the close sources carry no comments, the way the rest of the codebase does not', () => {
-  [CORE, TEAR, CRUMPLE].forEach((src) => {
+  [CORE, TEAR, PORTAL].forEach((src) => {
     src.split('\n').forEach((line) => {
       assert.doesNotMatch(line, /(^|\s)\/\//, 'no line comments');
     });
