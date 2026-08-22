@@ -70,10 +70,10 @@ test('the note counts only wild incidents and names their sites', () => {
   assert.ok(!html.includes('mikhailkhorokhorin'));
 });
 
-test('the note says break in the singular for one wild incident', () => {
+test('one wild incident still takes the partitive plural on the noun', () => {
   const html = load(FLEET, [{ who: 'ATLAS' }, { who: 'BODEGA' }]).wildCountHTML();
-  assert.ok(html.includes('break '));
-  assert.ok(!html.includes('breaks'));
+  assert.match(html, /1<\/b> of these breaks happened/);
+  assert.ok(!html.includes('of these break '));
 });
 
 test('the note disappears when every incident was on our own page', () => {
@@ -87,4 +87,28 @@ test('the note disappears when there are no incidents at all', () => {
 test('a site is named once even when it broke repeatedly', () => {
   const html = load(FLEET, [{ who: 'ATLAS' }, { who: 'ATLAS' }]).wildCountHTML();
   assert.equal(plain(html.match(/books\.toscrape\.com/g)).length, 1);
+});
+
+test('one wild break reads in the singular all the way through the sentence', () => {
+  const ctx = load(FLEET, [{ who: 'KESTREL' }]);
+  const html = ctx.wildCountHTML();
+  assert.match(html, /1<\/b> of these breaks happened on a site we do not control/);
+  assert.match(html, /Nobody staged it, and the re-weave closed it the same way\./);
+  assert.doesNotMatch(html, /of these break /);
+  assert.doesNotMatch(html, /staged them/);
+});
+
+test('several wild breaks keep the plural pronouns', () => {
+  const ctx = load(FLEET, [{ who: 'KESTREL' }, { who: 'ATLAS' }]);
+  const html = ctx.wildCountHTML();
+  assert.match(html, /2<\/b> of these breaks happened on a site we do not control/);
+  assert.match(html, /Nobody staged them, and the re-weave closed them the same way\./);
+  assert.doesNotMatch(html, /staged it,/);
+});
+
+test('the wild note names each site once and says nothing when nothing is wild', () => {
+  const ctx = load(FLEET, [{ who: 'KESTREL' }, { who: 'KESTREL' }]);
+  const html = ctx.wildCountHTML();
+  assert.equal(html.match(/news\.ycombinator\.com/g).length, 1);
+  assert.equal(load(FLEET, [{ who: 'BODEGA' }]).wildCountHTML(), '');
 });

@@ -27,6 +27,30 @@ const MOCK_RAW_INCIDENTS = [
       { stage: "REWEAVING", ts: mockStamp(58000) },
       { stage: "VERIFIED", ts: mockStamp(884000) },
     ],
+    verification: {
+      ran: true,
+      checked: 2,
+      passed: 2,
+      verdict: "EVERY_FIELD_BACK",
+      checks: [
+        {
+          field: "price",
+          from: "dead",
+          to: "live",
+          received_before: null,
+          received_after: "$38.00",
+          passed: true,
+        },
+        {
+          field: "rating",
+          from: "infected",
+          to: "live",
+          received_before: "undefined",
+          received_after: "4.6",
+          passed: true,
+        },
+      ],
+    },
   },
 ];
 

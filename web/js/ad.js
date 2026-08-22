@@ -7,6 +7,8 @@ const AD_FREE_TOOLS = [
   ["spider_history", "one Spider's whole decline, run by run, post-heal runs marked"],
   ["incident_log", "what broke, which strain, Integrity before and after the heal"],
   ["heal_receipt", "every phase of one repair, timestamped, on an unchanged collector id"],
+  ["evidence_report", "the whole trail for one incident, with sha256 digests you can recompute"],
+  ["numbers_audit", "every number on this page, recomputed from the committed JSON"],
 ];
 
 const AD_PAID_TOOLS = [
@@ -45,7 +47,7 @@ function adToolsHTML() {
   return (
     '<div class="ad__cols">' +
       '<section class="ad__col">' +
-        '<h4 class="ad__colhead">FOUR READ THE RECORD' +
+        '<h4 class="ad__colhead">SIX READ THE RECORD' +
           '<span class="ad__colnote">instant &middot; free &middot; never touches the network</span>' +
         "</h4>" +
         '<ul class="ad__tools">' + AD_FREE_TOOLS.map((p) => adToolRowHTML(p, false)).join("") + "</ul>" +
@@ -92,6 +94,8 @@ function adCouponHTML(meta) {
           '<span class="ad__line ad__line--tick">MY SCRAPERS ARE FINE ' +
             '<span class="ad__box ad__box--empty" aria-hidden="true"></span></span>' +
         "</p>" +
+        '<a class="ad__chaos" href="?mock=1">CHAOS LAB &rarr;' +
+          '<span class="ad__chaosnote">break one yourself, no install</span></a>' +
         '<p class="ad__small">Offer void where scrapers do not rot. ' +
           "Node 20 or better required. Credentials sold separately and never by us. " +
           '<b>' + adTestLine(meta) + "</b> at the last commit; the number above is read from " +
@@ -110,7 +114,7 @@ function adHTML(meta) {
       '<div class="ad__top">' +
         '<div class="ad__pitch">' +
           '<h3 class="ad__title" id="ad-title">' +
-            '<span class="ad__titleword">SIX TOOLS.</span> ' +
+            '<span class="ad__titleword">EIGHT TOOLS.</span> ' +
             '<span class="ad__titleword">NO SDK.</span> ' +
             '<span class="ad__titleword ad__titleline">CONNECT IN ONE LINE.</span>' +
           "</h3>" +

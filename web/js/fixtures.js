@@ -78,14 +78,25 @@ function mountMockBanner() {
 
 function mountMockControls(api) {
   mountMockBanner();
-  const bar = document.createElement("div");
+  const bar = document.createElement("section");
   bar.className = "demobar";
+  bar.setAttribute("aria-labelledby", "chaos-title");
   bar.innerHTML =
-    '<span class="label">Prototype controls — ?mock=1 only, not in the shipped build</span>' +
-    '<button class="btn btn--go" id="btn-break">Break BODEGA</button>' +
-    '<button class="btn btn--fix" id="btn-heal" disabled>Re-weave</button>' +
-    '<button class="btn" id="btn-dark">Toggle unwatched</button>' +
-    '<button class="btn" id="btn-reset">Reset</button>';
+    '<div class="demobar__head">' +
+      '<h2 class="demobar__title" id="chaos-title">CHAOS LAB</h2>' +
+      '<span class="demobar__flag">?mock=1 only</span>' +
+    "</div>" +
+    '<p class="demobar__copy">Break it yourself. The fleet below is synthetic; ' +
+      "<b>the mechanics are the real code.</b></p>" +
+    '<div class="demobar__row">' +
+      '<span class="demobar__step">1</span>' +
+      '<button class="btn btn--go" id="btn-break" type="button">Break BODEGA</button>' +
+      '<span class="demobar__step">2</span>' +
+      '<button class="btn btn--fix" id="btn-heal" type="button" disabled>Re-weave</button>' +
+      '<span class="demobar__step">3</span>' +
+      '<button class="btn" id="btn-dark" type="button">Toggle unwatched</button>' +
+      '<button class="btn" id="btn-reset" type="button">Reset</button>' +
+    "</div>";
 
   const note = document.createElement("p");
   note.className = "note";
@@ -94,9 +105,11 @@ function mountMockControls(api) {
     "spread is the primary health signal — it covers (100 − Integrity)% of each panel. " +
     "Field chips carry three states: live, infected, dead. Click any panel for the diagnostic view.";
 
+  const head = document.getElementById("nav-watch");
+  head.parentNode.insertBefore(bar, head);
+
   const feed = document.getElementById("feed");
-  feed.parentNode.insertBefore(bar, feed.nextSibling);
-  bar.parentNode.insertBefore(note, bar.nextSibling);
+  feed.parentNode.insertBefore(note, feed.nextSibling);
 
   const bodega = api.spiders[1];
   const pristine = JSON.parse(JSON.stringify(api.spiders.map((s) => ({ fields: s.fields, sample: s.sample }))));
@@ -110,6 +123,7 @@ function mountMockControls(api) {
       bodega.sample = { title:"Danforth Anchor, 8 kg Galvanised", price:null, rating:"undefined", image:null };
       bodega.reweaving = false;
       api.renderGrid();
+      if (api.announce) api.announce();
       setTimeout(() => api.burst(api.panelOf("BODEGA"), "CREEP...", "#C24BFF"), 300);
     }, 240);
     document.getElementById("btn-heal").disabled = false;
@@ -124,6 +138,7 @@ function mountMockControls(api) {
       bodega.fields = { title:"live", price:"live", rating:"live", image:"live" };
       bodega.sample = { title:"Danforth Anchor, 8 kg Galvanised", price:"$84.50", rating:"4.6", image:"https://picsum.photos/seed/harbor-anchor/480/320" };
       api.renderGrid();
+      if (api.announce) api.announce();
       const q = api.panelOf("BODEGA");
       q.classList.add("is-purging");
       api.burst(q, "PURGE!", api.COLOR.reweaving);

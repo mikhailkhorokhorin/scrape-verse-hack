@@ -35,12 +35,13 @@ function wildCountHTML() {
   const wild = (INCIDENTS || []).filter(isWildIncident);
   if (!wild.length) return "";
   const sites = Array.from(new Set(wild.map((inc) => universeOf(inc.who)))).filter(Boolean);
-  const noun = wild.length === 1 ? "break" : "breaks";
+  const pronoun = wild.length === 1 ? "it" : "them";
   return (
     '<p class="wild-note">' +
-      '<b class="wild-note__n">' + wild.length + "</b> of these " + noun +
-      " happened on a site we do not control &mdash; " + esc(sites.join(", ")) +
-      ". Nobody staged them, and the re-weave closed them the same way." +
+      '<b class="wild-note__n">' + wild.length + "</b> of these breaks happened" +
+      " on a site we do not control &mdash; " + esc(sites.join(", ")) +
+      ". Nobody staged " + pronoun + ", and the re-weave closed " + pronoun +
+      " the same way." +
     "</p>"
   );
 }
