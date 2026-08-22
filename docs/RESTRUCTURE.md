@@ -205,3 +205,115 @@ Done-when for the whole file: a stranger opening the repo sees folders that name
 product's parts; every file still ≤250 lines, zero comments, suite green; the site
 gained a manual and lost nothing; and no number anywhere describes a tree that no
 longer exists.
+
+---
+
+# Round two — the ad finds its page, the folders find their depth
+
+Written 22 Aug ~07:55 UTC, on the user's four asks: css into folders; deeper nesting
+where one level still holds 26 files; the same for `test/web`; and the newspaper ad —
+*A MESSAGE FROM THE WATCH · NO. 6 OF 6* — moving to the MANUAL, which itself should
+stop looking like the plain page in a styled issue. Video records ~11:20 UTC; the D1
+incident is mid-flight and nothing here touches `data/`, `scripts/` or `demo-target/`.
+
+## R6 · The ad moves to the back page *(agent, ~1h)*
+
+The manual and the ad currently say the same things twice — the ad says them better.
+So the ad stops being a section of the console and becomes the **centerpiece of the
+manual**, and the manual's plain duplicates die:
+
+- `manual.html` becomes: masthead → one intro paragraph → **the full newspaper ad**
+  (EIGHT TOOLS / iron-clad guarantee / coupon with the three commands / Chaos Lab tag)
+  → the six-step judge path → the Chaos Lab poster → colophon. The "Get the watch"
+  and "Drive it from an agent" sections dissolve into it — the coupon *is* the install,
+  the tools list *is* the agent section.
+- `ad.js` is already pure builders (`adToolsHTML`, `adCouponHTML`, `adHTML`) plus a
+  mount; a new ~30-line `manual.js` fetches `data/meta.json` and mounts the ad on the
+  manual, so the live test-count-from-meta behaviour survives the move. The manual
+  stops being JS-free; that is the honest price of a live number.
+- **The console keeps the slot.** `NO. 6 OF 6` is a beat in the issue's rhythm, and
+  deleting a page from a comic is felt. `#ad-slot` gets a **one-panel teaser** in the
+  same period vocabulary: the EIGHT TOOLS / NO SDK / CONNECT IN ONE LINE headline, one
+  line of copy, and `READ THE MANUAL →`. The full pitch lives where the manual lives.
+- Tests follow the content: the console tests now assert the teaser (and that the
+  full coupon is *gone* from the console); the manual tests assert the whole ad,
+  including the meta-count guard. `?capture=1` and print checked on both pages.
+
+## R7 · The manual dresses like the issue *(same agent, same pass, ~45min)*
+
+DESIGN-SPEC §8 first, then, concretely:
+- the console's halftone ground and paper/ink panels instead of the flat body;
+- section heads in the sechead vocabulary — ink plate, hard shadow, chromatic offset —
+  not plain bold text;
+- the judge path as six numbered tickets (ink border, hard shadow, the number as a
+  plate) rather than a list;
+- the Chaos Lab block as a small poster with the three clicks as panels;
+- a colophon footer that names it the back page of the issue;
+- reduced-motion and print stay exactly as clean as they are now; body copy stays
+  ≤75ch and AA contrast.
+
+Done when a reader scrolling console → manual cannot tell the design hand changed.
+
+## R8 · CSS mirrors the modules *(lead, ~40min)*
+
+`web/css/` (51 files, flat) takes the same anatomy as the JS, one level:
+
+```
+css/base/    tokens, layout, sizes, states, scrollbar
+css/fleet/   panel, symbiote-teeth, scratch, rig*, spark*, heat, sweep, pulse,
+             odometer, infection, webs, ground, landing, impact, bubble, caption,
+             heal, open, wild, track, states-of-the-grid…
+css/sheets/  issue, sheet*, receipt, diptych, haul, replay, noprize, masthead,
+             pagenav, intro, legend, feed, fleet(head), ad, evidence, empty, manual
+css/fx/      press, reveal
+css/print/   print, print-artefacts, capture
+css/mock/    mock
+```
+
+Contracts, learned the hard way in R3: the ~50 `<link>` hrefs in `index.html` and 5 in
+`manual.html` rewrite mechanically with order untouched; `web-loader.js` grows
+`cssPath(name)` beside `modulePath` (same recursive resolver, different root) and the
+four tests that read css by hand-built path (`stillness`, `wild`, `chaos-lab`,
+`manual`) go through it; there is no ESLint contract on css. Gate: suite, lint, zero
+console messages on both pages, screenshot at 1440/375 against before.
+
+## R9 · Depth where one level overflows *(lead, after R8, ~40min)*
+
+`fleet/` holds 26 files and `sheets/` 17 — the folders solved provenance, not volume.
+One more level, grouped by what a stranger would ask for:
+
+```
+fleet/grid/      render, panel, received, caption, reconcile, reconcile-dom, landing
+fleet/symbiote/  symbiote, infection, scratch
+fleet/rig/       rig, rig-parts, rig-react
+fleet/vitals/    sparkline, sparkhover, heatmap, pulse, odometer, sweep, heal, open, wild
+fleet/voice/     bubble, speech, impact
+fleet/scene/     webs, ground
+sheets/issue/    issue, sheet, sheet-rig, receipt, diptych, noprize
+sheets/haul/     haul, haul-view
+sheets/replay/   replay, replay-view, replay-mount
+sheets/front/    masthead, pagenav, intro, intro-plan, finish, ad
+```
+
+`data/` (11) and `mock/` (3) stay flat — depth must be earned. `test/web/` (43 files)
+mirrors the same subfolders, because a test tree that mirrors the source tree is the
+whole point of having either. `modulePath`/`cssPath` already resolve any depth, so
+tests keep naming files, not locations; the exact file-to-folder map is settled at
+execution from each file's actual role, not this table. Script tags rewrite again,
+order untouched; the docs path-rewrite script re-runs; `eslint.config.js`'s one path
+override (`web/js/data/config.js`) is unaffected.
+
+## Order, and what gets cut first
+
+Agent takes R6→R7 (one lane: `web/manual.html`, `manual.css`, `manual.js`, `ad.js`,
+`ad.css`, their tests). Lead takes R8, then R9, then the final gate — full suite, lint,
+both pages in the browser at both widths, capture and print, a safe-window push, and
+the deployed URLs checked. D1's document edits (`docs/D1-FOLLOWUP.md`) interleave the
+moment the fourth incident closes.
+
+If the clock compresses: **R9 is cut first, whole; then R8.** R6/R7 are the
+user-visible half and go last only to the wall. Done-when for the round: the manual
+reads as a page of the same comic with the ad as its centerpiece and a live test
+count; the console still has six message slots, the sixth now a teaser; every css and
+js file sits in a folder that names its part; and nothing on either page says a thing
+the repo cannot prove.
