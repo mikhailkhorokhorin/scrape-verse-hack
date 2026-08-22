@@ -193,6 +193,10 @@
 }
 .rscrub__input:focus-visible{opacity:1;outline:3px solid var(--cyan);outline-offset:4px;}
 
+@media(pointer:coarse){
+  .rscrub__input{height:44px;top:50%;transform:translateY(-50%);}
+}
+
 @media(prefers-reduced-motion:reduce){
   .rledger__row.is-flip{animation:none;}
 }

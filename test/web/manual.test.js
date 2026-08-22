@@ -40,8 +40,8 @@ test('the manual borrows the console type faces and adds none of its own', () =>
 });
 
 test('the manual wears the ad stylesheet, because the ad is now its centrepiece', () => {
-  assert.match(manual, /href="css\/ad\.css"/);
-  assert.match(manual, /href="css\/manual\.css"/);
+  assert.match(manual, /href="css\/[a-z]*\/?ad\.css"/);
+  assert.match(manual, /href="css\/[a-z]*\/?manual\.css"/);
 });
 
 test('the manual mounts the ad through a slot rather than pasting a copy of it', () => {

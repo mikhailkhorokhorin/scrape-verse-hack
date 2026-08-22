@@ -10,6 +10,10 @@
 .intro-replay:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;}
 .intro-replay:disabled{cursor:default;color:var(--dimmer);box-shadow:3px 3px 0 var(--ink);}
 
+@media(pointer:coarse){
+  .intro-replay{padding:11px 13px 10px;min-height:44px;}
+}
+
 .intro-running .panel .symbiote__body{
   transition:-webkit-mask-image 700ms cubic-bezier(.22,1,.36,1),mask-image 700ms cubic-bezier(.22,1,.36,1);
 }
