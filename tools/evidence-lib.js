@@ -5,7 +5,7 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 
 const ROOT = path.resolve(__dirname, '..');
-const EVIDENCE_DIR = path.join(ROOT, 'docs', 'evidence');
+const EVIDENCE_DIR = path.join(ROOT, 'evidence');
 
 function sha256(text) {
   return crypto.createHash('sha256').update(text, 'utf8').digest('hex');
@@ -47,7 +47,7 @@ function evidenceFor(incident, dir) {
     .filter((name) => name.startsWith(prefix) ||
       mentionsCollector(path.join(dir, name), incident.collector_id))
     .map((name) => ({
-      file: path.posix.join('docs', 'evidence', name),
+      file: path.posix.join('evidence', name),
       bytes: fs.statSync(path.join(dir, name)).size,
       sha256: digestOfFile(path.join(dir, name))
     }));

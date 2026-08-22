@@ -30,8 +30,14 @@ the field chips read, not a caption written for the reveal.*
 | **What happened when the site changed?** | Four real breaks, two of them on sites we do not control, and one with no human in any phase. Each was healed on the same Collector ID, and each carries a per-field receipt of the value before and after | [It already caught a real one](#it-already-caught-a-real-one) |
 | **What did the output actually give you?** | Real rows on screen, each stamped with the collector, the scan time, and the Integrity the Spider was at when the row was captured | [THE HAUL](#the-haul--the-data-itself) |
 
-Full specs, the collector registry with every heal logged, and the eighteen-audit
-checklist are in **[`docs/`](docs/README.md)**.
+**This repository is the code.** The writing lives beside it in
+**[the docs repository](https://gitlab.com/hackathons6943133/scrape-verse/docs)** — the
+product reasoning, the design contract, the collector registry with every heal logged, the
+audit trail, the submission and the video script. Two documents stay here because they
+belong beside what they describe: this file, and
+[`mcp/README.md`](mcp/README.md) next to the MCP server. The raw Bright Data payloads stay
+here too, in [`evidence/`](evidence/), because `tools/evidence-report.js` recomputes their
+SHA-256 digests and three test files assert against them.
 
 ## The four questions, answered at length
 
@@ -50,10 +56,10 @@ were written by hand, and none was taken from Bright Data's pre-built library:
 | KESTREL | news.ycombinator.com | `c_mt2fnt3p2k4n644701` | title, points, comments, author |
 
 The `create` envelope for each is committed
-([`docs/evidence/create-bodega.json`](docs/evidence/create-bodega.json),
-[`create-atlas.json`](docs/evidence/create-atlas.json),
-[`create-kestrel.json`](docs/evidence/create-kestrel.json)), and the registry with
-creation dates and every heal since is [`docs/COLLECTORS.md`](docs/COLLECTORS.md).
+([`evidence/create-bodega.json`](evidence/create-bodega.json),
+[`create-atlas.json`](evidence/create-atlas.json),
+[`create-kestrel.json`](evidence/create-kestrel.json)), and the registry with
+creation dates and every heal since is [`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md).
 
 ### The platform and the product can disagree, and that is the point
 
@@ -187,11 +193,11 @@ The Collector ID is the row that matters. **It did not change.** The collector w
 repaired, not recreated — the same one that broke is the one that came back.
 
 Check it yourself: the broken and healed payloads are committed as
-[`docs/evidence/kestrel-probe.json`](docs/evidence/kestrel-probe.json)
-and [`kestrel-after.json`](docs/evidence/kestrel-after.json), the scans are in
+[`evidence/kestrel-probe.json`](evidence/kestrel-probe.json)
+and [`kestrel-after.json`](evidence/kestrel-after.json), the scans are in
 `data/history.json` (`04:43:39Z` and
 `05:13:45Z` broken, `05:40:09Z` healed), and the heal is logged in
-[`docs/COLLECTORS.md`](docs/COLLECTORS.md).
+[`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md).
 
 ## Layout
 
@@ -255,8 +261,8 @@ test/                       1,153 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
 demo-target/                the demo target — three variants of the same shop page
 collectors.json             targets and per-field validators
-docs/                       specs, the collector registry, the audit checklist
-docs/evidence/              create envelopes and before/after payloads, as returned
+evidence/                   create envelopes and before/after payloads, as returned
+                            by Bright Data; digests are recomputed from these files
 .github/workflows/watch.yml scan every 30 min, heal, publish Pages
 ```
 
@@ -322,7 +328,7 @@ Two ideas from that pass are not in the build and are listed so they stop being
 reconsidered: the sparkline **crawler** was built, looked wrong, and was cut before it was
 committed; the masthead **cover character** was rejected before any code, because the
 tagline block carries the product thesis. The full brief set, with each brief's own status
-line, is in [`docs/ideas/`](docs/ideas/).
+line, is in [`ideas/`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/tree/main/ideas/).
 
 **The manual.** The console is the product; the manual is its back page.
 [`web/manual.html`](web/manual.html) — live at
@@ -531,7 +537,7 @@ what turns a run into an Integrity score, and it is why a field can be present a
 be reported as broken.
 
 The full `create` envelopes are committed under
-[`docs/evidence/`](docs/evidence/) as `create-atlas.json`, `create-kestrel.json`
+[`evidence/`](evidence/) as `create-atlas.json`, `create-kestrel.json`
 and `create-bodega.json`. Each target was verified as public, login-free, robots-checked
 and outside Bright Data's pre-built scraper library — do not substitute one.
 
@@ -539,7 +545,7 @@ and outside Bright Data's pre-built scraper library — do not substitute one.
 loop and the thing worth checking: the same collector that broke is the one that came
 back, repaired rather than replaced. The KESTREL heal at the top of this file is the
 worked example — same `c_mt2fnt3p2k4n644701` before and after. Every heal is logged
-against its ID in [`docs/COLLECTORS.md`](docs/COLLECTORS.md), with creation dates.
+against its ID in [`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md), with creation dates.
 
 ## What is not finished
 
@@ -554,7 +560,7 @@ Stated plainly rather than left for you to find:
   the field values came back real. Two of four are still hand-invoked, and this line says
   so
 - **A wrong diagnosis is in the log on purpose.** See `inc_003` above and
-  [`docs/COLLECTORS.md`](docs/COLLECTORS.md), which states the provenance of each record.
+  [`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md), which states the provenance of each record.
   Manufacturing cleaner evidence is precisely the failure this project exists to expose
 - **MTTR is a mean of four samples.** `renderMttr()` averages `closed_at − opened_at`
   across `data/incidents.json`. Four heals is enough to display honestly and not enough
@@ -563,7 +569,7 @@ Stated plainly rather than left for you to find:
   to completion inside one CI job, so no mid-heal record is ever persisted. The branch in
   `web/js/data/adapter.js` is reachable only from mock data
 - **The phone pass has not been run.** The responsive contract is specified in
-  `docs/DESIGN-SPEC.md` and the layout collapses to a single column, but nobody has walked
+  `DESIGN-SPEC.md` and the layout collapses to a single column, but nobody has walked
   the console at 375px since the character rig landed. It is the one item on the UI list
   that can reject work already done, and it is still open
 
@@ -577,7 +583,7 @@ Two committed JSON files, no database:
 | `data/incidents.json` | One record per heal: what broke, the strain, the prompt sent to Scraper Studio, what came back, and the four stage timestamps |
 
 Both are written by the scheduled pipeline and read directly by the console. The full
-field-by-field contract is in [`docs/CLAUDE.md`](docs/CLAUDE.md).
+field-by-field contract is in [`CLAUDE.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/CLAUDE.md).
 
 ## Architecture
 
@@ -652,7 +658,7 @@ css_selector_extractor → user_approval → save_new_template` — in roughly *
 with `--auto-approve --auto-save` and nobody watching. A verification run afterwards
 returned 30 rows carrying real titles, points, comments and authors where every field had
 been `null`, on the same Collector ID. Full log in
-[`docs/COLLECTORS.md`](docs/COLLECTORS.md).
+[`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md).
 
 ### What happens when the heal itself lies
 
@@ -731,19 +737,19 @@ steps, not because they exist.
 
 ## Documentation
 
-Everything that shaped this build is in **[`docs/`](docs/README.md)**. The three worth
+Everything that shaped this build is in **[the docs repository](https://gitlab.com/hackathons6943133/scrape-verse/docs)**. The three worth
 opening:
 
-- [`docs/COLLECTORS.md`](docs/COLLECTORS.md) — the collector registry: every `c_*` with
+- [`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md) — the collector registry: every `c_*` with
   its creation date and a dated log of every heal it survived
-- [`docs/DESIGN-SPEC.md`](docs/DESIGN-SPEC.md) — the visual contract the console was
+- [`DESIGN-SPEC.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/DESIGN-SPEC.md) — the visual contract the console was
   built against, including the banned-patterns list that rules out the generic dashboard
-- [`docs/AUDIT-PIPELINE.md`](docs/AUDIT-PIPELINE.md) — eighteen audits with a pass bar
+- [`AUDIT-PIPELINE.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/AUDIT-PIPELINE.md) — eighteen audits with a pass bar
   each, run before submitting
 
-If you are a coding agent, start at [`docs/CLAUDE.md`](docs/CLAUDE.md) — it puts you in
+If you are a coding agent, start at [`CLAUDE.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/CLAUDE.md) — it puts you in
 autonomous mode — then take the first unchecked item in
-[`docs/PROGRESS.md`](docs/PROGRESS.md) and work down the queue.
+[`PROGRESS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/PROGRESS.md) and work down the queue.
 
 ## Deploying the console anywhere
 
@@ -769,7 +775,7 @@ deployed layout is arranged.
 
 - Real `bdata` calls, never mocked. A judge checks the Collector ID
 - `create` takes 5-25 minutes and `heal` up to 15, and both cost credit. **Never recreate a
-  collector that already has an ID** in [`docs/COLLECTORS.md`](docs/COLLECTORS.md) — if
+  collector that already has an ID** in [`COLLECTORS.md`](https://gitlab.com/hackathons6943133/scrape-verse/docs/-/blob/main/COLLECTORS.md) — if
   `run` fails, `heal` it
 - Run `npm test` before changing anything in `scripts/` — the suite is the contract
   between what the pipeline writes and what the console reads

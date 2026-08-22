@@ -255,7 +255,7 @@ FIELDS
 
 DIGESTS (sha256, recompute with: node tools/evidence-report.js --json)
   incident record                   sha256 ebb1f63da705a389eeef6ee342b2888861b67a7c94661bca0d470cfc824a46dd
-  docs/evidence/create-bodega.json  sha256 15370ee2eb4dc58f9b9e25867998006dda6220281a796e5f997738f916ece823  (379 bytes)
+  evidence/create-bodega.json  sha256 15370ee2eb4dc58f9b9e25867998006dda6220281a796e5f997738f916ece823  (379 bytes)
 
   note: this record was reconstructed after the fact from the scan log.
 ```
