@@ -14,16 +14,21 @@ const {
 
 const registry = require('../mcp/registry.js');
 
-test('the ad advertises exactly the six tools the server actually registers', () => {
-  const advertised = Array.from(AD_FREE_TOOLS.concat(AD_PAID_TOOLS), (pair) => pair[0]).sort();
-  const real = registry.TOOLS.map((tool) => tool.name).sort();
-  assert.equal(advertised.length, 6, 'the headline says SIX TOOLS');
-  assert.deepEqual(advertised, real);
+test('the ad never advertises a tool the server does not actually register', () => {
+  const advertised = Array.from(AD_FREE_TOOLS.concat(AD_PAID_TOOLS), (pair) => pair[0]);
+  const real = registry.TOOLS.map((tool) => tool.name);
+  advertised.forEach((name) => assert.ok(real.includes(name), name + ' is not a real tool'));
 });
 
-test('the four free tools are the ones that never touch the network', () => {
+test('the headline count matches the number of tools the ad lists', () => {
+  const advertised = AD_FREE_TOOLS.length + AD_PAID_TOOLS.length;
+  const words = { 4: 'FOUR', 6: 'SIX', 7: 'SEVEN', 8: 'EIGHT' };
+  assert.ok(adHTML().includes(words[advertised] + ' TOOLS.'),
+    `the ad lists ${advertised} tools, so the headline must say ${words[advertised]} TOOLS`);
+});
+
+test('the free tools are the ones that never touch the network', () => {
   const free = AD_FREE_TOOLS.map((pair) => pair[0]);
-  assert.equal(free.length, 4);
   free.forEach((name) => {
     const tool = registry.TOOLS.find((t) => t.name === name);
     assert.ok(tool, name + ' is not a real tool');

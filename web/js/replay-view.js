@@ -196,7 +196,10 @@ function replayHTML(model) {
 }
 
 function incidentOf(id) {
-  return (RAW_INCIDENTS || []).find((inc) => inc && inc.id === id) || null;
+  const source = (typeof MOCK !== "undefined" && MOCK && typeof MOCK_RAW_INCIDENTS !== "undefined")
+    ? MOCK_RAW_INCIDENTS
+    : RAW_INCIDENTS;
+  return (source || []).find((inc) => inc && inc.id === id) || null;
 }
 
 function replayEmptyHTML() {

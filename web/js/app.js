@@ -98,6 +98,7 @@ function loadMock() {
 
   renderGrid();
   renderDiptych();
+  announceLandings(SPIDERS);
   renderFeed();
   renderHaul();
   renderReplay();
@@ -113,6 +114,7 @@ function loadMock() {
     panelOf: panelOf,
     burst: burst,
     COLOR: COLOR,
+    announce: () => announceLandings(SPIDERS),
   });
 }
 
