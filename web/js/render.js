@@ -36,6 +36,7 @@ function renderGrid() {
     (ERRORS.history ? failPlate(ERRORS.history) : "") + SPIDERS.map(panelHTML).join("");
 
   markTallCells(grid);
+  if (typeof scratchMount === "function") scratchMount();
 
   const allStale = SPIDERS.every((sp) => sp.unwatched);
   setFleetSpread(allStale ? null : avg);
