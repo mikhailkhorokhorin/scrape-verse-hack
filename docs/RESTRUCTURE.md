@@ -20,7 +20,7 @@ in safe windows with rebase · **no `bdata`, no credits — the D1 cycle is the 
 
 ---
 
-## R1 · Dead-code sweep — before anything moves *(Agent A, ~1h)*
+## R1 · Dead-code sweep — **DONE 22 Aug 07:33 UTC**
 
 Method, not vibes:
 1. Build the cross-reference: every top-level function/const in `web/js/*.js` grepped
@@ -36,6 +36,35 @@ Method, not vibes:
 Done when: zero provably-unreferenced functions/selectors remain, and the sweep's one
 paragraph (what was removed, why it was safe) lands at the bottom of this file.
 
+
+**R1 · The sweep, done — 22 Aug 07:33 UTC.** The cross-reference covered 567 top-level
+symbols across 58 `web/js` files and 533 classes across 50 `web/css` files, resolved
+against `web/js`, `index.html` and `test/`. It found the tree already lean: **three**
+functions were provably dead — `wildBadgeHTML` (`wild.js`), `changedCodesOf` (`delta.js`)
+and `introHoldMs` (`intro-plan.js`), each defined in the product but called only from its
+own test. Everything that merely *looked* dead was not: all 57 selectors with no literal
+match are built by concatenation (`"cell--" + status`, `" is-" + grade`), verified by
+prefix and then in a live browser where `rledger__row`, `haulcard` and `rtick` resolve to
+real nodes. No unused keyframes, no unused custom properties, no orphan files.
+
+**Two of the three deletions stood; one was reversed, and that reversal is the finding.**
+`changedCodesOf` and `introHoldMs` are gone with their tests. `wildBadgeHTML` was *not*
+dead code — it was **unwired** code. README, `SUBMISSION.md` and `VIDEO-SCRIPT.md` all
+state that the console renders an **IN THE WILD** badge on the two incidents that broke
+on sites we do not control, and the badge existed, and nothing ever called it. Deleting
+it would have made the documents quietly false; the honest repair was to call it. It is
+now emitted from `issueCoverHTML`, and the live page renders exactly two badges — KESTREL
+and ATLAS — with BODEGA, our own page, correctly bare.
+
+The sweep's second gift was the same shape: `press.css` styled `.incident .issue__name`
+in three blocks, but the headline has been `.issue__who` since a rename, so the incident
+title was silently excluded from the scroll-press every other heading gets. Renamed; the
+computed style now reports `press-plates` on `view()` for that element.
+
+Both repairs carry tests: the badge's presence and absence by universe, the cover's call
+site, and a guard asserting `press.css` names the class the page actually renders. Suite
+1,136 passing, lint clean, zero console messages on `index.html` and `?mock=1`.
+
 ## R2 · `test/` grows an anatomy — **DONE 22 Aug 07:13 UTC**
 
 ```
@@ -49,8 +78,12 @@ test/
 
 Contracts to update in the same commit:
 - `test/run.js` — readdirSync goes recursive (walk subdirs, keep the flat-file filter).
-- `.github/workflows/watch.yml:71` — `test/*.test.js` → `test/` (node's runner recurses
-  a directory). **Cron ritual applies**: back up `data/`, edit in a safe window, watch
+- `.github/workflows/watch.yml:71` — the glob is replaced by the runner itself,
+  `node test/run.js --test-reporter=tap`. Two forms were tried and rejected first:
+  `node --test test/` does **not** recurse into subdirectories, and the quoted glob
+  `test/**/*.test.js` only expands on Node 22+, while CI pins Node 20. Teaching
+  `run.js` to forward its argv makes local and CI take the identical path.
+  **Cron ritual applies**: back up `data/`, edit in a safe window, watch
   the next scheduled run count 1112 before touching anything else.
 - Each moved file's relative `require` paths (`./web-loader` → `../web-loader`).
 - Doc references: README's test paths, `VIDEO-SCRIPT.md`'s

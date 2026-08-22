@@ -55,12 +55,6 @@ test('an unknown collector falls back to reading history', () => {
   assert.equal(ctx.isWildIncident({ who: 'GHOST' }), true);
 });
 
-test('the badge renders only for a wild incident', () => {
-  const ctx = load(FLEET);
-  assert.ok(ctx.wildBadgeHTML({ who: 'ATLAS' }).includes('IN THE WILD'));
-  assert.equal(ctx.wildBadgeHTML({ who: 'BODEGA' }), '');
-});
-
 test('the note counts only wild incidents and names their sites', () => {
   const incidents = [{ who: 'ATLAS' }, { who: 'KESTREL' }, { who: 'BODEGA' }];
   const html = load(FLEET, incidents).wildCountHTML();
@@ -111,4 +105,33 @@ test('the wild note names each site once and says nothing when nothing is wild',
   const html = ctx.wildCountHTML();
   assert.equal(html.match(/news\.ycombinator\.com/g).length, 1);
   assert.equal(load(FLEET, [{ who: 'BODEGA' }]).wildCountHTML(), '');
+});
+
+test('a break on somebody else s site is badged IN THE WILD', () => {
+  const context = load(FLEET, []);
+  const html = context.wildBadgeHTML({ who: 'KESTREL' });
+  assert.match(html, /IN THE WILD/);
+  assert.match(html, /class="wild"/);
+});
+
+test('a break on a page we control carries no badge at all', () => {
+  const context = load(FLEET, []);
+  assert.equal(context.wildBadgeHTML({ who: 'BODEGA' }), '');
+});
+
+test('the incident cover asks for the badge, so the claim on the page is rendered not written', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const issue = fs.readFileSync(
+    path.join(__dirname, '..', '..', 'web', 'js', 'issue.js'), 'utf8');
+  assert.match(issue, /wildBadgeHTML\(inc\)/);
+});
+
+test('the press effect reaches the incident headline the page actually renders', () => {
+  const fs = require('node:fs');
+  const path = require('node:path');
+  const press = fs.readFileSync(
+    path.join(__dirname, '..', '..', 'web', 'css', 'press.css'), 'utf8');
+  assert.match(press, /\.incident \.issue__who/);
+  assert.doesNotMatch(press, /\.incident \.issue__name/);
 });

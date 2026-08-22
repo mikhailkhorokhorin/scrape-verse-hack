@@ -55,9 +55,3 @@ function deltaBetween(previous, spiders) {
   }
   return { snapshot: after, changes: changes };
 }
-
-function changedCodesOf(delta) {
-  return (delta && delta.changes ? delta.changes : [])
-    .filter((change) => change.newRun)
-    .map((change) => change.code);
-}
