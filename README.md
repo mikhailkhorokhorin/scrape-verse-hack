@@ -352,6 +352,12 @@ same code that runs the live watch.
 **RESET** puts it back. Everything is keyboard reachable, and with
 `prefers-reduced-motion` the scratch becomes a tap-toggle instead of a drag.
 
+The same gesture works on the **live** page without breaking anything: the diptych near
+the top pairs one Spider's healthy scan with the scan where it was taken, and the taken
+half is a frozen historical record, so there is always black there to drag off — even when
+the whole fleet is at 100%, which after `inc_004` is the normal state. That panel reveals
+and deliberately does not navigate.
+
 ## The demo target — break the site for real
 
 BODEGA scrapes a shop page we control, and that page ships in three variants so the break
