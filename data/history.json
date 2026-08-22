@@ -3425,5 +3425,102 @@
       "comments": 46,
       "author": "matklad"
     }
+  },
+  {
+    "collector_id": "c_mt2lkwxa1bb5uz223s",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-22T10:48:48.088Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": "£18.00",
+      "rating": "4.4",
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnqqngikv29od5",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-22T11:00:57.088Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 20,
+    "rows_expected": 20,
+    "sample": {
+      "title": "Libertarianism for Beginners",
+      "price": {
+        "value": 51.33,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": "Two",
+      "image_url": "https://books.toscrape.com/media/cache/91/a4/91a46253e165d144ef5938f2d456b88f.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt2fnt3p2k4n644701",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-22T11:01:00.725Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 30,
+    "rows_expected": 30,
+    "sample": {
+      "title": "Rust Glancer: Rust LSP using 100x less RAM",
+      "points": 254,
+      "comments": 54,
+      "author": "matklad"
+    }
   }
 ]
