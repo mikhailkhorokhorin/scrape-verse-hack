@@ -4224,5 +4224,69 @@
       "comments": 53,
       "author": "pentagrama"
     }
+  },
+  {
+    "collector_id": "c_mt4pkrma2b8beq8jv5",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-22T18:41:26.283Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt4pkats1518dwa6mn",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-22T19:10:25.080Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 142,
+    "rows_expected": 30,
+    "sample": {
+      "title": null,
+      "points": null,
+      "comments": null,
+      "author": null
+    }
   }
 ]
