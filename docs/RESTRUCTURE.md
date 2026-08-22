@@ -140,7 +140,7 @@ mock/`; `app.js` stayed at the root because it is the assembly point, not a part
 `<script src>` attributes were rewritten mechanically and their **order was not touched** —
 that order is the dependency graph. Three contracts needed following:
 
-- `eslint.config.js` overrides `web/js/config.js` (globals are declared, not assigned
+- `eslint.config.js` overrides `web/js/data/config.js` (globals are declared, not assigned
   there); the path had to follow the file to `web/js/data/config.js` or eight
   `prefer-const` errors fire on a file that is correct as written.
 - Five tests read module source by hand-built path rather than through the loader.
@@ -302,6 +302,24 @@ tests keep naming files, not locations; the exact file-to-folder map is settled 
 execution from each file's actual role, not this table. Script tags rewrite again,
 order untouched; the docs path-rewrite script re-runs; `eslint.config.js`'s one path
 override (`web/js/data/config.js`) is unaffected.
+
+
+**R8/R9 · Result — 22 Aug 08:05 UTC.** 49 stylesheets moved into
+`css/{base,fleet,sheets,fx,print,mock}/` and 42 modules into
+`js/fleet/{grid,symbiote,rig,vitals,voice,scene}/` and
+`js/sheets/{issue,haul,replay,front}/`; 40 web tests mirrored the same shape. The
+cascade order of the 50 `<link>` tags and the load order of the 58 `<script>` tags were
+preserved literally — only the prefixes changed. No leaf now holds more than nine files.
+
+`web-loader.js` grew `cssPath(name)` beside `modulePath(name)`, both on one shared
+recursive resolver, so the six tests that read source by path name a file rather than a
+location and cost nothing to move again. Three doc-path sweeps re-pointed every
+`web/js/…` and `web/css/…` reference in the live documents; `PROGRESS.md` and
+`AUDIT-PIPELINE.md` were deliberately left alone, because they are records of what was
+true when written, not instructions.
+
+`ad.js`, `ad.css`, `manual.css` and three tests were skipped in both passes — the design
+agent held them for R6/R7 — and are folded in when that lane lands.
 
 ## Order, and what gets cut first
 

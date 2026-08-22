@@ -90,7 +90,7 @@ proves nothing about a scraper surviving the real web:
 | `inc_002` | ATLAS | books.toscrape.com | **no** | `DRIFTED` | 90 → 100 |
 | `inc_003` | BODEGA | our demo page | yes | `THROTTLED` | 0 → 100 |
 
-The console marks the first two **IN THE WILD** (`web/js/fleet/wild.js`) and says so on the page:
+The console marks the first two **IN THE WILD** (`web/js/fleet/vitals/wild.js`) and says so on the page:
 nobody staged them.
 
 Each incident carries a per-field `verification` block naming the value received **before**
@@ -106,7 +106,7 @@ the heal and the value received **after** — not a pass/fail flag, the actual d
 
 That block is written by `scripts/verify.js` from a fresh run after the heal, not from the
 heal's own report — a heal that claims success and still returns nulls is exactly the
-silent failure being guarded against. It is rendered by `web/js/sheets/receipt.js` and returned by
+silent failure being guarded against. It is rendered by `web/js/sheets/issue/receipt.js` and returned by
 the `heal_receipt` MCP tool.
 
 `inc_003` is kept even though the diagnosis was wrong: `repair.js` opened it autonomously
@@ -211,14 +211,15 @@ scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
   js/app.js                 the assembly point: load, adapt, render, poll
   js/data/                  config, shaping, the delta between two scans
-  js/fleet/                 the grid: panels, symbiote, scratch, sparklines, the rig
-  js/sheets/                issues, receipts, the haul, replay, intro, the ad
+  js/fleet/{grid,symbiote,rig,vitals,voice,scene}/
+  js/sheets/{issue,haul,replay,front}/
   js/mock/                  the ?mock=1 fixtures and the Chaos Lab controls
+  css/{base,fleet,sheets,fx,print,mock}/   the same anatomy, one level
   manual.html               the back page: install, tools, judge path
 mcp/                        MCP server — the fleet, answering a coding agent
 test/                       1,136 tests, node:test, no dependencies
   pipeline/                 scoring, classification, healing, verification
-  web/                      the console's modules, run in a vm context
+  web/                      mirrors web/js, folder for folder
   mcp/                      protocol, tools, injection resistance
   tools/                    the evidence report
 data/                       history.json, incidents.json, committed by CI
@@ -261,7 +262,7 @@ The console is drawn as a comic page, and the drawing is the readout rather than
 beside it:
 
 - **A character per collector.** One inline-SVG spider is authored once and parameterised
-  (`web/js/fleet/rig.js`, `rig-parts.js`). **Each expected field owns a mirrored pair of legs**, so
+  (`web/js/fleet/rig/rig.js`, `rig-parts.js`). **Each expected field owns a mirrored pair of legs**, so
   a Spider at half Integrity is standing on half its legs, and **eight eyes light by
   Integrity band**. The same rig appears in the detail sheet with a named chip per field, so
   the leg-to-field mapping is stated explicitly where a judge would go to check it

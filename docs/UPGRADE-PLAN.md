@@ -72,7 +72,7 @@ on `pagenav.css` L6. It is wrong — the rule sets `border-radius:0` and the bor
 `border-bottom` on a square strip, which is what the spec requires. Not suppressed.
 
 
-### 1A · Sticky section index (`web/js/pagenav.js`, `web/css/pagenav.css`)
+### 1A · Sticky section index (`web/js/sheets/front/pagenav.js`, `web/css/sheets/pagenav.css`)
 
 The answer to "split it into pages" that keeps one page.
 
@@ -97,7 +97,7 @@ Done when: appears after scroll and not before; highlights track scrolling throu
 four sections; click navigates (instant under reduced motion); absent in capture,
 print, and during the intro; no overlap anywhere; tests and lint green.
 
-### 1B · Web motifs + quiet line animation (`web/css/webs.css`, `web/js/webs.js`)
+### 1B · Web motifs + quiet line animation (`web/css/fleet/webs.css`, `web/js/fleet/scene/webs.js`)
 
 The "паутинки" pass — presence, not noise.
 
@@ -119,7 +119,7 @@ load; reduced motion shows them complete with no animation; capture/print unaffe
 (they are decoration — hidden in print with the existing artefact rules); no FPS drop
 at 375px (spot-check against the 76fps baseline).
 
-### 1C · Rhythm, holes, and heading a11y (`web/css/layout.css`, `web/js/caption.js`)
+### 1C · Rhythm, holes, and heading a11y (`web/css/base/layout.css`, `web/js/fleet/grid/caption.js`)
 
 The "все в куче / где-то пустоты" pass.
 

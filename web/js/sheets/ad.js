@@ -94,7 +94,7 @@ function adCouponHTML(meta) {
           '<span class="ad__line ad__line--tick">MY SCRAPERS ARE FINE ' +
             '<span class="ad__box ad__box--empty" aria-hidden="true"></span></span>' +
         "</p>" +
-        '<a class="ad__chaos" href="?mock=1">CHAOS LAB &rarr;' +
+        '<a class="ad__chaos" href="index.html?mock=1">CHAOS LAB &rarr;' +
           '<span class="ad__chaosnote">break one yourself, no install</span></a>' +
         '<p class="ad__small">Offer void where scrapers do not rot. ' +
           "Node 20 or better required. Credentials sold separately and never by us. " +
@@ -142,6 +142,26 @@ function adHTML(meta) {
   );
 }
 
+function adTeaserHTML() {
+  return (
+    '<section class="teaser" id="ad" aria-labelledby="teaser-title">' +
+      '<p class="teaser__eyebrow">A MESSAGE FROM THE WATCH &middot; NO. 6 OF 6</p>' +
+      '<h3 class="teaser__title" id="teaser-title">' +
+        '<span class="teaser__word">EIGHT TOOLS.</span> ' +
+        '<span class="teaser__word">NO SDK.</span> ' +
+        '<span class="teaser__word teaser__word--last">CONNECT IN ONE LINE.</span>' +
+      "</h3>" +
+      '<p class="teaser__lede">Bolt this fleet into Claude Code or Cursor over plain ' +
+        "JSON-RPC. Six tools read the committed record for free; two spend real credit " +
+        "and say so in their own descriptions." +
+      "</p>" +
+      '<a class="teaser__cta" href="manual.html">READ THE MANUAL &rarr;' +
+        '<span class="teaser__ctanote">eight tools, the coupon, the judge path</span>' +
+      "</a>" +
+    "</section>"
+  );
+}
+
 function adSlot() {
   const existing = document.getElementById("ad-slot");
   if (existing) return existing;
@@ -171,9 +191,8 @@ function mountAd() {
     slot.innerHTML = "";
     return;
   }
-  const html = adHTML(META);
+  const html = adTeaserHTML();
   if (slot.innerHTML !== html || !slot.firstChild) slot.innerHTML = html;
-  adSetCount(META);
 }
 
 if (typeof document === "object" && document.getElementById) {

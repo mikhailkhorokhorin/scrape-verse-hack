@@ -86,7 +86,7 @@ incident id — it prints every phase beside the unchanged `collector_id`.
 the live Hacker News front page and ATLAS against books.toscrape.com. Only BODEGA is our
 own page. Most of the field can only demonstrate self-healing against a fixture they
 break themselves; two thirds of our evidence is on somebody else's HTML. The console
-states this itself — `web/js/fleet/wild.js` computes it from `collectors.json` and renders an
+states this itself — `web/js/fleet/vitals/wild.js` computes it from `collectors.json` and renders an
 **IN THE WILD** badge on those two cards plus a counted note above the feed.
 
 
@@ -103,7 +103,7 @@ SHA-256 digests recomputed from disk at call time:
 
 Every incident carries a `verification` object: a field-by-field re-check of the run
 **after** the heal, naming the value received before and the value received after.
-`scripts/verify.js` computes it, `web/js/sheets/receipt.js` renders it as a two-column
+`scripts/verify.js` computes it, `web/js/sheets/issue/receipt.js` renders it as a two-column
 was/now table in the issue sheet and on the printed page, and the MCP `heal_receipt`
 tool prints it. `inc_001` reads:
 
@@ -238,18 +238,18 @@ Incident Replay, blast radius and MTTR (72m 45s, mean of three) — all from
 Built for the Best UI track. No framework, no build step, no dependencies — plain modules
 in `web/js/`, assembled by the `build` job in `.github/workflows/watch.yml`.
 
-- **A character per collector, drawn as inline SVG** (`web/js/fleet/rig.js`, `rig-parts.js`) —
+- **A character per collector, drawn as inline SVG** (`web/js/fleet/rig/rig.js`, `rig-parts.js`) —
   no trademarked art anywhere. The design is load-bearing rather than decorative: **the
   legs are the expected fields**, one pair per field, and a leg for a dead field draws
   short and collapsed; **the eyes are the integrity band**, lighting rank by rank as
   health climbs; **the symbiote covers exactly what was lost** — its spread is the
   integrity deficit, so the black is the number, not an effect.
-- **The opening sequence replays a real incident** — `web/js/sheets/intro-plan.js` pins
+- **The opening sequence replays a real incident** — `web/js/sheets/front/intro-plan.js` pins
   `INTRO_INCIDENT_ID = "inc_003"` and beats out its actual integrity drop. It falls back
   to the worst real incident on record, never to a fixture.
 - **The incident feed reads as comic issues**, each with a permalink
   (`web/js/data/issue-route.js` routes off `location.hash`) and a print stylesheet
-  (`web/css/print.css`) so an issue prints as a page, verification table included.
+  (`web/css/print/print.css`) so an issue prints as a page, verification table included.
 - **THE HAUL** shows the actual scraped rows with provenance stamps.
 - **Incident Replay** plays the recorded stage timestamps. The panel says so on screen:
   *"Every timestamp below is recorded, not generated. A re-weave takes up to fifteen

@@ -3,13 +3,11 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const path = require('node:path');
-const { loadWebModule, modulePath } = require('../web-loader.js');
+const { loadWebModule, modulePath, cssPath } = require('../web-loader.js');
 
-const WEB = path.join(__dirname, '..', '..', 'web');
 const fixtures = fs.readFileSync(modulePath('fixtures.js'), 'utf8');
-const mockCss = fs.readFileSync(path.join(WEB, 'css', 'mock.css'), 'utf8');
-const adCss = fs.readFileSync(path.join(WEB, 'css', 'ad.css'), 'utf8');
+const mockCss = fs.readFileSync(cssPath('mock.css'), 'utf8');
+const adCss = fs.readFileSync(cssPath('ad.css'), 'utf8');
 const adJs = fs.readFileSync(modulePath('ad.js'), 'utf8');
 
 test('the demo bar is named CHAOS LAB, not an apology about prototypes', () => {
@@ -49,8 +47,8 @@ test('no shadow anywhere in the chaos lab is blurred', () => {
   });
 });
 
-test('the coupon carries a chaos lab tag pointing at the mock page', () => {
-  assert.match(adJs, /class="ad__chaos" href="\?mock=1"/);
+test('the coupon carries a chaos lab tag pointing at the console mock route', () => {
+  assert.match(adJs, /class="ad__chaos" href="index\.html\?mock=1"/);
   assert.match(adJs, /CHAOS LAB &rarr;/);
 });
 
