@@ -3,8 +3,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
-const path = require('node:path');
-const { loadWebModule, WEB_DIR } = require('../web-loader.js');
+const { loadWebModule, modulePath } = require('../web-loader.js');
 
 const web = loadWebModule(['rig-parts.js', 'rig-react.js']);
 const {
@@ -109,7 +108,7 @@ test('cssEscape neutralises quotes and backslashes in a field name', () => {
 });
 
 test('the spark viewBox constants match the sparkline the rig aims at', () => {
-  const source = fs.readFileSync(path.join(WEB_DIR, 'sparkline.js'), 'utf8');
+  const source = fs.readFileSync(modulePath('sparkline.js'), 'utf8');
   const declared = source.match(/const W = (\d+), H = (\d+)/);
   assert.ok(declared, 'sparkline.js should declare its viewBox size');
   assert.equal(SPARK_VIEW_W, Number(declared[1]));

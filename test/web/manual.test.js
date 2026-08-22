@@ -4,12 +4,13 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
+const { modulePath } = require('../web-loader.js');
 
 const ROOT = path.join(__dirname, '..', '..');
 const WEB = path.join(ROOT, 'web');
 const manual = fs.readFileSync(path.join(WEB, 'manual.html'), 'utf8');
 const manualCss = fs.readFileSync(path.join(WEB, 'css', 'manual.css'), 'utf8');
-const pagenavJs = fs.readFileSync(path.join(WEB, 'js', 'pagenav.js'), 'utf8');
+const pagenavJs = fs.readFileSync(modulePath('pagenav.js'), 'utf8');
 const pagenavCss = fs.readFileSync(path.join(WEB, 'css', 'pagenav.css'), 'utf8');
 const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
 const submission = fs.readFileSync(path.join(ROOT, 'docs', 'SUBMISSION.md'), 'utf8');

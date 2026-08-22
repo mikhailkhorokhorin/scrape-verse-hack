@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { loadWebModule } = require('../web-loader.js');
+const { loadWebModule, modulePath } = require('../web-loader.js');
 
 const context = loadWebModule(['config.js', 'format.js', 'ad.js']);
 const {
@@ -49,7 +49,7 @@ test('the two paid tools are the ones whose own description warns about credit',
 test('the test count is read from meta, never baked into the markup', () => {
   assert.equal(adTestCount({ tests: 935 }), 935);
   assert.equal(adTestCount({ tests: 821 }), 821);
-  const source = fs.readFileSync(path.join(__dirname, '..', '..', 'web', 'js', 'ad.js'), 'utf8');
+  const source = fs.readFileSync(modulePath('ad.js'), 'utf8');
   assert.doesNotMatch(source, /\b(821|935|889)\b/, 'a test count is hardcoded in ad.js');
 });
 

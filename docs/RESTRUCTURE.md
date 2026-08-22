@@ -101,7 +101,7 @@ Node 20 in CI does not expand `test/**/*.test.js`, and `node --test test/` does 
 recurse, so the runner is the only form that works in both places. 1,112 tests before,
 1,112 after, lint clean, `data/` backed up before the workflow edit.
 
-## R3 · `web/js` and `web/css` mirror the product *(Agent A after R1, ~1-1.5h)*
+## R3 · `web/js` mirrors the product — **DONE 22 Aug 07:44 UTC** (js only; css left flat)
 
 Grouping principle: a folder per *surface*, not per *pattern* —
 
@@ -133,6 +133,35 @@ churn = a path died silently), console clean, full suite, deployed check.
 **Condition: start R3 only if ≥1.5h remain before the video and everything else is
 green. It is the largest diff for the least judge-visible gain — legibility for the
 Clean Code reviewer who opens the tree, nothing for the one watching the site.**
+
+
+**Result — 22 Aug 07:44 UTC.** 57 modules moved with `git mv` into `data/ fleet/ sheets/
+mock/`; `app.js` stayed at the root because it is the assembly point, not a part. The 57
+`<script src>` attributes were rewritten mechanically and their **order was not touched** —
+that order is the dependency graph. Three contracts needed following:
+
+- `eslint.config.js` overrides `web/js/config.js` (globals are declared, not assigned
+  there); the path had to follow the file to `web/js/data/config.js` or eight
+  `prefer-const` errors fire on a file that is correct as written.
+- Five tests read module source by hand-built path rather than through the loader.
+  Rather than teach each one a folder, `web-loader.js` now exports `modulePath(name)`,
+  the same recursive resolver `loadWebModule` uses — tests keep naming a file, not a
+  location, so the next move costs nothing.
+- Removing those `path.join` calls orphaned three imports, which ESLint caught.
+
+Gate: 1,136 tests passing, lint clean, and in the browser both `index.html` and `?mock=1`
+render with **zero console messages** — 3 panels, 3 incidents, 2 IN THE WILD badges, 8 ad
+tools, 5 nav links, the Chaos Lab breaking BODEGA to `is-critical` with the scratch canvas
+mounted. CI on the restructured test tree went green on the same commit range.
+
+
+**CSS was deliberately left flat.** The 51 stylesheets are already named for what they
+style (`panel.css`, `symbiote.css`, `receipt.css`), so a reader finds one by name without
+a folder to guide them; moving them would rewrite 51 `<link>` hrefs and every path in the
+CSS-reading tests for legibility the filenames already provide. The JS move earned its
+risk — 58 files whose names alone do not say whether `open.js` is a sheet or a fleet part.
+The CSS move does not, and shipping a half-moved tree an hour before a recording is the
+worse outcome. Recorded as a decision, not an omission.
 
 ## R4 · The second page: THE MANUAL *(Agent B, ~45min)*
 

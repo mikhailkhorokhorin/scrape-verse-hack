@@ -4,13 +4,13 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { loadWebModule } = require('../web-loader.js');
+const { loadWebModule, modulePath } = require('../web-loader.js');
 
 const WEB = path.join(__dirname, '..', '..', 'web');
-const fixtures = fs.readFileSync(path.join(WEB, 'js', 'fixtures.js'), 'utf8');
+const fixtures = fs.readFileSync(modulePath('fixtures.js'), 'utf8');
 const mockCss = fs.readFileSync(path.join(WEB, 'css', 'mock.css'), 'utf8');
 const adCss = fs.readFileSync(path.join(WEB, 'css', 'ad.css'), 'utf8');
-const adJs = fs.readFileSync(path.join(WEB, 'js', 'ad.js'), 'utf8');
+const adJs = fs.readFileSync(modulePath('ad.js'), 'utf8');
 
 test('the demo bar is named CHAOS LAB, not an apology about prototypes', () => {
   assert.match(fixtures, /CHAOS LAB/);
@@ -89,7 +89,7 @@ test('every verified field names what came back before and after the heal', () =
 });
 
 test('the mock path seeds the landing snapshot so the first break has something to compare against', () => {
-  const app = fs.readFileSync(path.join(WEB, 'js', 'app.js'), 'utf8');
+  const app = fs.readFileSync(modulePath('app.js'), 'utf8');
   const mock = app.slice(app.indexOf('function loadMock'), app.indexOf('mountMockControls'));
   assert.match(mock, /announceLandings\(SPIDERS\)/);
 });

@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { loadWebModule, setGlobal, plain } = require('../web-loader.js');
+const { loadWebModule, setGlobal, plain, modulePath } = require('../web-loader.js');
 
 function load(spiders, incidents) {
   const context = loadWebModule(['config.js', 'format.js', 'wild.js']);
@@ -121,9 +121,7 @@ test('a break on a page we control carries no badge at all', () => {
 
 test('the incident cover asks for the badge, so the claim on the page is rendered not written', () => {
   const fs = require('node:fs');
-  const path = require('node:path');
-  const issue = fs.readFileSync(
-    path.join(__dirname, '..', '..', 'web', 'js', 'issue.js'), 'utf8');
+  const issue = fs.readFileSync(modulePath('issue.js'), 'utf8');
   assert.match(issue, /wildBadgeHTML\(inc\)/);
 });
 

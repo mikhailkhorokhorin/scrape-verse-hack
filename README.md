@@ -209,6 +209,12 @@ npm test && npx eslint . && node tools/numbers-audit.js
 ```
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
+  js/app.js                 the assembly point: load, adapt, render, poll
+  js/data/                  config, shaping, the delta between two scans
+  js/fleet/                 the grid: panels, symbiote, scratch, sparklines, the rig
+  js/sheets/                issues, receipts, the haul, replay, intro, the ad
+  js/mock/                  the ?mock=1 fixtures and the Chaos Lab controls
+  manual.html               the back page: install, tools, judge path
 mcp/                        MCP server — the fleet, answering a coding agent
 test/                       1,136 tests, node:test, no dependencies
   pipeline/                 scoring, classification, healing, verification
