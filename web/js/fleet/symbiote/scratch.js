@@ -2,7 +2,7 @@
 
 const SCRATCH_HINT_KEY = "thwip.scratch.found";
 const SCRATCH_NS = "http://www.w3.org/2000/svg";
-const SCRATCH_IDS = { n: 0 };
+const SCRATCH_IDS = { n: 0, frame: 0 };
 
 function scratchReduced() {
   return typeof matchMedia === "function" &&
@@ -62,14 +62,13 @@ function scratchStateFor(panel) {
   return panel.__scratch;
 }
 
-function scratchPathEl(strand, i) {
+function scratchPathEl(strand) {
   const path = document.createElementNS(SCRATCH_NS, "path");
   path.setAttribute("class", "scratch__strand scratch__strand--" + strand.kind);
   path.setAttribute("d", strand.d);
   path.setAttribute("stroke-width", strand.weight + "");
   path.style.setProperty("--ox", strand.anchor[0] + "px");
   path.style.setProperty("--oy", strand.anchor[1] + "px");
-  path.style.setProperty("--i", i + "");
   return path;
 }
 
@@ -89,11 +88,13 @@ function scratchDrawWeb(state) {
   scratchBandRect(state.band, box, top);
   state.g.textContent = "";
   state.strands = scratchStrands({ w: box.w, h: box.h }, state.seed, top);
-  state.nodes = state.strands.map((strand, i) => {
-    const el = scratchPathEl(strand, i);
-    state.g.appendChild(el);
+  const frag = document.createDocumentFragment();
+  state.nodes = state.strands.map((strand) => {
+    const el = scratchPathEl(strand);
+    frag.appendChild(el);
     return el;
   });
+  state.g.appendChild(frag);
   state.panel.classList.remove("is-bared");
   state.panel.classList.remove("is-scratched");
 }
@@ -186,7 +187,19 @@ function scratchRemount() {
   document.querySelectorAll(".panel.has-scratch").forEach((panel) => {
     const state = panel.__scratch;
     if (!state) return;
-    if (scratchSize(state)) scratchDrawWeb(state);
+    const was = state.box;
+    if (!scratchSize(state)) return;
+    if (was && was.w === state.box.w && was.h === state.box.h) return;
+    scratchDrawWeb(state);
+  });
+}
+
+function scratchOnResize() {
+  if (SCRATCH_IDS.frame) return;
+  SCRATCH_IDS.frame = requestAnimationFrame(() => {
+    SCRATCH_IDS.frame = 0;
+    scratchMount();
+    scratchRemount();
   });
 }
 
@@ -213,6 +226,5 @@ function scratchBind() {
   document.addEventListener("pointermove", scratchOnMove);
   document.addEventListener("pointerup", scratchOnUp);
   document.addEventListener("pointercancel", scratchOnUp);
-  window.addEventListener("resize", scratchMount);
-  window.addEventListener("resize", scratchRemount);
+  window.addEventListener("resize", scratchOnResize);
 }

@@ -12,9 +12,8 @@
 }
 
 .scratch__veil{
-  fill:var(--ink);
-  fill-opacity:.95;
-  transition:opacity 420ms ease-out;
+  fill:none;
+  fill-opacity:0;
 }
 
 .scratch__g{
@@ -23,6 +22,7 @@
   stroke-linecap:round;
   stroke-linejoin:round;
   stroke-opacity:.72;
+  contain:paint;
 }
 
 .scratch__strand{
@@ -83,7 +83,6 @@
 
 @media(prefers-reduced-motion:reduce){
   .scratch-hint{animation:none;}
-  .scratch__veil{transition:none;}
   .scratch__strand.is-torn{animation-name:none;opacity:0;}
 }
 

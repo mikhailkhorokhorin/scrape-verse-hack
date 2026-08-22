@@ -144,7 +144,13 @@ test("the layer never takes the pointer and never sits over the content", () => 
   const layer = gutterCss.slice(gutterCss.indexOf(".gutter{"), gutterCss.indexOf("@media(min-width:1200px)"));
   assert.match(layer, /position:fixed/);
   assert.match(layer, /pointer-events:none/);
-  assert.match(layer, /z-index:0/);
+  const layerZ = Number((layer.match(/z-index:(-?\d+)/) || [])[1]);
+  const wrapCss = fs.readFileSync(cssPath("base/layout.css"), "utf8");
+  const wrapZ = Number((wrapCss.match(/\.wrap\{[^}]*z-index:(-?\d+)/) || [])[1]);
+  assert.ok(Number.isFinite(layerZ), "the layer needs an explicit stacking order");
+  assert.ok(Number.isFinite(wrapZ), "the content needs an explicit stacking order");
+  assert.ok(layerZ < wrapZ,
+    "decoration at z-index " + layerZ + " would sit over content at " + wrapZ);
   assert.match(layer, /overflow:hidden/);
   assert.match(gutterJs, /setAttribute\("aria-hidden", "true"\)/);
 });

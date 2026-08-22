@@ -1,7 +1,7 @@
 .gutter{
   position:fixed;inset:0;
   pointer-events:none;
-  z-index:0;
+  z-index:1;
   overflow:hidden;
   display:none;
   --col:720px;
@@ -13,7 +13,7 @@
   .gutter--manual{display:block;}
 }
 
-@media(min-width:1700px){
+@media(min-width:1800px){
   .gutter{display:block;}
 }
 
@@ -207,7 +207,7 @@
   .gutter__swing,.gutter__swing--slow,.gutter__loose,.gutter__crawl,.gutter__slide{
     animation:none !important;transform:none !important;
   }
-  .gutter__pane--lit{animation:none !important;opacity:.85;}
+  .gutter__glow{animation:none !important;opacity:.85;}
 }
 
 .is-capture .gutter{display:none !important;}

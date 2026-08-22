@@ -93,18 +93,27 @@ test('different panels get different webs', () => {
   );
 });
 
-test('there are real gaps between the strands, it is a web and not a black slab', () => {
-  const strands = scratchStrands(BOX, 5);
+const STRAND_HALF_WIDTH = 0.7;
+
+function bareShareOf(seed, step) {
+  const strands = scratchStrands(BOX, seed);
   let bare = 0;
   let total = 0;
-  for (let x = 10; x < BOX.w; x += 11) {
-    for (let y = 10; y < BOX.h; y += 11) {
+  for (let x = 10; x < BOX.w; x += step) {
+    for (let y = 10; y < BOX.h; y += step) {
       total += 1;
-      if (scratchHitAt(strands, x, y, 3).length === 0) bare += 1;
+      if (scratchHitAt(strands, x, y, STRAND_HALF_WIDTH).length === 0) bare += 1;
     }
   }
-  assert.ok(bare / total > 0.25, 'no daylight between the threads at all');
-  assert.ok(bare / total < 0.95, 'the web is too sparse to hide anything');
+  return bare / total;
+}
+
+test('there are real gaps between the strands, it is a web and not a black slab', () => {
+  [[5, 11], [1, 23], [9, 23]].forEach(([seed, step]) => {
+    const bare = bareShareOf(seed, step);
+    assert.ok(bare > 0.25, 'seed ' + seed + ' inked the panel into a slab, not a web');
+    assert.ok(bare < 0.95, 'seed ' + seed + ' spun a web too sparse to hide anything');
+  });
 });
 
 test('every strand is sampled into a polyline the hit test can walk', () => {
@@ -155,8 +164,7 @@ test('a torn strand is never offered up a second time', () => {
 });
 
 test('the tearing radius is small, so a drag takes one strand at a time', () => {
-  assert.ok(SCRATCH_RADIUS <= 24,
-    'a wide radius wiped whole quadrants of the web in a single stroke');
+  assert.ok(SCRATCH_RADIUS <= 24, 'a wide radius wipes whole quadrants in a single stroke');
   assert.ok(SCRATCH_RADIUS >= 12, 'too fine a radius makes the strands impossible to catch');
 });
 

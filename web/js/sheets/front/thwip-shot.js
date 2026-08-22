@@ -5,7 +5,13 @@ const THWIP_HOLD = 1000;
 const THWIP_BOX = { w: 520, h: 200 };
 const THWIP_SAFE = { x: 176, y: 132, w: 368, h: 68 };
 const THWIP_TONES = ["cyan", "pink", ""];
-const THWIP_UP_CHANCE = 0.18;
+const THWIP_UP_CHANCE = 0.16;
+const THWIP_DOWN_CHANCE = 0.3;
+const THWIP_MIN_HUBS = 2;
+const THWIP_MAX_HUBS = 3;
+const THWIP_EXTRA_HUB = 0.45;
+const THWIP_BAND = [0.16, 0.72];
+const THWIP_HUB_TRIES = 4;
 
 const THWIP_CHARACTERS = [
   {
@@ -13,8 +19,8 @@ const THWIP_CHARACTERS = [
     hubs: 2,
     sides: ["left", "right"],
     reach: [0.34, 0.46],
-    spokes: [8, 10],
-    rings: [4, 6],
+    spokes: [12, 15],
+    rings: [6, 9],
     spread: [30, 44],
     weight: [1.3, 1.9],
     cross: 0.35,
@@ -23,11 +29,11 @@ const THWIP_CHARACTERS = [
   },
   {
     name: "dense",
-    hubs: 1,
-    sides: ["left"],
+    hubs: 2,
+    sides: ["left", "right"],
     reach: [0.48, 0.62],
-    spokes: [12, 15],
-    rings: [8, 9],
+    spokes: [18, 22],
+    rings: [12, 14],
     spread: [34, 48],
     weight: [1.5, 2.2],
     cross: 0.7,
@@ -39,8 +45,8 @@ const THWIP_CHARACTERS = [
     hubs: 2,
     sides: ["right", "right"],
     reach: [0.5, 0.66],
-    spokes: [6, 9],
-    rings: [3, 4],
+    spokes: [9, 14],
+    rings: [4, 6],
     spread: [16, 26],
     weight: [1.1, 1.6],
     cross: 0.2,
@@ -52,8 +58,8 @@ const THWIP_CHARACTERS = [
     hubs: 3,
     sides: ["left", "right", "left"],
     reach: [0.3, 0.4],
-    spokes: [6, 9],
-    rings: [3, 4],
+    spokes: [9, 14],
+    rings: [4, 6],
     spread: [24, 38],
     weight: [1.0, 1.5],
     cross: 0.15,
@@ -65,8 +71,8 @@ const THWIP_CHARACTERS = [
     hubs: 2,
     sides: ["left", "right"],
     reach: [0.42, 0.56],
-    spokes: [9, 12],
-    rings: [6, 8],
+    spokes: [14, 18],
+    rings: [9, 12],
     spread: [40, 56],
     weight: [1.6, 2.4],
     cross: 0.5,
@@ -80,21 +86,30 @@ function thwipCharacter(rng) {
 }
 
 function thwipAim(rng, left, spread) {
-  const up = webRand(rng) < THWIP_UP_CHANCE;
+  const roll = webRand(rng);
   const half = spread / 2;
-  const off = up ? webPick(rng, -10, 2) : half * 0.72 + webPick(rng, 2, 18);
+  let off;
+  if (roll < THWIP_UP_CHANCE) off = webPick(rng, -10, 2);
+  else if (roll < THWIP_UP_CHANCE + THWIP_DOWN_CHANCE) off = webPick(rng, 52, 84);
+  else off = half * 0.72 + webPick(rng, 2, 18);
   return left ? off : 180 - off;
 }
 
 function thwipHubs(rng, character) {
   const out = [];
   const spread = (character.spread[0] + character.spread[1]) / 2;
-  for (let i = 0; i < character.hubs; i += 1) {
-    const left = character.sides[i % character.sides.length] === "left";
+  const count = Math.max(THWIP_MIN_HUBS, Math.min(THWIP_MAX_HUBS, character.hubs));
+  const total = count < THWIP_MAX_HUBS && webRand(rng) < THWIP_EXTRA_HUB ? count + 1 : count;
+  const lane = (THWIP_BAND[1] - THWIP_BAND[0]) / total;
+  for (let i = 0; i < total; i += 1) {
+    const left = i % 2 === 0
+      ? character.sides[0] === "left"
+      : character.sides[0] !== "left";
     const tone = character.tones[i % character.tones.length];
+    const band = THWIP_BAND[0] + lane * i;
     out.push({
       x: (left ? webPick(rng, 0.02, 0.12) : webPick(rng, 0.88, 0.98)) * THWIP_BOX.w,
-      y: webPick(rng, 0.3, 0.5) * THWIP_BOX.h,
+      y: webPick(rng, band, band + lane * 0.86) * THWIP_BOX.h,
       aim: thwipAim(rng, left, spread),
       reach: THWIP_BOX.w * webPick(rng, character.reach[0], character.reach[1]),
       tone: tone === undefined ? THWIP_TONES[i % THWIP_TONES.length] : tone,
@@ -160,14 +175,23 @@ function thwipSvg(rng) {
   const g = document.createElementNS(WEBGEOM_NS, "g");
   g.setAttribute("class", "thwip__g");
   let order = 0;
-  thwipHubs(rng, character).forEach((hub) => {
-    const plan = webPlan(rng, hub, {
-      minSpokes: character.spokes[0], maxSpokes: character.spokes[1],
-      minRings: character.rings[0], maxRings: character.rings[1],
-      minSpread: character.spread[0], maxSpread: character.spread[1],
+  let live = 0;
+  let tries = 0;
+  while (live < THWIP_MIN_HUBS && tries < THWIP_HUB_TRIES) {
+    thwipHubs(rng, character).forEach((hub) => {
+      if (live >= THWIP_MAX_HUBS) return;
+      const plan = webPlan(rng, hub, {
+        minSpokes: character.spokes[0], maxSpokes: character.spokes[1],
+        minRings: character.rings[0], maxRings: character.rings[1],
+        minSpread: character.spread[0], maxSpread: character.spread[1],
+      });
+      const kept = webKeepOut(plan, THWIP_SAFE);
+      if (kept.spokes.length === 0) return;
+      order = thwipDrawPlan(g, kept, rng, order, character);
+      live += 1;
     });
-    order = thwipDrawPlan(g, webKeepOut(plan, THWIP_SAFE), rng, order, character);
-  });
+    tries += 1;
+  }
   svg.appendChild(g);
   return svg;
 }

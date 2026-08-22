@@ -1,99 +1,93 @@
 "use strict";
 
-const GUTTER_BUGLE_ROWS = [72, 104, 136, 168, 200, 232, 264];
+const GUTTER_BUGLE_CYCLE = [11, 27];
+const GUTTER_BUGLE_ROWS = [150, 196, 240, 284, 328, 372, 416];
 
-const GUTTER_BUGLE_COLS = [12, 32, 52, 72, 92];
+const GUTTER_BUGLE_COLS = [4, 27, 50, 74, 97, 120];
 
-const GUTTER_BUGLE_PERIODS = [4.3, 5.1, 6.4, 7.2, 8.1, 9];
 
-const GUTTER_BUGLE_D = "M6 2 L6 -44 M30 2 L30 -44 M54 2 L54 -44 M78 2 L78 -44 " +
-  "M102 2 L102 -44 M0 -2 L108 -2 M0 -16 L108 -16 M0 -30 L108 -30 M0 -42 L108 -42";
+const GUTTER_BUGLE_D = "M-18 2 L-18 -56 M11 2 L11 -56 M40 2 L40 -56 M69 2 L69 -56 " +
+  "M98 2 L98 -56 M127 2 L127 -56 M156 2 L156 -56 " +
+  "M-20 -2 L158 -2 M-20 -28 L158 -28 M-20 -54 L158 -54";
+
+const GUTTER_BUGLE_BRACE = "M-18 -2 L11 -28 M11 -2 L-18 -28 M127 -2 L156 -28 M156 -2 L127 -28 " +
+  "M40 -28 L69 -54 M69 -28 L40 -54";
 
 function gutterBugleFrame(ink) {
-  ink.appendChild(gutterEl("g", { class: "gutter__rig" }))
-    .appendChild(gutterPath("gutter__rigline", GUTTER_BUGLE_D));
-}
-
-function gutterBugleHorn(x, y) {
-  const g = gutterEl("g", { class: "gutter__horn", transform: "translate(" + x + " " + y + ")" });
-  g.appendChild(gutterPath("gutter__hornline",
-    "M0 0 L5 0 q6 0 6 5 q0 5 -6 5 L4 10 q-6 0 -6 -5 q0 -5 6 -5"));
-  g.appendChild(gutterPath("gutter__hornline", "M11 4 L17 4"));
-  g.appendChild(gutterPath("gutter__bell", "M17 -3 L17 11 L25 15 L25 -7z"));
-  return g;
-}
-
-function gutterBugleWord(text, x, y, size) {
-  const t = gutterEl("text", {
-    class: "gutter__sign", x: x, y: y, "font-size": size,
-    "text-anchor": "middle", "dominant-baseline": "alphabetic",
-  });
-  t.textContent = text;
-  return t;
+  const rig = gutterEl("g", { class: "gutter__rig" });
+  rig.appendChild(gutterPath("gutter__rigline", GUTTER_BUGLE_D));
+  rig.appendChild(gutterPath("gutter__rigbrace", GUTTER_BUGLE_BRACE));
+  ink.appendChild(rig);
 }
 
 function gutterBugleSign(ink) {
-  const sign = gutterEl("g", { class: "gutter__signrig", transform: "translate(0 50)" });
+  const sign = gutterEl("g", { class: "gutter__signrig", transform: "translate(0 62)" });
   gutterBugleFrame(sign);
-  sign.appendChild(gutterBugleWord("DAILY", 34, -24, 17));
-  sign.appendChild(gutterBugleHorn(60, -30));
-  sign.appendChild(gutterBugleWord("BUGLE", 56, -6, 17));
+  sign.appendChild(gutterTypeWord("DAILY", 15, -16, 22));
+  sign.appendChild(gutterBugleHorn(54.4, -37.2, 20));
+  sign.appendChild(gutterTypeWord("BUGLE", 121, -16, 22));
   ink.appendChild(sign);
 }
 
-function gutterBugleWindow(rng, x, y, arch, lit, seat) {
-  const cls = "gutter__pane" + (lit ? " gutter__pane--lit" : "");
-  const node = arch
-    ? gutterPath(cls, "M" + x + " " + (y + 13) + " L" + x + " " + (y + 5) +
-      " q0 -5 5 -5 q5 0 5 5 L" + (x + 10) + " " + (y + 13) + "z")
-    : gutterEl("rect", { class: cls, x: x, y: y, width: 10, height: 13, rx: 1 });
-  if (lit) {
-    const p = GUTTER_BUGLE_PERIODS[seat % GUTTER_BUGLE_PERIODS.length];
-    node.style.setProperty("--lit", p + "s");
-    node.style.setProperty("--d", "-" + webRound(webPick(rng, 0, p)) + "s");
-  }
-  return node;
+function gutterBugleShape(cls, x, y, arch) {
+  return arch
+    ? gutterPath(cls, "M" + x + " " + (y + 26) + " L" + x + " " + (y + 9) +
+      " q0 -9 7 -9 q7 0 7 9 L" + (x + 14) + " " + (y + 26) + "z")
+    : gutterEl("rect", { class: cls, x: x, y: y, width: 14, height: 20, rx: 1 });
 }
 
-function gutterBugleFacade(rng, ink) {
+function gutterBugleWindow(rng, x, y, arch) {
+  const cell = gutterEl("g", { class: "gutter__cell" });
+  cell.appendChild(gutterBugleShape("gutter__pane", x, y, arch));
+  const glow = gutterBugleShape("gutter__glow", x, y, arch);
+  const span = webPick(rng, GUTTER_BUGLE_CYCLE[0], GUTTER_BUGLE_CYCLE[1]);
+  glow.style.setProperty("--lit", webRound(span) + "s");
+  glow.style.setProperty("--d", "-" + webRound(webPick(rng, 0, span)) + "s");
+  cell.appendChild(glow);
+  return cell;
+}
+
+function gutterBugleCrown(wall) {
+  wall.appendChild(gutterEl("rect", {
+    class: "gutter__capstone", x: -11, y: 62, width: 160, height: 12,
+  }));
+  wall.appendChild(gutterPath("gutter__cornice", "M-13 62 L151 62 M-11 74 L149 74 M-9 82 L147 82"));
+  const teeth = gutterEl("g", { class: "gutter__dentils" });
+  for (let x = -5; x <= 139; x += 8) {
+    teeth.appendChild(gutterEl("rect", {
+      class: "gutter__tooth", x: x, y: 75, width: 4, height: 6,
+    }));
+  }
+  wall.appendChild(teeth);
+}
+
+function gutterBugleFacade(ink) {
   const wall = gutterEl("g", { class: "gutter__wall" });
   wall.appendChild(gutterEl("rect", {
-    class: "gutter__block", x: 4, y: 56, width: 104, height: 244,
+    class: "gutter__block", x: -9, y: 74, width: 156, height: 386,
   }));
-  wall.appendChild(gutterPath("gutter__cornice", "M0 56 L112 56 M2 62 L110 62"));
-  [26, 58, 90].forEach((x) => {
-    wall.appendChild(gutterPath("gutter__pilaster", "M" + x + " 62 L" + x + " 300"));
+  gutterBugleCrown(wall);
+  [-9, 17, 43, 69, 95, 121, 147].forEach((x) => {
+    wall.appendChild(gutterPath("gutter__pilaster", "M" + x + " 84 L" + x + " 460"));
   });
+  wall.appendChild(gutterEl("rect", {
+    class: "gutter__shade", x: 125, y: 84, width: 22, height: 376,
+  }));
   ink.appendChild(wall);
   return wall;
 }
 
-function gutterBugleLit(rng, total) {
-  const want = webPickInt(rng, 3, 4);
-  const pick = {};
-  let guard = 0;
-  while (Object.keys(pick).length < want && guard < 60) {
-    pick[webPickInt(rng, 0, total - 1)] = true;
-    guard += 1;
-  }
-  return pick;
-}
-
 function gutterBugleSvg(rng) {
-  const svg = gutterMotifSvg("gutter__bugle", "0 0 112 300");
-  svg.setAttribute("preserveAspectRatio", "xMidYMin meet");
+  const svg = gutterMotifSvg("gutter__bugle", "-22 0 184 460");
+  svg.setAttribute("preserveAspectRatio", "xMidYMax meet");
   const ink = gutterInk(svg);
-  gutterBugleFacade(rng, ink);
-  const total = GUTTER_BUGLE_ROWS.length * GUTTER_BUGLE_COLS.length;
-  const lit = gutterBugleLit(rng, total);
-  let seat = 0;
+  gutterBugleFacade(ink);
   GUTTER_BUGLE_ROWS.forEach((y, r) => {
-    if (r > 0) ink.appendChild(gutterPath("gutter__ledge", "M6 " + (y - 6) + " L106 " + (y - 6)));
-    GUTTER_BUGLE_COLS.forEach((x, c) => {
-      const at = r * GUTTER_BUGLE_COLS.length + c;
-      const on = !!lit[at];
-      ink.appendChild(gutterBugleWindow(rng, x, y, r === 0, on, seat));
-      if (on) seat += 1;
+    if (r > 0) {
+      ink.appendChild(gutterPath("gutter__ledge", "M-7 " + (y - 9) + " L145 " + (y - 9)));
+    }
+    GUTTER_BUGLE_COLS.forEach((x) => {
+      ink.appendChild(gutterBugleWindow(rng, x, y, r === 0));
     });
   });
   gutterBugleSign(ink);

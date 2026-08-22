@@ -12,51 +12,14 @@ function scratchPanelHeight(panel) {
   return panel.getBoundingClientRect().height;
 }
 
-function scratchReachTop(state) {
-  const reach = Math.min(1, Math.max(0, state.spread)) * SCRATCH_COVER;
-  return state.box.h * (1 - reach);
-}
-
 function scratchSeenOf(state) {
   const seen = state.layer.getBoundingClientRect();
   if (seen.height === 0) return null;
   return { rect: seen, scale: state.box.h / seen.height };
 }
 
-function scratchStraddler(state, reach) {
-  const seen = scratchSeenOf(state);
-  if (!seen) return null;
-  let top = null;
-  state.panel.querySelectorAll(SCRATCH_CONCEALS).forEach((el) => {
-    const box = el.getBoundingClientRect();
-    if (box.height === 0) return;
-    const y = (box.top - seen.rect.top) * seen.scale;
-    const bottom = y + box.height * seen.scale;
-    if (bottom <= reach || y >= reach) return;
-    if (top === null || y < top) top = y;
-  });
-  return top;
-}
-
-function scratchFloorOf(state) {
-  const seen = scratchSeenOf(state);
-  if (!seen) return 0;
-  let floor = 0;
-  state.panel.querySelectorAll(SCRATCH_KEEPS).forEach((el) => {
-    const box = el.getBoundingClientRect();
-    if (box.height === 0) return;
-    const bottom = (box.top - seen.rect.top + box.height) * seen.scale;
-    if (bottom > floor) floor = bottom;
-  });
-  return floor;
-}
-
 function scratchTopOf(state) {
-  const reach = scratchReachTop(state);
-  const cut = scratchStraddler(state, reach);
-  if (cut === null) return Math.round(reach);
-  const lifted = cut - SCRATCH_CLEARANCE;
-  return Math.round(Math.max(0, Math.max(scratchFloorOf(state), lifted)));
+  return 0;
 }
 
 function scratchSize(state) {

@@ -21,7 +21,7 @@ const context = loadWebModule(
 );
 const {
   scratchSize, scratchPointIn, scratchTopOf,
-  SCRATCH_ROW_H, SCRATCH_COVER, SCRATCH_CLEARANCE,
+  SCRATCH_ROW_H, SCRATCH_COVER,
 } = context;
 
 function fakeState(cssW, cssH, left, top, spread, concealed) {
@@ -77,75 +77,48 @@ test('a pointer near a corner maps to that same corner, and the top is never dro
   assert.ok(scratchPointIn(state, box.left + 100, box.top + 2));
 });
 
-test('the veil reaches up from the base in proportion to the spread', () => {
-  const state = fakeState(755, 400, 0, 0, 0.85);
+test('the web starts at the very top of the panel, it is not a band across the base', () => {
+  [0.85, 0.2, 1, 0.5].forEach((spread) => {
+    const state = fakeState(755, 400, 0, 0, spread);
+    scratchSize(state);
+    assert.equal(scratchTopOf(state), 0,
+      'a spread of ' + spread + ' left a bare strip the scraped values could be read through');
+  });
+});
+
+test('no readout on the panel can push the web down off the content it hides', () => {
+  const state = fakeState(755, 400, 0, 0, 0.85, [10, 120, 260, 380]);
   scratchSize(state);
-  const top = scratchTopOf(state);
-  assert.ok(top > 0, 'the veil never covers the whole panel');
-  assert.ok(Math.abs(top - 400 * (1 - 0.85 * SCRATCH_COVER)) <= 1);
+  assert.equal(scratchTopOf(state), 0,
+    'the web covers the panel outright, nothing may carve an opening in it');
 });
 
-test('a shallow spread leaves most of the panel bare', () => {
-  const state = fakeState(755, 400, 0, 0, 0.2);
-  scratchSize(state);
-  assert.ok(scratchTopOf(state) > 400 * 0.7);
-});
-
-test('the edge lifts clear of a readout it would otherwise slice through', () => {
-  const bare = fakeState(755, 400, 0, 0, 0.85);
-  scratchSize(bare);
-  const plainTop = scratchTopOf(bare);
-  const sliced = fakeState(755, 400, 0, 0, 0.85, [plainTop - 8]);
-  scratchSize(sliced);
-  assert.ok(scratchTopOf(sliced) < plainTop,
-    'an edge cutting across the readout clipped the 0% and cut the legs off the rig');
-  assert.ok(scratchTopOf(sliced) <= plainTop - 8 - SCRATCH_CLEARANCE + 1,
-    'the edge clears the readout by a real margin');
-});
-
-test('content already fully below the edge never drags the veil higher', () => {
-  const bare = fakeState(755, 400, 0, 0, 0.85);
-  scratchSize(bare);
-  const plainTop = scratchTopOf(bare);
-  const low = fakeState(755, 400, 0, 0, 0.85, [plainTop + 120]);
-  scratchSize(low);
-  assert.equal(scratchTopOf(low), plainTop);
-});
-
-test('content entirely above the edge is left alone, not swallowed', () => {
-  const bare = fakeState(755, 400, 0, 0, 0.85);
-  scratchSize(bare);
-  const plainTop = scratchTopOf(bare);
-  const high = fakeState(755, 400, 0, 0, 0.85, [plainTop - 90]);
-  scratchSize(high);
-  assert.equal(scratchTopOf(high), plainTop,
-    'the header must stay readable rather than be dragged under the veil');
-});
-
-test('the lifted edge never rises over the panel header', () => {
-  const state = fakeState(755, 400, 0, 0, 0.85);
-  scratchSize(state);
-  const reach = scratchTopOf(state);
-  const cutter = { getBoundingClientRect: () => ({ top: reach - 40, height: 80 }) };
+test('the panel header is covered like everything else, it earns no exemption', () => {
   const head = { getBoundingClientRect: () => ({ top: 20, height: 60 }) };
-  state.panel.querySelectorAll = (sel) => (sel.indexOf('phead') === -1 ? [cutter] : [head]);
-  assert.equal(scratchTopOf(state), 80,
-    'lifting to clear a readout must stop at the codename, not swallow it');
-});
-
-test('the veil never climbs above the top of the panel', () => {
-  const tall = { getBoundingClientRect: () => ({ top: 2, height: 380 }) };
   const state = fakeState(755, 400, 0, 0, 0.85);
   scratchSize(state);
-  state.panel.querySelectorAll = (sel) => (sel.indexOf('phead') === -1 ? [tall] : []);
-  assert.ok(scratchTopOf(state) >= 0,
-    'a tall element straddling the edge must not push the veil off the panel');
+  state.panel.querySelectorAll = (sel) => (sel.indexOf('phead') === -1 ? [] : [head]);
+  assert.equal(scratchTopOf(state), 0,
+    'sparing the header would leave a readable gap at the top of the zone');
+});
+
+test('the cover reaches the whole panel however tall it is', () => {
+  [200, 400, 900].forEach((h) => {
+    const state = fakeState(755, h, 0, 0, 0.85);
+    scratchSize(state);
+    assert.equal(scratchTopOf(state), 0);
+    assert.equal(state.box.h, h, 'the web box must span the panel it covers');
+  });
 });
 
 test('a spread too shallow to hide even one row does not mount a web at all', () => {
   const state = fakeState(755, 400, 0, 0, 0.001);
   assert.equal(scratchSize(state), false);
   assert.ok(SCRATCH_ROW_H > 0);
+  assert.ok(SCRATCH_COVER > 0 && SCRATCH_COVER <= 1,
+    'the mount threshold is a share of the panel, a web is worth spinning or it is not');
+  const worth = fakeState(755, 400, 0, 0, 1);
+  assert.equal(scratchSize(worth), true, 'a full spread always earns a web');
 });
 
 test('the layer is sized from the panel layout box, never the rotated screen rect', () => {
@@ -186,9 +159,29 @@ test('nothing in the whole sheet animates or transitions a paint property', () =
   const css = fs.readFileSync(cssPath('scratch.css'), 'utf8');
   assert.doesNotMatch(css, /transition:[^;}]*stroke-dashoffset/);
   assert.doesNotMatch(css, /animation:[^;}]*dash/);
-  const veil = css.slice(css.indexOf('.scratch__veil'), css.indexOf('.scratch__g'));
-  assert.match(veil, /transition:opacity/,
-    'the veil fades on opacity, its fill stays a static paint');
+  assert.doesNotMatch(css, /transition:[^;}]*\bfill\b/,
+    'transitioning fill repaints the whole rect every frame');
+});
+
+test('the veil paints nothing, the strands alone are what conceal the readouts', () => {
+  const css = fs.readFileSync(cssPath('scratch.css'), 'utf8');
+  const veil = css.slice(css.indexOf('.scratch__veil{'));
+  const rule = veil.slice(0, veil.indexOf('}'));
+  assert.match(rule, /fill:none/,
+    'a painted rect is the old slab, the reveal is meant to be earned strand by strand');
+  assert.match(rule, /fill-opacity:0/, 'the rect stays invisible whatever the fill resolves to');
+});
+
+test('what the panel hides is carried by the strand count, not by a slab of ink', () => {
+  const web = fs.readFileSync(modulePath('scratch-web.js'), 'utf8');
+  const cell = /SCRATCH_CELL\s*=\s*(\d+)/.exec(web);
+  assert.ok(cell, 'the weave declares a cell size');
+  assert.ok(Number(cell[1]) > 0 && Number(cell[1]) < 140,
+    'a coarse cell leaves the readouts legible between the hubs');
+  const spokes = /minSpokes:\s*(\d+)/.exec(web);
+  const rings = /minRings:\s*(\d+)/.exec(web);
+  assert.ok(spokes && Number(spokes[1]) >= 6, 'each hub needs enough spokes to obscure its cell');
+  assert.ok(rings && Number(rings[1]) >= 4, 'the rings are what close the gaps between spokes');
 });
 
 test('the torn strand retracts toward the anchor it hangs from', () => {

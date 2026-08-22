@@ -1,15 +1,35 @@
-.gutter .gutter__slot--bugle{height:300px;width:clamp(88px,var(--gut),112px);opacity:.78;}
-.gutter .gutter__slot--webhead{height:300px;width:clamp(72px,var(--gut),80px);top:0;opacity:.9;}
+.gutter .gutter__slot--bugle{height:670px;width:clamp(178px,var(--gut),264px);opacity:1;}
+.gutter .gutter__slot--webhead{height:740px;width:clamp(226px,var(--gut),290px);top:0;opacity:1;}
 
 .gutter__slot--right.gutter__slot--bugle{
-  left:auto;
-  right:2px;
+  top:auto !important;
+  bottom:0;
+  margin-top:0;
+  left:calc(50% + var(--col) + var(--clear));
+  right:auto;
+  margin-left:calc((var(--gut) - clamp(178px,var(--gut),264px)) / 2 - 12px);
+  --out:0px;
 }
 
 .gutter__slot--left.gutter__slot--webhead{
   right:auto;
-  left:clamp(2px,calc(var(--gut) * .1),34px);
+  left:calc((50% - var(--col) - var(--clear)) / 2 - clamp(226px,var(--gut),290px) / 2);
+  top:0 !important;
+  margin-top:0;
 }
+
+.gutter--manual .gutter__slot--webhead{width:clamp(226px,var(--gut),290px);}
+
+.gutter .gutter__slot--webhead svg{display:block;height:100%;}
+
+.gutter .gutter__webhead{opacity:1 !important;}
+
+.gutter__hero{
+  opacity:1;
+  filter:saturate(1.25) brightness(1.12) drop-shadow(0 0 6px rgba(0,0,0,.55));
+}
+
+.gutter .gutter__slot--bugle svg{display:block;height:100%;}
 
 .gutter__bugle,.gutter__webhead{
   transform:scale(var(--scale,1)) rotate(var(--turn,0deg));
@@ -22,44 +42,48 @@
 .gutter__webhead{width:100%;height:auto;overflow:visible;}
 
 .gutter__wall{fill:none;}
-.gutter__block{fill:var(--void-2);stroke:var(--paper);stroke-width:1.4;opacity:.5;}
-.gutter__cornice{fill:none;stroke:var(--paper);stroke-width:1.6;opacity:.55;}
-.gutter__pilaster{fill:none;stroke:var(--paper);stroke-width:1;opacity:.3;}
-.gutter__ledge{fill:none;stroke:var(--paper);stroke-width:.9;opacity:.26;}
-.gutter__pane{fill:var(--void);stroke:var(--paper);stroke-width:.9;opacity:.34;}
+.gutter__block{fill:var(--paper);stroke:var(--paper);stroke-width:1.6;opacity:.72;}
+.gutter__capstone{fill:var(--paper);stroke:var(--paper);stroke-width:1;opacity:.88;}
+.gutter__cornice{fill:none;stroke:var(--paper);stroke-width:1.8;opacity:.9;}
+.gutter__dentils{fill:var(--paper);opacity:.9;}
+.gutter__tooth{fill:var(--paper);stroke:none;}
+.gutter__pilaster{fill:none;stroke:var(--dim);stroke-width:1.2;opacity:.85;}
+.gutter__shade{fill:var(--void);stroke:none;opacity:.28;}
+.gutter__ledge{fill:none;stroke:var(--dim);stroke-width:1;opacity:.8;}
+.gutter__pane{fill:var(--void);stroke:var(--dim);stroke-width:.9;opacity:.95;}
 
-.gutter__pane--lit{
-  fill:var(--degraded);stroke:var(--degraded);opacity:.85;
-  animation:gutter-blink var(--lit,6s) steps(1,end) infinite;
+.gutter__cell{fill:none;}
+
+.gutter__glow{
+  fill:var(--degraded);stroke:var(--degraded);stroke-width:.9;
+  opacity:0;
+  animation:gutter-blink var(--lit,17s) steps(1,end) infinite;
   animation-delay:var(--d,0s);
   will-change:opacity;
 }
 
 .gutter__signrig{fill:none;}
-.gutter__rigline{fill:none;stroke:var(--paper);stroke-width:1;opacity:.42;}
+.gutter__rigline{fill:none;stroke:var(--paper);stroke-width:1.1;opacity:.6;}
+.gutter__rigbrace{fill:none;stroke:var(--paper);stroke-width:.7;opacity:.34;}
 .gutter__sign{
-  fill:var(--critical);stroke:none;opacity:.92;
+  fill:var(--critical);stroke:none;opacity:1;
   font-family:Anton,Impact,sans-serif;letter-spacing:.02em;
 }
-.gutter__hornline{fill:none;stroke:var(--critical);stroke-width:1.6;opacity:.9;}
-.gutter__bell{fill:var(--critical);stroke:var(--critical);stroke-width:1;opacity:.9;}
+.gutter__word{fill:var(--critical);stroke:var(--critical);stroke-width:2.8;stroke-linejoin:round;}
+.gutter__bell{fill:var(--critical);stroke:none;opacity:1;}
+.gutter__loop{fill:none;stroke:var(--critical);stroke-width:3;opacity:1;stroke-linecap:round;}
+.gutter__bore{fill:var(--critical);stroke:none;opacity:1;}
+.gutter__mouth{fill:var(--critical);stroke:none;opacity:1;}
+.gutter__valve{fill:var(--critical);stroke:none;opacity:1;}
 
 .gutter__hero{fill:none;}
-.gutter__mask{fill:var(--critical);stroke:var(--paper);stroke-width:1.3;opacity:.72;}
-.gutter__lens{fill:var(--paper);stroke:var(--ink);stroke-width:.6;opacity:.95;}
-.gutter__suit{fill:var(--critical);stroke:var(--paper);stroke-width:1.2;opacity:.72;}
-.gutter__limb{fill:none;stroke:var(--critical);stroke-width:3.4;opacity:.66;stroke-linecap:round;}
-.gutter__fist{fill:var(--critical);stroke:var(--paper);stroke-width:1.2;opacity:.7;}
 .gutter__weave{fill:none;stroke:var(--paper);stroke-width:.7;opacity:.44;}
 .gutter__emblem{fill:none;stroke:var(--ink);stroke-width:1.1;opacity:.7;}
 
-.gutter__swing--webhead{transform-origin:30px 0;}
+.gutter__swing--webhead{transform-origin:40px 0;}
 
 @keyframes gutter-blink{
-  0%{opacity:.85;}
-  46%{opacity:.85;}
-  50%{opacity:.16;}
-  62%{opacity:.16;}
-  66%{opacity:.85;}
-  100%{opacity:.85;}
+  0%,92%{opacity:0;}
+  94%,99%{opacity:1;}
+  100%{opacity:0;}
 }

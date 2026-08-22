@@ -3,11 +3,8 @@
 const SCRATCH_RADIUS = 22;
 const SCRATCH_ROW_H = 26;
 const SCRATCH_COVER = 0.82;
-const SCRATCH_CLEARANCE = 18;
 const SCRATCH_SAMPLES = 14;
-const SCRATCH_CELL = 190;
-const SCRATCH_CONCEALS = ".integrity,.sparkframe,.spark__note,.bar,.chips";
-const SCRATCH_KEEPS = ".phead";
+const SCRATCH_CELL = 74;
 const SCRATCH_AIMS = [30, 78, 126, 174, -138, -84, -30, 12];
 
 function scratchRng(seed) {
@@ -58,9 +55,9 @@ function scratchStrand(seg, hub, kind, weight) {
 
 function scratchPlanFor(rng, hub) {
   const plan = webPlan(rng, hub, {
-    minSpokes: 5, maxSpokes: 6,
-    minRings: 4, maxRings: 5,
-    minSpread: 52, maxSpread: 72,
+    minSpokes: 10, maxSpokes: 13,
+    minRings: 8, maxRings: 10,
+    minSpread: 82, maxSpread: 118,
   });
   const out = plan.spokes.map((seg) => scratchStrand(seg, hub, "spoke", 1.4));
   plan.rings.forEach((seg, i) => {

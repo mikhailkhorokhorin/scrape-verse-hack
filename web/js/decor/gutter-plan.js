@@ -13,7 +13,7 @@ const GUTTER_MIX = {
     corners: { tl: "cyan", br: "pink", tr: "dim", bl: "dim" },
     sure: [
       { kind: "spider", side: "right", band: [0, 0] },
-      { kind: "bugle", side: "right", band: [0.3, 0.42] },
+      { kind: "bugle", side: "right", band: [0.5, 0.5] },
     ],
     pool: ["torn", "climber", "bead", "sac"],
     minScatter: 5,

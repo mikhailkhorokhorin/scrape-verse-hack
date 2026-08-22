@@ -1,4 +1,4 @@
-.wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:var(--s4) var(--s4) var(--s6);}
+.wrap{position:relative;z-index:2;max-width:1440px;margin:0 auto;padding:var(--s4) var(--s4) var(--s6);}
 @media(max-width:768px){.wrap{padding:var(--s3) var(--s2) var(--s5);}}
 
 .masthead{

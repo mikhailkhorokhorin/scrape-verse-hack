@@ -55,11 +55,11 @@
 }
 .legend__black::after{
   content:"";position:absolute;inset:0;
-  background:var(--symbiote);
-  filter:url(#symbiote-turbulence);
-  -webkit-mask-image:linear-gradient(to top,#000 0,#000 55%,transparent 66%);
-  mask-image:linear-gradient(to top,#000 0,#000 55%,transparent 66%);
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  background:
+    repeating-linear-gradient(38deg,transparent 0 5px,var(--dim) 5px 6px),
+    repeating-linear-gradient(-38deg,transparent 0 5px,var(--dim) 5px 6px),
+    repeating-linear-gradient(90deg,transparent 0 7px,var(--dimmer) 7px 8px);
+  opacity:.72;
 }
 
 .legend__cols{

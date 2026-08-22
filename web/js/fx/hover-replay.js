@@ -70,12 +70,31 @@ function hoverDelegate(root, selector, fire, cooldownMs) {
 
 const HOVER_PULSE_MS = 640;
 const HOVER_SPARK_MS = 420;
+const HOVER_TRACE_MS = 1250;
 
 function mountHoverPulse() {
   if (typeof document === "undefined" || !document.querySelector) return null;
   const host = document.querySelector(".readouts");
   if (!host) return null;
   return hoverDelegate(host, ".pulse", (dot) => hoverRestart(dot, "pulse--kick", "pulse-kick"), HOVER_PULSE_MS);
+}
+
+function mountHoverTrace() {
+  if (typeof document === "undefined" || !document.querySelector) return null;
+  const line = document.getElementById("pulse");
+  if (!line) return null;
+  const replay = () => {
+    line.querySelectorAll(".pulseline__trace").forEach((trace) => {
+      trace.classList.remove("pulseline__trace--draw");
+      hoverRestart(trace, "pulseline__trace--rewind", "trace-rewind");
+    });
+  };
+  line.addEventListener("click", () => {
+    if (hoverReduced()) return;
+    if (!hoverReady(line, HOVER_TRACE_MS)) return;
+    replay();
+  });
+  return hoverReplay(line, replay, HOVER_TRACE_MS);
 }
 
 function mountHoverSparks() {
@@ -87,6 +106,7 @@ function mountHoverSparks() {
 
 function mountHoverReplay() {
   mountHoverPulse();
+  mountHoverTrace();
   mountHoverSparks();
 }
 

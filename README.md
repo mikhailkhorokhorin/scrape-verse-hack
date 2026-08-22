@@ -30,7 +30,7 @@ Nothing below needs an API key, touches the network, or spends a credit.
 | 1 | Open the [live console](https://mikhailkhorokhorin.github.io/scrape-verse-hack/) | Three real collectors, four recorded incidents, the data they returned |
 | 2 | Drag the black off the darkened half of the **diptych** near the top | The reveal is the same data the field chips read, not a caption |
 | 3 | Open [`?mock=1`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1), press **BREAK BODEGA**, then **RE-WEAVE** | The breakâ†’healâ†’receipt loop, in your browser, in ten seconds |
-| 4 | `git clone` this repo, then `npm test` | 1,461 tests, `node:test`, zero dependencies, offline |
+| 4 | `git clone` this repo, then `npm test` | 1,460 tests, `node:test`, zero dependencies, offline |
 | 5 | `node tools/evidence-report.js inc_004` | The full trail of the incident **no human touched**, with SHA-256 digests |
 | 6 | `git log --author="thwip watch" --oneline \| wc -l` | Commits authored by the workflow, not by a person |
 
@@ -44,9 +44,9 @@ project.
 
 | Codename | Target | Collector ID | Fields under contract | Why this site |
 |---|---|---|---|---|
-| **ATLAS** | books.toscrape.com | `c_mt2fnqqngikv29od5` | title, price, rating, image_url, availability | A sandbox built for scraping; no robots.txt, server-rendered. Rating lives in a **CSS class**, not in text â€” the natural infected-field candidate |
-| **KESTREL** | news.ycombinator.com | `c_mt2fnt3p2k4n644701` | title, points, comments, author | A real site with real churn. `robots.txt` allows the front page; `Crawl-delay: 30` is respected |
-| **BODEGA** | our own demo page | `c_mt2lkwxa1bb5uz223s` | title, price, rating, image | Breakable on purpose, so a judge can reproduce a break without waiting for the web to move |
+| **ATLAS** | books.toscrape.com | `c_mt4watrl16nf8i3in7` | title, price, rating, image_url, availability | A sandbox built for scraping; no robots.txt, server-rendered. Rating lives in a **CSS class**, not in text â€” the natural infected-field candidate |
+| **KESTREL** | news.ycombinator.com | `c_mt4wke4p10o50u8bzp` | title, points, comments, author | A real site with real churn. `robots.txt` allows the front page; `Crawl-delay: 30` is respected |
+| **BODEGA** | our own demo page | `c_mt4pkrma2b8beq8jv5` | title, price, rating, image | Breakable on purpose, so a judge can reproduce a break without waiting for the web to move |
 
 Every ID is pinned in [`collectors.json`](collectors.json) with its per-field validators
 and has never been recreated. The creation envelopes Bright Data returned are committed
@@ -219,7 +219,7 @@ verbatim transcript of the receipt for the incident no human touched.
 ```bash
 git clone https://github.com/mikhailkhorokhorin/scrape-verse-hack.git
 cd scrape-verse-hack
-npm test                                  # 1,461 tests, zero dependencies, offline
+npm test                                  # 1,460 tests, zero dependencies, offline
 python3 -m http.server 8000               # any static server
 ```
 
@@ -258,7 +258,7 @@ web/           the console â€” no build step, no framework, no dependencies
   manual.html                    the back page: the pitch, the tools, the judge path
 mcp/           MCP server â€” eight tools, stdio JSON-RPC, no SDK
 tools/         evidence-report.js and numbers-audit.js â€” proof, computed twice
-test/          1,461 tests in {pipeline,web,mcp,tools}/, mirroring the source tree
+test/          1,460 tests in {pipeline,web,mcp,tools}/, mirroring the source tree
 data/          history.json and incidents.json, committed by CI every 30 minutes
 evidence/      raw Bright Data payloads; the digests are recomputed from these
 collectors.json   targets, Collector IDs, per-field validators

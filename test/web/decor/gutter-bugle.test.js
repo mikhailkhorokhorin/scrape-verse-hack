@@ -11,6 +11,7 @@ const WEB = path.join(ROOT, "web");
 const index = fs.readFileSync(path.join(WEB, "index.html"), "utf8");
 const manual = fs.readFileSync(path.join(WEB, "manual.html"), "utf8");
 const bugleJs = fs.readFileSync(modulePath("gutter-bugle.js"), "utf8");
+const typeJs = fs.readFileSync(modulePath("gutter-bugle-type.js"), "utf8");
 const webheadJs = fs.readFileSync(modulePath("gutter-webhead.js"), "utf8");
 const motifsJs = fs.readFileSync(modulePath("gutter-motifs.js"), "utf8");
 const planJs = fs.readFileSync(modulePath("gutter-plan.js"), "utf8");
@@ -52,16 +53,19 @@ test("the building is pinned right on the watch, the figure left on the manual",
 test("the sign stands on its own lattice rig, above the roof", () => {
   assert.match(bugleJs, /function gutterBugleFrame/);
   assert.match(bugleJs, /gutter__rigline/);
-  const rig = (bugleJs.match(/GUTTER_BUGLE_D = "([^"]*)" \+\s*"([^"]*)"/) || []).slice(1).join(" ");
-  const uprights = (rig.match(/M\d+ 2 L\d+ -44/g) || []).length;
-  const rails = (rig.match(/M0 -\d+ L108 -\d+/g) || []).length;
+  const decl = bugleJs.slice(bugleJs.indexOf("GUTTER_BUGLE_D ="));
+  const rig = decl.slice(0, decl.indexOf(";")).match(/"[^"]*"/g).join(" ").replace(/"/g, "");
+  const segs = rig.match(/M-?\d+ -?\d+ L-?\d+ -?\d+/g) || [];
+  const parts = segs.map((seg) => seg.match(/M(-?\d+) (-?\d+) L(-?\d+) (-?\d+)/));
+  const uprights = parts.filter((m) => m[1] === m[3]).length;
+  const rails = parts.filter((m) => m[2] === m[4]).length;
   assert.ok(uprights >= 4, "the rig needs vertical posts showing through the letters");
   assert.ok(rails >= 3, "the rig needs horizontal rails showing through the letters");
 });
 
 test("a bugle sits between the two words of the sign", () => {
-  assert.match(bugleJs, /function gutterBugleHorn/);
-  assert.match(bugleJs, /gutter__bell/);
+  assert.match(typeJs, /function gutterBugleHorn/);
+  assert.match(typeJs, /gutter__bell/);
   const sign = bugleJs.slice(bugleJs.indexOf("function gutterBugleSign"));
   const body = sign.slice(0, sign.indexOf("\n}"));
   const daily = body.indexOf('"DAILY"');
@@ -84,18 +88,28 @@ test("the top row is arched and the rows below are square", () => {
   assert.match(bugleJs, /gutterEl\("rect", \{ class: cls/, "the lower rows are plain rects");
 });
 
-test("only a few windows are lit, and each blinks on its own clock", () => {
-  assert.match(bugleJs, /webPickInt\(rng, 3, 4\)/, "three or four lit windows, not a garland");
-  assert.match(bugleJs, /"--lit"/);
-  assert.match(bugleJs, /"--d"/);
-  const periods = (bugleJs.match(/GUTTER_BUGLE_PERIODS = \[([^\]]+)\]/) || [])[1];
-  const secs = periods.split(",").map((n) => Number(n.trim()));
-  assert.equal(new Set(secs).size, secs.length, "the blink periods repeat");
-  secs.forEach((n) => assert.ok(n >= 4 && n <= 9, n + "s is outside the 4-9s spread"));
+test("every window blinks on its own clock, so the light stays sparse", () => {
+  assert.match(bugleJs, /"--lit"/, "each window needs its own period");
+  assert.match(bugleJs, /"--d"/, "each window needs its own phase");
+  const win = bugleJs.slice(bugleJs.indexOf("function gutterBugleWindow"));
+  const body = win.slice(0, win.indexOf("\n}"));
+  assert.match(body, /webPick\(rng, GUTTER_BUGLE_CYCLE\[0\], GUTTER_BUGLE_CYCLE\[1\]\)/,
+    "the period must be drawn per window, not shared by a fixed set");
+  assert.match(body, /webPick\(rng, 0, span\)/,
+    "the phase must be drawn per window, or every window blinks in unison");
+  const cycle = (bugleJs.match(/GUTTER_BUGLE_CYCLE = \[([^\]]+)\]/) || [])[1];
+  const [lo, hi] = cycle.split(",").map((n) => Number(n.trim()));
+  assert.ok(hi > lo, "the cycle needs a real spread, or the periods collapse");
+  assert.ok(lo >= 10, lo + "s is too short a cycle to keep the building calm");
+  const frames = bugleCss.slice(bugleCss.indexOf("@keyframes gutter-blink"));
+  const on = frames.match(/(\d+)%,(\d+)%\{opacity:1;\}/);
+  assert.ok(on, "the keyframes must hold the window lit for a slice of the cycle");
+  assert.ok(Number(on[2]) - Number(on[1]) <= 12,
+    "a window lit most of its cycle turns the facade into a garland");
 });
 
 test("the window light snaps and only ever animates opacity", () => {
-  const rule = bugleCss.slice(bugleCss.indexOf(".gutter__pane--lit{"));
+  const rule = bugleCss.slice(bugleCss.indexOf(".gutter__glow{"));
   const body = rule.slice(0, rule.indexOf("}"));
   assert.match(body, /steps\(1/, "the light must snap, not fade");
   assert.match(body, /will-change:opacity/);
@@ -107,14 +121,15 @@ test("the window light snaps and only ever animates opacity", () => {
     "the blink must not touch a paint or layout property");
 });
 
-test("the figure hangs head-down with a mask, torso, arms and legs", () => {
-  assert.match(webheadJs, /rotate\(180\)/, "the figure must hang upside down");
-  ["GUTTER_WEBHEAD_MASK", "GUTTER_WEBHEAD_EYES", "GUTTER_WEBHEAD_TORSO",
-    "GUTTER_WEBHEAD_ARMS", "GUTTER_WEBHEAD_LEGS"].forEach((name) => {
-    assert.ok(webheadJs.includes(name), name + " is missing");
-  });
-  const eyes = (webheadJs.match(/GUTTER_WEBHEAD_EYES = \[([^\]]*)\]/) || [])[1];
-  assert.equal((eyes.match(/"M/g) || []).length, 2, "a mask needs exactly two eye lenses");
+test("the figure is one transparent artwork, sized from its own aspect", () => {
+  assert.match(webheadJs, /GUTTER_WEBHEAD_SRC = "assets\/webhead\.png"/,
+    "the artwork must be a png, the only format here that carries transparency");
+  const art = (webheadJs.match(/GUTTER_WEBHEAD_ART = \{ w: (\d+), h: (\d+) \}/) || []);
+  assert.ok(art.length === 3, "the artwork needs its intrinsic size recorded");
+  assert.match(webheadJs, /Math\.round\(wide \* art\.h \/ art\.w\)/,
+    "height must follow the artwork aspect, or the figure stretches");
+  assert.doesNotMatch(webheadJs, /feColorMatrix|feComposite/,
+    "a transparent png needs no background key");
 });
 
 test("the figure swings on the shared sway, and rests under reduced motion", () => {
@@ -123,7 +138,7 @@ test("the figure swings on the shared sway, and rests under reduced motion", () 
   assert.match(bugleCss, /\.gutter__swing--webhead\{transform-origin:/,
     "the swing modifier needs its own origin");
   const reduce = gutterCss.slice(gutterCss.indexOf("@media(prefers-reduced-motion:reduce)"));
-  assert.match(reduce, /\.gutter__pane--lit\{animation:none !important/,
+  assert.match(reduce, /\.gutter__glow\{animation:none !important/,
     "the windows must stop blinking under reduced motion");
   assert.ok(reduce.includes("gutter__swing"), "the swing must stop under reduced motion");
 });

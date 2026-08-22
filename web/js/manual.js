@@ -1,7 +1,7 @@
 "use strict";
 
 const MANUAL_META_URL = "data/meta.json";
-const MANUAL_FALLBACK_META = { tests: 1461 };
+const MANUAL_FALLBACK_META = { tests: 1460 };
 
 function manualSlot() {
   return document.getElementById("ad-slot");

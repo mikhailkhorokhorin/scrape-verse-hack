@@ -20,9 +20,23 @@
   fill:none;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;
   vector-effect:non-scaling-stroke;
   stroke-dasharray:var(--len,2000);stroke-dashoffset:0;
+}
+
+.pulseline__trace--draw{
   animation:trace-in 1400ms cubic-bezier(.22,1,.36,1) 200ms both;
 }
 @keyframes trace-in{from{stroke-dashoffset:var(--len,2000);}}
+
+.pulseline__trace--rewind{
+  animation:trace-rewind 1250ms linear both;
+}
+
+@keyframes trace-rewind{
+  0%{stroke-dashoffset:0;animation-timing-function:cubic-bezier(.5,0,.75,0);}
+  40%{stroke-dashoffset:var(--len,2000);}
+  44%{stroke-dashoffset:var(--len,2000);animation-timing-function:cubic-bezier(.22,1,.36,1);}
+  100%{stroke-dashoffset:0;}
+}
 
 .pulseline__tag{
   position:absolute;z-index:3;top:0;left:0;
@@ -56,8 +70,15 @@
 
 @media(prefers-reduced-motion:reduce){
   .pulse--kick{animation:none;transform:none;}
+  .pulseline__trace--draw,
+  .pulseline__trace--rewind{animation:none;}
 }
 
 .is-capture .pulse--kick{animation:none;transform:none;}
+.is-capture .pulseline__trace--draw,
+.is-capture .pulseline__trace--rewind{animation:none;}
 
-@media print{.pulse--kick{animation:none;transform:none;}}
+@media print{.pulse--kick{animation:none;transform:none;}
+  .pulseline__trace--draw,
+  .pulseline__trace--draw,
+  .pulseline__trace--rewind{animation:none;}}

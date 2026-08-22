@@ -83,6 +83,18 @@ function renderPulse(history) {
       'aria-label="Fleet pulse: ' + beats.length + " scans, mean integrity " + avg + " percent, " +
       (flat ? "arrhythmic" : "steady") + '">' +
       '<line class="pulseline__base" x1="0" y1="' + H / 2 + '" x2="' + W + '" y2="' + H / 2 + '"/>' +
-      '<path class="pulseline__trace" d="' + d + '" stroke="' + color + '" style="--len:' + Math.round(W * 2.4) + '"/>' +
+      '<path class="pulseline__trace" d="' + d + '" stroke="' + color + '"/>' +
     "</svg>";
+
+  pulseMeasure(host);
+}
+
+function pulseMeasure(host) {
+  const trace = host.querySelector(".pulseline__trace");
+  if (!trace || typeof trace.getTotalLength !== "function") return null;
+  const len = Math.ceil(trace.getTotalLength());
+  if (!(len > 0)) return null;
+  trace.style.setProperty("--len", len + "");
+  trace.classList.add("pulseline__trace--draw");
+  return len;
 }
