@@ -98,4 +98,6 @@ function readFixture(name) {
   return JSON.parse(fs.readFileSync(path.join(DATA_DIR, name), 'utf8'));
 }
 
-module.exports = { loadWebModule, readFixture, setGlobal, plain, WEB_DIR, DATA_DIR };
+module.exports = {
+  loadWebModule, readFixture, setGlobal, plain, modulePath, WEB_DIR, DATA_DIR,
+};

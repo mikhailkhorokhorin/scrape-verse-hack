@@ -52,7 +52,7 @@ module.exports = [
     },
   },
   {
-    files: ['web/js/config.js'],
+    files: ['web/js/data/config.js'],
     rules: { 'prefer-const': 'off' }
   },
 ];
