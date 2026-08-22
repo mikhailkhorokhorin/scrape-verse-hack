@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="THWIP — the manual. Eight MCP tools, the three install commands, the six-step judge path, and the Chaos Lab. Every command on this page is one that actually runs.">
+<meta name="description" content="THWIP — the manual. Eight MCP tools, the coupon that installs it, the five things worth doing with it, and the Chaos Lab. Every command on this page is one that actually runs.">
 <title>THWIP Manual</title>
 <link rel="canonical" href="https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html">
 <meta property="og:type" content="article">
@@ -38,9 +38,9 @@
     <div>
       <h1 class="wordmark wordmark--manual">THWIP</h1>
       <p class="tagline">Scrapers do not crash, they <b>rot</b>. This is the back page of the
-      issue: the whole pitch, the three lines that install it, the path a judge can walk in
-      ten minutes, and the lab where you break one yourself.
-      <b>Every command here is one that runs</b> — no pseudo-code, no placeholders.</p>
+      issue: the pitch, the coupon that installs it, what to do with it once you have, and
+      the lab where you break one yourself.
+      <b>Every command here is one that runs.</b> No pseudo-code, no placeholders.</p>
     </div>
   </header>
 
@@ -57,63 +57,63 @@
   </noscript>
 
   <section class="man" id="judge" aria-labelledby="judge-h">
-    <div class="sechead"><h2 class="caption" id="judge-h">Judge it in ten minutes</h2><span class="rule"></span></div>
-    <p class="man__lead">Six things, in this order. The first three take under two minutes
-    each; the last three are one command apiece. Nothing below needs an API key, touches the
-    network, or spends a cent.</p>
+    <div class="sechead"><h2 class="caption" id="judge-h">What to do with it</h2><span class="rule"></span></div>
+    <p class="man__lead">The coupon above got you the repository. These are the five things
+    worth doing with it — two in a browser, three in a terminal. None needs an API key,
+    touches the network, or spends a cent.</p>
 
     <ol class="steps">
-      <li class="step">
-        <h3 class="step__h">Open the console</h3>
-        <p>The opening sequence replays <span class="mono">inc_003</span>, a real recorded
-        incident, not a mock. Scroll to <b>Incident Feed</b>: three cards, each a comic issue
-        with its own permalink. The note above the feed counts the breaks that happened on
-        sites we do not control. <a class="man__link" href="index.html">Open the watch &rarr;</a></p>
+      <li class="step step--wide">
+        <h3 class="step__h">Watch a real incident replay itself</h3>
+        <p>The console opens on <span class="mono">inc_003</span> — a break the cron found
+        overnight, healed on its own, and got <b>wrong</b>. The false diagnosis is still in
+        the record. Scroll to <b>Incident Feed</b>: every card is a comic issue with its own
+        permalink, and the note above them counts the breaks that happened on sites nobody
+        here controls. <a class="man__link" href="index.html">Open the watch &rarr;</a></p>
+      </li>
+      <li class="step step--wide">
+        <h3 class="step__h">Drag the black off a panel</h3>
+        <p>The substance covers exactly the share of its contract a Spider stopped
+        delivering. Hold the pointer on the darkened half of the <b>diptych</b> and pull:
+        underneath are the values that actually came back:
+        <span class="mono">null</span>, a literal <span class="mono">"undefined"</span>.
+        Nothing there is written for the reveal. Prefer to break one yourself? The
+        <b>CHAOS LAB</b> poster below is three clicks and no install.</p>
       </li>
       <li class="step">
-        <h3 class="step__h">Check requirement 4 in one command</h3>
-        <p>Clone with the coupon above, then run this. It prints every phase of a repair
-        beside the <span class="mono">collector_id</span> that did not change, then the
-        per-field verification table. No API key, no network, no credit.</p>
+        <h3 class="step__h">Make it prove requirement 4</h3>
+        <p>Every phase of one repair, printed beside the
+        <span class="mono">collector_id</span> that did not change, then the per-field
+        verification table. This is the MCP server answering over stdio, with the same
+        eight tools the ad lists.</p>
         <pre class="man__code man__code--wrap"><code>printf '%s\n%s\n' \
   '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}' \
   '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}' \
   | node mcp/server.js</code></pre>
       </li>
       <li class="step">
-        <h3 class="step__h">Run the suite</h3>
-        <pre class="man__code man__code--tight"><code>npm test</code></pre>
-        <p><span class="mono">node:test</span>, zero dependencies, offline, spends nothing.
-        The count is on the coupon above and is read from
-        <span class="mono">data/meta.json</span> as this page loads.</p>
-      </li>
-      <li class="step">
-        <h3 class="step__h">Break one yourself, in the browser, in ten seconds</h3>
-        <p>The <b>CHAOS LAB</b> route opens a synthetic fleet running the real mechanics. The
-        three clicks are on the poster below.</p>
-      </li>
-      <li class="step">
         <h3 class="step__h">Print the evidence trail</h3>
         <pre class="man__code man__code--tight"><code>node tools/evidence-report.js</code></pre>
-        <p>For each incident: the collector id on both sides of the repair (asserted
-        identical), the stage durations, the value every field held before and after, the
-        verdict, and SHA-256 digests recomputed from the committed files at call time.</p>
+        <p>For each incident: the collector id on both sides of the repair, asserted
+        identical; the stage durations; the value every field held before and after; the
+        verdict; and SHA-256 digests recomputed from the committed files at call time.
+        A check, not a claim.</p>
       </li>
       <li class="step">
         <h3 class="step__h">Count what no human did</h3>
         <pre class="man__code man__code--tight"><code>git log --author="thwip watch" --oneline | wc -l
 node tools/numbers-audit.js</code></pre>
-        <p>The first counts the commits the workflow authored rather than a person. The second
-        recomputes every number the console shows from the committed JSON, by a second
-        implementation that shares no code with the console.</p>
+        <p>The first counts commits the workflow authored rather than a person. The second
+        recomputes every number the console shows from the committed JSON. It is a second
+        implementation that shares no code with the console, so a disagreement would show.</p>
       </li>
     </ol>
 
-    <p class="man__note">To see the console rather than the code, serve the repo over HTTP with
-    <span class="mono">python3 -m http.server 8000</span>, then open
-    <span class="mono">/web/</span>. Opening the file directly shows an error plate: the page
-    fetches two JSON files, and browsers block <span class="mono">fetch</span> on
-    <span class="mono">file://</span> origins.</p>
+    <p class="man__note">The console needs a real HTTP origin: serve the repo with
+    <span class="mono">python3 -m http.server 8000</span> and open
+    <span class="mono">/web/</span>. Opening the file directly shows an error plate, because
+    the page fetches two JSON files and browsers block
+    <span class="mono">fetch</span> on <span class="mono">file://</span>.</p>
   </section>
 
   <section class="man" id="break" aria-labelledby="break-h">

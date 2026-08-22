@@ -54,6 +54,7 @@
 
 .steps{list-style:none;counter-reset:step;margin:var(--s3) 0 var(--s4);padding:0;
   display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s3);}
+.step--wide{grid-column:1 / -1;}
 .step{
   counter-increment:step;position:relative;
   padding:var(--s3) var(--s3) var(--s3) calc(var(--s3) + 30px);
