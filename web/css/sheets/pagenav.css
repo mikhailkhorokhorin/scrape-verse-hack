@@ -55,10 +55,13 @@
 }
 .pagenav__link--page:hover{background:var(--cyan);}
 
-html{scroll-padding-top:64px;}
+html{scroll-padding-top:64px;scroll-behavior:smooth;}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+}
 
 .is-capture .pagenav{display:none !important;}
-.intro-running .pagenav{display:none !important;}
 
 @media(max-width:768px){
   .pagenav{gap:var(--s2);padding:6px var(--s2) 5px;}

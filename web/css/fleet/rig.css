@@ -75,6 +75,10 @@
   50%{transform:translateX(1px) rotate(.6deg);}
 }
 
+.cell.rig-rest .rig__leg,
+.cell.rig-rest .rig__eye,
+.cell.rig-rest .rig__body{animation-play-state:paused;}
+
 @media(prefers-reduced-motion:reduce){
   .rig__leg,.rig__eye,.rig__body{animation:none;}
 }

@@ -1,7 +1,8 @@
 "use strict";
 
-const SCRATCH_REGROW_MS = 4200;
 const SCRATCH_HINT_KEY = "thwip.scratch.found";
+const SCRATCH_NS = "http://www.w3.org/2000/svg";
+const SCRATCH_IDS = { n: 0 };
 
 function scratchReduced() {
   return typeof matchMedia === "function" &&
@@ -24,103 +25,89 @@ function scratchLinesOf(sp) {
   }));
 }
 
-
 function scratchSpreadOf(panel) {
   const raw = panel.style.getPropertyValue("--spread");
   const n = Number(String(raw).trim());
   return Number.isFinite(n) ? n : 0;
 }
 
-
-
-
-
-function scratchReveal(state, strokes) {
-  const ctx = state.ctx;
-  const w = state.canvas.width;
-  const h = state.canvas.height;
-  const top = 0;
-  ctx.save();
-  scratchClipTo(ctx, strokes);
-  ctx.globalCompositeOperation = "source-over";
-  ctx.fillStyle = SCRATCH_UNDER;
-  ctx.fillRect(0, top, w, h - top);
-  scratchPaintValues(ctx, state.lines, w, h, top);
-  ctx.restore();
-}
-
-function scratchRepaint(state) {
-  const ctx = state.ctx;
-  const w = state.canvas.width;
-  const h = state.canvas.height;
-  const top = 0;
-  ctx.globalCompositeOperation = "source-over";
-  ctx.clearRect(0, 0, w, h);
-  symbioteFillBody(ctx, w, h, top, SCRATCH_INK);
-  scratchPaintGhost(ctx, state.lines, w, h, top);
-  if (!state.strokes.some((s) => s.length)) return;
-  scratchReveal(state, state.strokes);
-}
-
-function scratchSize(state) {
-  const box = state.panel.getBoundingClientRect();
-  if (box.width === 0 || box.height === 0) return false;
-  const shown = Math.min(1, Math.max(0, state.spread)) * 0.82;
-  const height = Math.round(box.height * shown);
-  if (height < SCRATCH_ROW_H) return false;
-  state.canvas.width = Math.round(box.width);
-  state.canvas.height = height;
-  state.canvas.style.top = "auto";
-  state.canvas.style.bottom = "0";
-  state.canvas.style.height = Math.round(box.height * shown) + "px";
-  return true;
-}
-
 function scratchStateFor(panel) {
   if (panel.__scratch) return panel.__scratch;
-  const canvas = document.createElement("canvas");
-  canvas.className = "scratch__canvas";
-  canvas.setAttribute("aria-hidden", "true");
-  panel.appendChild(canvas);
+  const layer = document.createElementNS(SCRATCH_NS, "svg");
+  layer.setAttribute("class", "scratch__web");
+  layer.setAttribute("aria-hidden", "true");
+  layer.setAttribute("focusable", "false");
+  layer.setAttribute("preserveAspectRatio", "none");
+  const veil = document.createElementNS(SCRATCH_NS, "rect");
+  veil.setAttribute("class", "scratch__veil");
+  const id = "scratch-band-" + (SCRATCH_IDS.n += 1);
+  const defs = document.createElementNS(SCRATCH_NS, "defs");
+  const clip = document.createElementNS(SCRATCH_NS, "clipPath");
+  clip.setAttribute("id", id);
+  const band = document.createElementNS(SCRATCH_NS, "rect");
+  clip.appendChild(band);
+  defs.appendChild(clip);
+  const g = document.createElementNS(SCRATCH_NS, "g");
+  g.setAttribute("class", "scratch__g");
+  g.setAttribute("clip-path", "url(#" + id + ")");
+  layer.appendChild(defs);
+  layer.appendChild(veil);
+  layer.appendChild(g);
+  panel.appendChild(layer);
   panel.__scratch = {
-    panel: panel,
-    canvas: canvas,
-    ctx: canvas.getContext("2d"),
-    strokes: [],
-    lines: [],
-    spread: 0,
-    timer: null,
-    dragged: false,
+    panel: panel, layer: layer, veil: veil, band: band, g: g,
+    strands: [], nodes: [], lines: [], box: { w: 1, h: 1 },
+    spread: 0, seed: 1, dragged: false,
   };
   return panel.__scratch;
 }
 
-function scratchSet(state, point) {
-  if (!point) {
-    state.strokes = [];
-    state.timer = null;
-    scratchRepaint(state);
-    state.panel.classList.remove("is-scratched");
-    return;
-  }
-  const current = state.strokes[state.strokes.length - 1] || [];
-  const added = scratchInterpolate(current, point);
-  const from = current.length ? [current[current.length - 1]] : [];
-  if (!state.strokes.length) state.strokes.push([]);
-  state.strokes[state.strokes.length - 1] = current.concat(added);
-  scratchReveal(state, [from.concat(added)]);
+function scratchPathEl(strand, i) {
+  const path = document.createElementNS(SCRATCH_NS, "path");
+  path.setAttribute("class", "scratch__strand scratch__strand--" + strand.kind);
+  path.setAttribute("d", strand.d);
+  path.setAttribute("stroke-width", strand.weight + "");
+  path.style.setProperty("--ox", strand.anchor[0] + "px");
+  path.style.setProperty("--oy", strand.anchor[1] + "px");
+  path.style.setProperty("--i", i + "");
+  return path;
+}
+
+function scratchBandRect(el, box, top) {
+  el.setAttribute("x", "0");
+  el.setAttribute("y", top + "");
+  el.setAttribute("width", box.w + "");
+  el.setAttribute("height", Math.max(0, box.h - top) + "");
+}
+
+function scratchDrawWeb(state) {
+  const box = state.box;
+  const top = scratchTopOf(state);
+  state.top = top;
+  state.layer.setAttribute("viewBox", "0 0 " + box.w + " " + box.h);
+  scratchBandRect(state.veil, box, top);
+  scratchBandRect(state.band, box, top);
+  state.g.textContent = "";
+  state.strands = scratchStrands({ w: box.w, h: box.h }, state.seed, top);
+  state.nodes = state.strands.map((strand, i) => {
+    const el = scratchPathEl(strand, i);
+    state.g.appendChild(el);
+    return el;
+  });
+  state.panel.classList.remove("is-bared");
+  state.panel.classList.remove("is-scratched");
+}
+
+function scratchTearAt(state, px, py) {
+  const hits = scratchHitAt(state.strands, px, py, SCRATCH_RADIUS);
+  if (hits.length === 0) return false;
+  hits.forEach((i) => {
+    state.strands[i].torn = true;
+    if (state.nodes[i]) state.nodes[i].classList.add("is-torn");
+  });
   state.panel.classList.add("is-scratched");
-}
-
-function scratchOpen(state) {
-  state.strokes.push([]);
-}
-
-function scratchRegrow(state) {
-  if (state.timer) clearTimeout(state.timer);
-  state.timer = scratchReduced()
-    ? null
-    : setTimeout(() => scratchSet(state, null), SCRATCH_REGROW_MS);
+  if (scratchAllTorn(state.strands)) state.panel.classList.add("is-bared");
+  return true;
 }
 
 function scratchMarkFound() {
@@ -140,33 +127,20 @@ function scratchWasFound() {
   }
 }
 
-function scratchPointIn(state, clientX, clientY) {
-  const box = state.canvas.getBoundingClientRect();
-  if (box.width === 0 || box.height === 0) return null;
-  if (clientY < box.top - SCRATCH_RADIUS) return null;
-  return {
-    x: ((clientX - box.left) / box.width) * state.canvas.width,
-    y: ((clientY - box.top) / box.height) * state.canvas.height,
-  };
-}
-
 function scratchTouch(panel, e, dragging) {
   const state = panel.__scratch;
   if (!state) return;
   const point = scratchPointIn(state, e.clientX, e.clientY);
   if (!point) return;
   if (dragging) state.dragged = true;
-  const off = !dragging && scratchReduced() && state.strokes.some((k) => k.length);
-  scratchSet(state, off ? null : point);
+  scratchTearAt(state, point.x, point.y);
   scratchMarkFound();
-  scratchRegrow(state);
 }
 
 function scratchOnDown(e) {
   const panel = e.target.closest && e.target.closest(".panel.has-scratch");
   if (!panel) return;
   panel.classList.add("is-scratching");
-  if (panel.__scratch) scratchOpen(panel.__scratch);
   scratchTouch(panel, e, false);
 }
 
@@ -197,8 +171,8 @@ function scratchMountPanel(panel, sp) {
   const state = scratchStateFor(panel);
   state.lines = lines;
   state.spread = spread;
-  state.strokes = [];
-  if (scratchSize(state)) scratchRepaint(state);
+  state.seed = (Number(panel.dataset.idx) || 0) + 1;
+  if (scratchSize(state)) scratchDrawWeb(state);
 }
 
 function scratchHint(panel) {
@@ -206,6 +180,14 @@ function scratchHint(panel) {
   if (panel.querySelector(".scratch-hint")) return;
   panel.insertAdjacentHTML("beforeend",
     '<span class="scratch-hint">Something is under there</span>');
+}
+
+function scratchRemount() {
+  document.querySelectorAll(".panel.has-scratch").forEach((panel) => {
+    const state = panel.__scratch;
+    if (!state) return;
+    if (scratchSize(state)) scratchDrawWeb(state);
+  });
 }
 
 function scratchMount() {
@@ -232,4 +214,5 @@ function scratchBind() {
   document.addEventListener("pointerup", scratchOnUp);
   document.addEventListener("pointercancel", scratchOnUp);
   window.addEventListener("resize", scratchMount);
+  window.addEventListener("resize", scratchRemount);
 }

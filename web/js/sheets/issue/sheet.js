@@ -104,7 +104,10 @@ function openSheet(idx) {
     '<pre class="sample">' + jsonHTML(sp.sample, sp.fields) + "</pre>";
 
   SHEET_OPENER = document.activeElement;
-  document.getElementById("modal").hidden = false;
+  const modal = document.getElementById("modal");
+  modal.hidden = false;
+  if (typeof sheetCloseArm === "function") sheetCloseArm(sp.code);
+  if (typeof panelcutOpen === "function") panelcutOpen(modal);
   document.querySelector(".wrap").setAttribute("inert", "");
   document.body.style.overflow = "hidden";
   bindHeal(document.getElementById("sheet-body"));
@@ -114,11 +117,13 @@ function openSheet(idx) {
 function closeSheet() {
   const modal = document.getElementById("modal");
   if (modal.hidden) return;
-  modal.hidden = true;
   document.querySelector(".wrap").removeAttribute("inert");
   document.body.style.overflow = "";
   if (SHEET_OPENER && document.contains(SHEET_OPENER)) SHEET_OPENER.focus();
   SHEET_OPENER = null;
+  const hide = () => { modal.hidden = true; };
+  if (typeof panelcutClose === "function") panelcutClose(modal, hide);
+  else hide();
 }
 
 function trapSheetFocus(e) {

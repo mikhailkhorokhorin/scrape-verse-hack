@@ -54,7 +54,11 @@
   -webkit-mask-image:linear-gradient(to top,#000 0,#000 52%,transparent 64%);
   mask-image:linear-gradient(to top,#000 0,#000 52%,transparent 64%);
   -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  animation:symbiote-breathe 9s ease-in-out infinite;
+  animation:plate-breathe 9s ease-in-out infinite;
+}
+@keyframes plate-breathe{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-4px);}
 }
 .plate__cap{
   position:absolute;z-index:2;left:0;right:0;bottom:0;

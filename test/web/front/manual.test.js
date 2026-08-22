@@ -50,12 +50,23 @@ test('the manual mounts the ad through a slot rather than pasting a copy of it',
 });
 
 test('the manual loads the ad builders and its own mount, in that order', () => {
-  const scripts = manual.match(/<script src="([^"]+)"><\/script>/g) || [];
-  assert.deepEqual(scripts, [
-    '<script src="js/data/format.js"></script>',
-    '<script src="js/sheets/ad.js"></script>',
-    '<script src="js/manual.js"></script>',
-  ]);
+  const scripts = (manual.match(/<script src="([^"]+)"><\/script>/g) || [])
+    .map((tag) => (tag.match(/src="([^"]+)"/) || [])[1]);
+  const order = [
+    'js/data/format.js',
+    'js/sheets/ad.js',
+    'js/manual.js',
+    'js/sheets/front/web-geom.js',
+    'js/decor/gutter-parts.js',
+    'js/decor/gutter.js',
+    'js/sheets/front/thwip-shot.js',
+  ];
+  order.forEach((src) => assert.ok(scripts.includes(src), src + ' is not loaded'));
+  const at = order.map((src) => scripts.indexOf(src));
+  at.forEach((n, i) => {
+    if (i === 0) return;
+    assert.ok(n > at[i - 1], order[i] + ' must load after ' + order[i - 1]);
+  });
 });
 
 test('the mount reuses the ad builders instead of duplicating a word of the pitch', () => {

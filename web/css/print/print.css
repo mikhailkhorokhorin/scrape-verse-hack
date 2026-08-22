@@ -6,7 +6,7 @@
   body.has-issue,body.has-issue .wrap,body.has-issue main{height:auto;min-height:0;}
   body::before,.wrap::before,.wrap::after{display:none !important;}
   .fleet-ground,.fleet-symbiote,.modal,.mockflag,.demobar{display:none !important;}
-  .intro-replay,.intro,.bubble,.wild-note,.evidence{display:none !important;}
+  .intro,.bubble,.wild-note,.evidence{display:none !important;}
   .pagenav{display:none !important;}
   .open{display:none !important;}
 

@@ -40,3 +40,24 @@
   background:var(--void);padding:3px 9px 2px;
 }
 .pulseline--flat .pulseline__read{color:var(--critical);}
+
+.pulse--kick{animation:pulse-kick 640ms cubic-bezier(.22,.9,.3,1) both;}
+
+@keyframes pulse-kick{
+  0%{opacity:1;transform:scale(1);}
+  18%{opacity:1;transform:scale(1.9);}
+  40%{opacity:.35;transform:scale(1);}
+  58%{opacity:1;transform:scale(1.55);}
+  78%{opacity:.4;transform:scale(1);}
+  100%{opacity:1;transform:scale(1);}
+}
+
+.readout__value--word{cursor:default;}
+
+@media(prefers-reduced-motion:reduce){
+  .pulse--kick{animation:none;transform:none;}
+}
+
+.is-capture .pulse--kick{animation:none;transform:none;}
+
+@media print{.pulse--kick{animation:none;transform:none;}}

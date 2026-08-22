@@ -1,0 +1,104 @@
+.webcatch{
+  position:absolute;
+  width:130px;height:130px;
+  pointer-events:none;
+  overflow:visible;
+  z-index:0;
+  opacity:0;
+}
+
+.webcatch--tl{left:0;top:0;}
+.webcatch--tr{right:0;top:0;}
+.webcatch--bl{left:0;bottom:0;}
+.webcatch--br{right:0;bottom:0;}
+
+.webcatch__g{
+  fill:none;
+  stroke:var(--dim);
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.webcatch--cyan .webcatch__g{stroke:var(--cyan);}
+.webcatch--pink .webcatch__g{stroke:var(--pink);}
+
+.webcatch__strand,.webcatch__ring{
+  stroke-dasharray:var(--len,120);
+  stroke-dashoffset:var(--len,120);
+}
+
+.webcatch--draw{
+  opacity:.16;
+  transition:opacity 240ms linear;
+  will-change:opacity;
+}
+
+.webcatch--draw .webcatch__strand,
+.webcatch--draw .webcatch__ring{
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 460ms cubic-bezier(.22,.61,.36,1);
+  transition-delay:var(--d,0ms);
+}
+
+.webcatch--still{opacity:.13;}
+.webcatch--still .webcatch__strand,
+.webcatch--still .webcatch__ring{stroke-dashoffset:0;}
+
+.webcatch--poster{width:112px;height:112px;}
+
+.cell--critical,.cell--reweaving,.poster{position:relative;}
+
+.webthread{
+  position:absolute;
+  left:0;top:50%;
+  width:100%;height:26px;
+  margin-top:-13px;
+  pointer-events:none;
+  overflow:visible;
+  z-index:0;
+  opacity:0;
+}
+
+.webthread__g{
+  fill:none;
+  stroke:var(--dim);
+  stroke-linecap:round;
+}
+
+.webthread__line{
+  stroke-dasharray:var(--len,620);
+  stroke-dashoffset:var(--len,620);
+}
+
+.webthread--draw{
+  opacity:.2;
+  transition:opacity 200ms linear;
+  will-change:opacity;
+}
+
+.webthread--draw .webthread__line{
+  stroke-dashoffset:0;
+  transition:stroke-dashoffset 620ms cubic-bezier(.3,.7,.4,1);
+}
+
+.webthread--still{opacity:.16;}
+.webthread--still .webthread__line{stroke-dashoffset:0;}
+
+@media(max-width:767px){
+  .webcatch,.webthread{display:none;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .webcatch,.webthread{display:none !important;}
+  .webcatch--draw,.webthread--draw{transition:none !important;}
+  .webcatch--draw .webcatch__strand,
+  .webcatch--draw .webcatch__ring,
+  .webthread--draw .webthread__line{transition:none !important;stroke-dashoffset:0;}
+}
+
+.is-capture .webcatch,
+.is-capture .webthread{display:none !important;}
+
+@media print{
+  .webcatch,.webthread{display:none !important;}
+}

@@ -10,7 +10,7 @@
     #noprize-slot{
       animation:press-register linear both;
       animation-timeline:view();
-      animation-range:entry 8% cover 32%;
+      animation-range:cover 0% cover 32%;
     }
 
     .sechead h2,
@@ -19,13 +19,13 @@
     .incident .issue__who{
       animation:press-plates linear both;
       animation-timeline:view();
-      animation-range:entry 8% cover 34%;
+      animation-range:cover 0% cover 34%;
     }
   }
 }
 
 @keyframes press-register{
-  0%{opacity:.34;transform:translateY(9px);}
+  0%{opacity:.72;transform:translateY(9px);}
   46%{opacity:1;}
   100%{opacity:1;transform:translateY(0);}
 }

@@ -8,7 +8,6 @@
 .sheet{
   background:var(--void-2);border:4px solid var(--ink);box-shadow:12px 12px 0 var(--ink);
   max-width:760px;width:100%;min-width:0;padding:var(--s4);position:relative;
-  animation:panel-in 300ms cubic-bezier(.22,1,.36,1) both;
 }
 @media(max-width:767px){.sheet{padding:var(--s3) var(--s2);}}
 .sheet::before{
