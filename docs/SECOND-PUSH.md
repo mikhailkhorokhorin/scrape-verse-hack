@@ -72,7 +72,7 @@ three covering broken value, verified value, and the no-verification fallback.
 
 ---
 
-## S1 · The cheap moves — two agents, then a third pass
+## S1 · The cheap moves — two agents, then a third pass — **DONE 22 Aug**
 
 Three moves whose whole cost is typography over numbers already held. Each agent owns
 its own files; none touches another's; `index.html` insertions are single-line and
@@ -134,13 +134,21 @@ Files: `web/js/ad.js`, `web/css/ad.css`, one line each in `index.html`.
 reads as a page of the comic at 1440/768/375; hidden in capture; and its print behaviour
 is decided deliberately and recorded rather than left to chance.
 
+**S1 done.** MOVE 1 opens on `NOBODY HAS LOOKED AT THIS FLEET IN 13M` with 57 scans /
+1,194 rows / 3 breaks / 3 heals, every figure recomputed by hand and matched; the gap
+line vanishes cleanly when `last_human_ts` is absent. MOVE 3's letter is byte-identical
+to `inc_003.summary` (617 chars, checked in the browser). MOVE 6 reads its six tool
+names from `mcp/registry.js` and its test count from `meta.json`, and suppresses itself
+in mock mode rather than showing a fake number. The workflow's meta step now writes
+`last_human_ts` additively, with the original printf as its else branch.
+
 **S1 gate (lead):** merge, reconcile the `index.html` insertions, tests and lint,
 screenshot all three moves at three widths, one commit per move, push in a safe window,
 verify live.
 
 ---
 
-## S2 · MOVE 2 — the scratch. The headline. (UI-61 + UI-62; lead plus one agent)
+## S2 · MOVE 2 — the scratch. The headline. (UI-61 + UI-62) — **DONE 22 Aug**
 
 Drag the black off a taken panel and underneath is the value that actually came back.
 This is the one image and the one interaction; everything else this weekend supports it.
