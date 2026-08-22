@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { loadWebModule, modulePath } = require('../web-loader.js');
+const { loadWebModule, modulePath, cssPath } = require('../web-loader.js');
 
 const context = loadWebModule(['config.js', 'format.js', 'ad.js']);
 const {
@@ -178,4 +178,28 @@ test('the console mount renders the teaser and the manual builder renders the co
 
 test('the coupon chaos tag names the console explicitly, so it works from the manual too', () => {
   assert.match(adCouponHTML({ tests: 935 }), /href="index\.html\?mock=1"/);
+});
+
+test('the full ad still carries every beat the console used to show', () => {
+  const html = adHTML({ tests: 1136 });
+  assert.match(html, /A MESSAGE FROM THE WATCH &middot; NO\. 6 OF 6/);
+  assert.match(html, /OUR IRON-CLAD GUARANTEE:/);
+  assert.match(html, /CUT ALONG THE DOTTED LINE/);
+  assert.equal((html.match(/ad__tool--paid/g) || []).length, 2);
+  assert.equal(AD_FREE_TOOLS.length, 6);
+});
+
+test('the ad stylesheet brings no animation and no keyframes to the page it lands on', () => {
+  const css = fs.readFileSync(cssPath('ad.css'), 'utf8');
+  assert.equal((css.match(/@keyframes/g) || []).length, 0);
+  const reduced = css.slice(css.indexOf('@media(prefers-reduced-motion:reduce)'));
+  assert.match(reduced, /transition:none/);
+  assert.match(reduced, /transform:none/);
+});
+
+test('capture and print hide the console teaser and leave the manual its ad', () => {
+  const css = fs.readFileSync(cssPath('ad.css'), 'utf8');
+  assert.match(css, /\.is-capture \.teaser\{display:none !important;\}/);
+  assert.match(css, /@media print\{\.teaser\{display:none !important;\}\}/);
+  assert.doesNotMatch(css, /\.is-capture \.ad\{display:none/);
 });

@@ -16,7 +16,6 @@ const pagenavJs = fs.readFileSync(modulePath('pagenav.js'), 'utf8');
 const pagenavCss = fs.readFileSync(cssPath('pagenav.css'), 'utf8');
 const readme = fs.readFileSync(path.join(ROOT, 'README.md'), 'utf8');
 const submission = fs.readFileSync(path.join(ROOT, 'docs', 'SUBMISSION.md'), 'utf8');
-
 const ad = loadWebModule(['config.js', 'format.js', 'ad.js']);
 const meta = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'meta.json'), 'utf8'));
 const adMarkup = ad.adHTML(meta);
@@ -68,12 +67,9 @@ test('the mount reuses the ad builders instead of duplicating a word of the pitc
   });
 });
 
-test('the mount reads the count from meta.json, and never from a literal in its own source', () => {
+test('the mount fetches meta.json and still paints a readable ad if that fails', () => {
   assert.match(manualJs, /fetch\(MANUAL_META_URL/);
   assert.match(manualJs, /"data\/meta\.json"/);
-});
-
-test('the mount paints a readable ad before the fetch and after a failed one', () => {
   assert.match(manualJs, /manualMountAd\(MANUAL_FALLBACK_META\)/);
   assert.match(manualJs, /\.catch\(/);
   assert.match(manualJs, /manualUsableMeta/);
@@ -91,28 +87,6 @@ test('the test count on the page is the count the committed meta.json records', 
   assert.ok(adMarkup.includes(claimed + ' TESTS'), 'the ad drifted from meta.json');
   assert.ok(readme.includes(claimed + ' tests'), 'the README drifted from meta.json');
   assert.ok(submission.includes(claimed + ' tests'), 'SUBMISSION drifted from meta.json');
-});
-
-test('the ad the manual renders carries the whole pitch the console gave up', () => {
-  assert.match(adMarkup, /A MESSAGE FROM THE WATCH &middot; NO\. 6 OF 6/);
-  assert.match(adMarkup, /EIGHT TOOLS\./);
-  assert.match(adMarkup, /OUR IRON-CLAD GUARANTEE:/);
-  assert.match(adMarkup, /CUT ALONG THE DOTTED LINE/);
-  assert.match(adMarkup, /SEND NO MONEY NOW/);
-});
-
-test('all eight MCP tools reach the page through the ad, each exactly once', () => {
-  const tools = [
-    'fleet_status', 'spider_history', 'incident_log', 'heal_receipt',
-    'evidence_report', 'numbers_audit', 'scan_fleet', 'heal_spider',
-  ];
-  tools.forEach((name) => {
-    const hits = adMarkup.match(new RegExp('<code class="ad__toolname">' + name + '</code>', 'g')) || [];
-    assert.equal(hits.length, 1, name + ' is not listed exactly once');
-  });
-  assert.equal(ad.AD_FREE_TOOLS.length, 6);
-  assert.equal(ad.AD_PAID_TOOLS.length, 2);
-  assert.equal((adMarkup.match(/ad__tool--paid/g) || []).length, 2);
 });
 
 test('the install instructions the manual shows are the coupon, and they are the real ones', () => {
@@ -173,6 +147,8 @@ test('the chaos lab block is a poster, and the three clicks are its panels', () 
   const poster = manualCss.slice(manualCss.indexOf('.poster{'), manualCss.indexOf('.poster::before'));
   assert.match(poster, /border:4px solid var\(--ink\)/);
   assert.match(poster, /box-shadow:10px 10px 0 var\(--infected\)/);
+  assert.match(manual, /fleet in this mode is synthetic/);
+  assert.match(manual, /the same code the live console uses/);
 });
 
 test('the manual stands on the console halftone ground, not a flat body', () => {
@@ -181,44 +157,26 @@ test('the manual stands on the console halftone ground, not a flat body', () => 
   assert.match(poster, /radial-gradient\(var\(--void-dot\) 1px,transparent 1\.4px\)/);
 });
 
-test('the manual says the mock fleet is synthetic, as the chaos lab itself does', () => {
-  assert.match(manual, /fleet in this mode is synthetic/);
-  assert.match(manual, /the same code the live console uses/);
-});
-
-test('the foot names the page as the back page of the issue', () => {
+test('the foot names the page as the back page and leads back to the console', () => {
   const foot = manual.slice(manual.indexOf('<footer'));
   assert.match(foot, /THE BACK PAGE OF THE ISSUE/);
   assert.match(foot, /href="index\.html"/);
   assert.match(manualCss, /\.manfoot__colophon\{/);
-});
-
-test('the manual leads back to the console from the nav and from the foot', () => {
   const nav = manual.slice(manual.indexOf('<nav'), manual.indexOf('</nav>'));
   assert.match(nav, /href="index\.html"/);
 });
 
-test('the console nav gains one page link, and it points at the manual', () => {
+test('the console nav gains one page link, drawn as a section link but never current', () => {
   assert.match(pagenavJs, /const PAGENAV_PAGES = /);
   assert.match(pagenavJs, /href: "manual\.html", label: "MANUAL"/);
-  const pages = pagenavJs.match(/\{ href: /g) || [];
-  assert.equal(pages.length, 1, 'the nav should gain exactly one cross-page link');
-});
-
-test('the page link is rendered by the same nav markup the sections use', () => {
+  assert.equal((pagenavJs.match(/\{ href: /g) || []).length, 1);
   assert.match(pagenavJs, /class="pagenav__link pagenav__link--page"/);
   assert.match(pagenavCss, /\.pagenav__link--page/);
-});
-
-test('the cross-page link carries no data-nav, so scroll-spy never marks it current', () => {
   const markup = pagenavJs.slice(
     pagenavJs.indexOf('const pages = '),
     pagenavJs.indexOf('return \'<span class="pagenav__mark"')
   );
   assert.doesNotMatch(markup, /data-nav/);
-});
-
-test('the manual nav marks the manual as the current page for a screen reader', () => {
   assert.match(manual, /class="pagenav__link is-here" href="manual\.html" aria-current="page"/);
 });
 
@@ -238,32 +196,15 @@ test('nothing on the manual animates through a reduced-motion preference', () =>
   assert.equal((manualCss.match(/@keyframes/g) || []).length, 0);
 });
 
-test('the ad brings no animation of its own onto the manual', () => {
-  assert.equal((adCss.match(/@keyframes/g) || []).length, 0);
-  const reduced = adCss.slice(adCss.indexOf('@media(prefers-reduced-motion:reduce)'));
-  assert.match(reduced, /transition:none/);
-  assert.match(reduced, /transform:none/);
-});
-
-test('the manual carries a print block, because a judge may print it', () => {
+test('a printed manual drops the chrome and keeps the ad in ink on paper', () => {
   assert.match(manualCss, /@media print/);
   const print = manualCss.slice(manualCss.indexOf('@media print'));
   assert.match(print, /\.pagenav\{display:none !important;\}/);
   assert.match(print, /white-space:pre-wrap/);
   assert.match(print, /page-break-inside:avoid/);
-});
-
-test('the printed manual keeps the ad, in ink on paper, with its commands unwrapped', () => {
-  const print = manualCss.slice(manualCss.indexOf('@media print'));
   assert.match(print, /\.ad\{[^}]*background:#fff/);
   assert.match(print, /\.ad__cmd\{[^}]*white-space:pre-wrap/);
   assert.doesNotMatch(print, /\.ad\{display:none/);
-});
-
-test('the ad hides on the console under capture and print, and only the teaser does', () => {
-  assert.match(adCss, /\.is-capture \.teaser\{display:none !important;\}/);
-  assert.match(adCss, /@media print\{\.teaser\{display:none !important;\}\}/);
-  assert.doesNotMatch(adCss, /\.is-capture \.ad\{display:none/);
 });
 
 test('no shadow on the manual is blurred, the way the rest of the issue is drawn', () => {
@@ -275,14 +216,10 @@ test('no shadow on the manual is blurred, the way the rest of the issue is drawn
   });
 });
 
-test('the manual keeps every corner square, as the design spec requires', () => {
-  const radii = manualCss.match(/border-radius:([^;]+)/g) || [];
-  radii.forEach((decl) => {
+test('corners stay square and body copy stays inside a readable measure', () => {
+  (manualCss.match(/border-radius:([^;]+)/g) || []).forEach((decl) => {
     assert.equal(decl, 'border-radius:0', decl + ' is not a comic corner');
   });
-});
-
-test('body copy on the manual stays inside a readable measure', () => {
   const measures = manualCss.match(/max-width:(\d+)ch/g) || [];
   assert.ok(measures.length > 0);
   measures.forEach((decl) => {

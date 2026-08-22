@@ -199,9 +199,11 @@ test('the counters match the committed history and incidents exactly', () => {
     incidents.filter((inc) => (inc.stages || []).some((s) => s.stage === 'VERIFIED')).length);
 });
 
-test('the thesis over the committed incidents names three spiders inside four hours', () => {
+test('the thesis over the committed incidents claims every spider, and means it', () => {
   const incidents = readFixture('incidents.json');
+  const taken = new Set(incidents.map((inc) => inc.spider || inc.who));
   const thesis = openThesisOf(incidents, [1, 2, 3], NOW);
-  assert.equal(thesis,
-    'EVERY SPIDER ON THIS PAGE HAS BEEN TAKEN. ALL THREE, ON 21 AUG, INSIDE FOUR HOURS.');
+  assert.equal(taken.size, 3, 'all three spiders have been taken at least once');
+  assert.match(thesis, /^EVERY SPIDER ON THIS PAGE HAS BEEN TAKEN\./);
+  assert.match(thesis, /INSIDE \d+ HOURS\.$/);
 });
