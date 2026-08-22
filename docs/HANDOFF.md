@@ -8,7 +8,7 @@ against the repository as of this commit, not from memory.
 Three real collectors, all 100% healthy. Three real incidents in `data/incidents.json`,
 all resolved, all on unchanged collector ids — one of them (`inc_003`) was opened by the
 cron **autonomously** and records a heal that honestly failed, because the fault was in
-our own payload parser, not the target. 1,022 tests green via `npm test`, `npx eslint .`
+our own payload parser, not the target. 1,112 tests green via `npm test`, `npx eslint .`
 clean, both run in CI on every push. The console is live and honest at
 https://mikhailkhorokhorin.github.io/scrape-verse-hack/ — 18/18 audits from
 `docs/AUDIT-PIPELINE.md` are done.
@@ -47,7 +47,7 @@ against the old classes again.
 - `docs/` holds every spec: `PRODUCT.md` (why), `DESIGN-SPEC.md` (visual contract, §8
   Banned is non-negotiable), `COLLECTORS.md` (heal registry — submission evidence),
   `AUDIT-PIPELINE.md` (the 18 audits and their verdicts), `STRATEGY.md`.
-- `npm test` — 1,022 tests, zero dependencies, node:test. `npm run lint`.
+- `npm test` — 1,112 tests, zero dependencies, node:test. `npm run lint`.
 - `node mcp/server.js` — the MCP server; `mcp/README.md` shows the wiring and a real
   conversation. The example output is captured from the real tools, do not invent.
 - `demo-target/` — the Chaos Lab: `index.html` (healthy), `broken-renamed.html`,

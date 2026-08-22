@@ -22,7 +22,8 @@ repository nobody looked at.
 
 ## What a judge should do first
 
-Three things, in this order, each under two minutes.
+Six things, in this order. The first three take under two minutes each; the last three are
+one command apiece.
 
 1. **Open the console** — https://mikhailkhorokhorin.github.io/scrape-verse-hack/. The
    opening sequence replays `inc_003`, a real recorded incident, not a mock. Scroll to
@@ -32,7 +33,20 @@ Three things, in this order, each under two minutes.
    `printf '%s\n%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"x","version":"1"}}}' '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_001"}}}' | node mcp/server.js`
    It prints every phase beside the unchanged `collector_id`, then the per-field
    verification table. No API key, no network, no credit.
-3. **`npm test`** — 1,022 tests, `node:test`, zero dependencies, offline, spends nothing.
+3. **`npm test`** — 1,112 tests, `node:test`, zero dependencies, offline, spends nothing.
+4. **Break one yourself, in the browser, in ten seconds.**
+   https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1 opens the **CHAOS LAB**:
+   press **BREAK BODEGA** and the substance climbs the panel; drag across it and the black
+   tears away, showing the values that actually came back; press **RE-WEAVE** and the
+   receipt prints. The fleet in that mode is synthetic and the page says so at the top —
+   the mechanics running it are the same code the live console uses.
+5. **Print the evidence trail** — `node tools/evidence-report.js` prints, for each
+   incident, the collector id on both sides of the repair (asserted identical), the stage
+   durations, the value every field held before and after, the verdict, and SHA-256
+   digests recomputed from the committed files at call time.
+6. **Count what no human did** — `git log --author="thwip watch" --oneline | wc -l`, and
+   `node tools/numbers-audit.js` to recompute every number the console shows from the
+   committed JSON, by a second implementation that shares no code with the console.
 
 ---
 
@@ -74,6 +88,16 @@ own page. Most of the field can only demonstrate self-healing against a fixture 
 break themselves; two thirds of our evidence is on somebody else's HTML. The console
 states this itself — `web/js/wild.js` computes it from `collectors.json` and renders an
 **IN THE WILD** badge on those two cards plus a counted note above the feed.
+
+
+**A heal that lies cannot close an incident.** `resolved` is computed from a fresh scrape
+taken *after* the repair, never from the heal's own report; populated-but-wrong values are
+caught by the per-field validators in `collectors.json` and scored `INFECTED` at half
+credit. The four failure modes — nothing back, garbage back, partial, real — are walked in
+the README under *"What happens when the heal itself lies"* and asserted in
+`test/heal-that-lies.test.js`. One command prints the whole trail for any incident, with
+SHA-256 digests recomputed from disk at call time:
+`node tools/evidence-report.js inc_003`.
 
 ### The verification object — per-field proof, not a status flag
 
@@ -141,7 +165,7 @@ console, and we do not claim they are in the repo.
 
 ### 2. How is it driven from a coding agent?
 
-`mcp/` is an MCP server: **six tools over stdio JSON-RPC, hand-written, no SDK**, so the
+`mcp/` is an MCP server: **eight tools over stdio JSON-RPC, hand-written, no SDK**, so the
 whole loop — is anything broken → what broke → fix it → prove it — runs inside Claude Code
 or Cursor. Install with `claude mcp add thwip -- node mcp/server.js`.
 
@@ -151,10 +175,12 @@ or Cursor. Install with `claude mcp add thwip -- node mcp/server.js`.
 | `spider_history` | run history for one Spider, oldest first | free, offline |
 | `incident_log` | every recorded break with strain, integrity delta and resolution | free, offline |
 | `heal_receipt` | full timestamped receipt for one incident, plus the per-field verification table | free, offline |
+| `evidence_report` | the whole trail for one incident: unchanged collector id, stage durations, per-field before/after, SHA-256 digests recomputed from disk | free, offline |
+| `numbers_audit` | every number the console shows, recomputed from the committed JSON by a second implementation | free, offline |
 | `scan_fleet` | live scrape through Bright Data, scored field by field | **spends credit** |
 | `heal_spider` | diagnose, re-weave, verify with a fresh scrape, open an incident | **spends credit** |
 
-**Four of the six read recorded data — instant, free, no network.** The other two declare
+**Six of the eight read recorded data — instant, free, no network.** The other two declare
 `SPENDS_CREDITS` in their own tool descriptions, so the agent has to tell the user before
 it bills them. The model cannot quietly spend money.
 
@@ -240,8 +266,8 @@ in `web/js/`, assembled by the `build` job in `.github/workflows/watch.yml`.
 | App repository | **done** | public, MIT — https://github.com/mikhailkhorokhorin/scrape-verse-hack |
 | Docs repository | **done** | public, on GitLab |
 | `README.md` | **done** | pitch, setup, tests, CI, Chaos Lab, architecture, Collector IDs, healing walkthrough |
-| Test suite | **done** | 1,022 tests, `npm test`, `node:test`, zero dependencies, offline |
-| MCP server | **done** | `mcp/` — six tools over stdio JSON-RPC, no SDK |
+| Test suite | **done** | 1,112 tests, `npm test`, `node:test`, zero dependencies, offline |
+| MCP server | **done** | `mcp/` — eight tools over stdio JSON-RPC, no SDK |
 | Demo video | **not recorded** | `docs/VIDEO-SCRIPT.md` |
 | Video link in README | **not done** | add the moment the video is uploaded |
 | Header screenshot in README | **done, may want refreshing** | `assets/the-watch.png` — predates THE HAUL and the characters; retake with `?capture=1` if time allows |

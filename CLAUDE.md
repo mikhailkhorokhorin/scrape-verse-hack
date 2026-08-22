@@ -34,8 +34,8 @@ Commit each task separately. A single commit spanning six tasks cannot be review
 | Console framework | None. Vanilla, no build step |
 | Frontend starting point | Port `docs/prototype.html`. Never rewrite it from the spec |
 | CI | **GitHub Actions** — `.github/workflows/watch.yml`, `*/30` cron in the file. GitLab was abandoned early; there is no GitLab remote |
-| Tests | `node:test`, no dependencies. `npm test` — 826 tests, must stay green |
-| MCP server | `mcp/`, stdio JSON-RPC, no SDK. Six tools. See `mcp/README.md` |
+| Tests | `node:test`, no dependencies. `npm test` — 1,112 tests, must stay green |
+| MCP server | `mcp/`, stdio JSON-RPC, no SDK. Eight tools. See `mcp/README.md` |
 
 ## Two hard stops — the only reasons to come back to a human
 

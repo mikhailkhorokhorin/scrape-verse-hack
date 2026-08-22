@@ -12,17 +12,21 @@ Scrapers do not crash. They decay — a target site changes, extraction starts r
 nulls and wrong values, and the pipeline stays green while the data quietly rots. THWIP
 watches for that, shows it, and repairs it.
 
+![The black substance being dragged off a taken panel, revealing the values the scraper actually returned: price null in red, rating "undefined" as a literal string in violet](assets/scratch.gif)
+
+*Integrity loss renders as a substance covering exactly the percentage a Spider has lost.
+Hold the pointer down and it tears away, showing the values underneath — the same data
+the field chips read, not a caption written for the reveal.*
+
 **Source repository → https://github.com/mikhailkhorokhorin/scrape-verse-hack**
 (branches `main` and `develop`.)
-
-<!-- TODO before submitting: demo video link -->
 
 ## The four things a judge asks — answered here
 
 | Question | Answer, in one line | Section |
 |---|---|---|
 | **How was the scraper designed?** | Three Bright Data Scraper Studio collectors, created with `bdata scraper create` from a plain-English field description; per-field validators live in `collectors.json` | [The collectors](#the-collectors) |
-| **How is it driven from an agent?** | An MCP server with six tools — status, history, incidents, heal receipts, and two that scan and heal for real | [MCP server](#mcp-server--the-fleet-in-your-agent) |
+| **How is it driven from an agent?** | An MCP server with eight tools — status, history, incidents, heal receipts, evidence trails, a numbers audit, and two that scan and heal for real | [MCP server](#mcp-server--the-fleet-in-your-agent) |
 | **What happened when the site changed?** | Three real breaks, two of them on sites we do not control. Each was healed on the same Collector ID, and each carries a per-field receipt of the value before and after | [It already caught a real one](#it-already-caught-a-real-one) |
 | **What did the output actually give you?** | Real rows on screen, each stamped with the collector, the scan time, and the Integrity the Spider was at when the row was captured | [THE HAUL](#the-haul--the-data-itself) |
 
@@ -59,10 +63,10 @@ project possible: a field can be present, non-null, and still be reported broken
 ### How it is driven from a coding agent
 
 `mcp/` is an MCP server speaking JSON-RPC 2.0 over stdio, written straight against the
-spec — **no SDK, no dependencies**. Six tools. Four read the committed data and are free:
-`fleet_status`, `spider_history`, `incident_log`, `heal_receipt`. Two call Bright Data and
-spend credit, and say so in the descriptions the agent reads: `scan_fleet` and
-`heal_spider`.
+spec — **no SDK, no dependencies**. Eight tools. Six read the committed data and are free:
+`fleet_status`, `spider_history`, `incident_log`, `heal_receipt`, `evidence_report`,
+`numbers_audit`. Two call Bright Data and spend credit, and say so in the descriptions the
+agent reads: `scan_fleet` and `heal_spider`.
 
 ```bash
 claude mcp add thwip -- node mcp/server.js
@@ -161,13 +165,54 @@ and [`kestrel-after.json`](docs/evidence/kestrel-after.json), the scans are in
 
 ## Layout
 
+### Why this code is clean
+
+The judging phrase is "a repo a stranger could pick up on Monday". Here is what that
+stranger inherits, counted from the tree rather than remembered:
+
+| | |
+|---|---|
+| Tests | **1,112**, across 59 `test/*.test.js` files |
+| Dependencies | **zero** — `dependencies` and `devDependencies` are both empty objects |
+| Source files | 140 JS + 50 CSS, and **every one is ≤250 lines** — `max-lines` is an ESLint error, tests included |
+| Comments | **zero, as policy** — `grep -c '^\s*//'` across `web/js`, `scripts` and `tools` returns 0 |
+| Enforcement | ESLint and the full suite run in CI on every push |
+
+Four decisions carry most of the weight:
+
+- **Verification comes from a fresh run, never from the heal's own report.**
+  `repair.js:heal` issues a separate `scraper run` after the re-weave and scores *that*
+  payload with our own classifier; `verify.js` turns the two runs into a per-field
+  verdict, and the incident closes only when the fresh run clears the threshold. A repair
+  that reports success and delivers nothing leaves the incident open, which is the only
+  arrangement an unattended system can be trusted on.
+- **Data writes are append-only and atomic.** `scripts/lib/store.js` appends records and
+  writes through a pid-scoped temp file, `fsync`s it and renames it into place — a cron
+  killed mid-write cannot leave half a JSON file behind, and history is added to rather
+  than edited, so a past diagnosis cannot be quietly improved after the fact.
+- **The test harness runs browser globals in node with no bundler.** `test/web-loader.js`
+  evaluates `web/js/*.js` inside a `vm` context and exposes its lexicals, so the console's
+  plain global functions are unit-testable exactly as the browser loads them. No build
+  step exists in this project, and none is needed to test it.
+- **The grid reconciler is keyed by collector id.** Each cell carries `data-cid`;
+  `reconcile.js` computes a pure plan and `reconcile-dom.js` applies only the cells whose
+  generated HTML changed, so a 30-second refresh never tears down a panel a visitor is
+  mid-gesture on.
+
+One command checks all of it:
+
+```bash
+npm test && npx eslint . && node tools/numbers-audit.js
+```
+
+
 ```
 scripts/                    health-check and repair, Node
 web/                        the console — no build step, no framework
 mcp/                        MCP server — the fleet, answering a coding agent
-test/                       1,022 tests, node:test, no dependencies
+test/                       1,112 tests, node:test, no dependencies
 data/                       history.json, incidents.json, committed by CI
-demo-target/                the Chaos Lab — three variants of the same shop page
+demo-target/                the demo target — three variants of the same shop page
 collectors.json             targets and per-field validators
 docs/                       specs, the collector registry, the audit checklist
 docs/evidence/              create envelopes and before/after payloads, as returned
@@ -238,7 +283,26 @@ committed; the masthead **cover character** was rejected before any code, becaus
 tagline block carries the product thesis. The full brief set, with each brief's own status
 line, is in [`docs/ideas/`](docs/ideas/).
 
-## Chaos Lab — break the site yourself
+## Break it yourself (ten seconds, no install)
+
+**https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1**
+
+No clone, no keys, no backend — the fleet is synthetic fixtures, the mechanics are the
+same code that runs the live watch.
+
+1. **BREAK BODEGA** — Integrity falls 98% → 38%. The black climbs the panel, covering
+   exactly what the scraper lost.
+2. **Drag across the black** — it tears open. Under it are the values that actually came
+   back: `price: null`, `rating: "undefined ⟵ literal text"`. That is the whole thesis:
+   the scraper never crashed, it just went quietly wrong.
+3. **RE-WEAVE** — the repair runs and prints a receipt: *2 of 2 broken fields re-checked
+   against the run after the heal* — `null → $38.00`, `undefined → 4.6`, on an unchanged
+   Collector ID.
+
+**RESET** puts it back. Everything is keyboard reachable, and with
+`prefers-reduced-motion` the scratch becomes a tap-toggle instead of a drag.
+
+## The demo target — break the site for real
 
 BODEGA scrapes a shop page we control, and that page ships in three variants so the break
 does not have to be taken on trust. Switch between them from the header of the page
@@ -286,7 +350,7 @@ Cursor and any other MCP client work the same way — it is a plain stdio proces
 (`npm run mcp`). Full setup and a worked conversation are in
 [`mcp/README.md`](mcp/README.md).
 
-Six tools. Four read the committed data — instant, free, no network:
+Eight tools. Six read the committed data — instant, free, no network:
 
 | Tool | What it answers |
 |---|---|
@@ -294,6 +358,8 @@ Six tools. Four read the committed data — instant, free, no network:
 | `spider_history` | How has one Spider behaved over time, with post-heal runs marked |
 | `incident_log` | What broke, and did the repair hold |
 | `heal_receipt` | Prove one repair — every phase with timestamps and gaps, beside the `collector_id` that did not change |
+| `evidence_report` | The whole trail for one incident: stage durations, per-field values on both sides, and SHA-256 digests recomputed from the committed files at call time |
+| `numbers_audit` | Every number the console shows, recomputed from the committed JSON by a second implementation that shares no code with it |
 
 Two drive Bright Data for real and **spend credit**: `scan_fleet` scrapes and scores the
 fleet, `heal_spider` diagnoses, re-weaves, verifies and opens an incident. Their tool
@@ -321,7 +387,7 @@ failing for two consecutive scans and is outside its 2-hour cooldown; force one 
 
 ## Running the tests
 
-1,022 tests, `node:test`, no dependencies and no test framework to install:
+1,112 tests, `node:test`, no dependencies and no test framework to install:
 
 ```bash
 npm test
@@ -357,6 +423,28 @@ The scan commits with the built-in `GITHUB_TOKEN`, which the workflow requests t
 The cron is in the file, so the schedule needs no setup in the UI. `concurrency: watch`
 keeps two scans from writing `data/` at once. The `scan` job runs only on the cron or on
 a manual dispatch, so pushing code never spends credit.
+
+### Count the unattended record yourself
+
+Every claim on this page is recomputable from the committed JSON and the git log. Three
+commands, no install, no credentials:
+
+```bash
+git log --author="thwip watch" --oneline | wc -l   # commits no human made
+node tools/numbers-audit.js                        # every number the console shows
+npm test                                           # the whole suite, offline
+```
+
+As of this writing that is **22 bot commits** between 21 Aug 07:49 and 22 Aug 06:00 UTC,
+**90 scans** over **1,876 rows**, **3 incidents** and **3 heals**, with `unchangedIds`
+reading `true` — the collector IDs going into every repair are the IDs coming out.
+
+The bot commits are also readable in the browser, no clone required:
+[commits by `thwip watch`](https://github.com/mikhailkhorokhorin/scrape-verse-hack/commits/main?author=thwip%20watch).
+
+`tools/numbers-audit.js` is deliberately a second implementation. It re-derives the
+figures from `data/*.json` without importing a line of the console's own code, so if the
+page and the audit ever disagree, one of them is lying and you can see which.
 
 ## The collectors
 
@@ -503,6 +591,66 @@ with `--auto-approve --auto-save` and nobody watching. A verification run afterw
 returned 30 rows carrying real titles, points, comments and authors where every field had
 been `null`, on the same Collector ID. Full log in
 [`docs/COLLECTORS.md`](docs/COLLECTORS.md).
+
+### What happens when the heal itself lies
+
+A self-healing scraper is only as trustworthy as the thing that decides the heal worked.
+If the repair reports its own success, the system is a rubber stamp. So THWIP never asks.
+After every re-weave it runs a **fresh scrape** and scores what actually comes back, field
+by field, against the validators in `collectors.json`. The incident closes only if that
+fresh run clears the HEALTHY threshold. Four things can come back, and only one of them
+closes anything.
+
+**The heal returns nothing.** Every field is null again. The verdict is
+`NOTHING_CAME_BACK`, integrity is unchanged, and `resolved` stays `false` — the incident
+is still open, still visible on the console, still counted against us. A heal that
+silently produced no data cannot mark itself done.
+`node --test test/heal-that-lies.test.js`
+
+**The heal returns garbage that looks like data.** This is the failure mode that defeats
+a schema check: a price that reads back as the string `undefined`, a rating of `9000`.
+Both are populated. Both would pass "is the field present?". Both are caught here, because
+every field carries a rule — `rating` is `{ type: "number", min: 0, max: 5 }` — and a
+value that fails its rule is scored `INFECTED`, worth half credit, not full. Integrity
+lands below the resolve bar and the incident stays open. ATLAS's real incident is this
+shape caught one step earlier — `availability` populated on every scan and wrong on every
+scan: `node tools/evidence-report.js inc_002`
+
+**The heal fixes some of it.** One field of two comes back. The verdict is `PARTIAL`, the
+receipt names which field returned and which is still failing, and `resolved` is still
+`false`. A partial repair is a real improvement and it is still not a closed incident; the
+ledger says both things at once rather than rounding up.
+`node --test test/verify.test.js`
+
+**The heal actually works.** Every broken field comes back live, integrity clears the
+threshold, the verdict is `EVERY_FIELD_BACK`, and only now does `resolved` flip to `true`.
+The receipt keeps the value each field held on both sides, so the claim is checkable
+rather than asserted. BODEGA's overnight incident is the worked example:
+`node tools/evidence-report.js inc_003`
+
+The design difference is worth stating plainly, because there is an obvious alternative:
+**gate the approve** — inspect the proposed repair and reject it before it ships. That is
+a good pattern when a human is watching, because judging a borderline fix needs taste: is
+this selector brittle, is this value plausible for this site. THWIP runs unattended on a
+30-minute cron with nobody in the loop, and a gate with no human behind it is just a
+second guess stacked on the first. So we do not gate the approve. **We let the heal ship,
+then verify from reality and refuse to close.** The cost is an honest window where a
+collector is repaired but not yet confirmed. The benefit is that no number on this page
+can be wrong in our favour: every `resolved: true` in the ledger is backed by a scrape
+that happened after the repair and returned data that passed its validators.
+
+The four cases above are the four stories in `test/heal-that-lies.test.js`. They build
+real rows, push them through the same scoring code the cron uses, and assert the verdict
+and the `resolved` flag that fall out.
+
+**One command prints the full evidence trail.** `node tools/evidence-report.js` (or
+`inc_001` for one incident, `--json` for machine reading) prints, per incident: the
+`collector_id` before and after the repair — asserted identical, and the tool fails loudly
+if it ever is not — the stage timestamps with the duration between each, a per-field table
+of state and value on both sides of the heal, the verification verdict, and SHA-256
+digests of the incident record and of every committed payload file behind it. The digests
+are recomputed from disk at call time, so they are a check, not a claim. The same report
+is available to an agent as the `evidence_report` MCP tool.
 
 ## Roadmap
 
