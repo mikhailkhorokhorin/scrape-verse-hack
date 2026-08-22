@@ -1,5 +1,98 @@
 # Competitive position
 
+Second reconnaissance run 2026-08-22, morning. 131 repositories checked via the GitHub
+API (exact sizes, commit counts, full READMEs, git trees), 93 of them hackathon-era.
+**Only 18 contain a real collector id**, and only three entries besides ours pair a
+collector, a test suite and a working live URL. The first recon's "the real field is
+three projects" undercounted: it is about four serious ones and eight real-but-narrow.
+
+## The four that matter, and where we stand against each
+
+### rycerzes/brightdata-gatekeeper — the Bright Data + Clean Code threat
+
+An approval layer over Bright Data's own heal: golden rows recorded while healthy, a
+proposed fix judged against them, bad heals **rejected**. 14 test files, an MCP server,
+two live URLs, a generated demo video. Their documented incident — a heal that silently
+nulled a field, which `--auto-approve` would have shipped — is the strongest single
+artifact in the field, and it is aimed at the flag we use.
+
+Our answer is already on disk: `scripts/verify.js` computes the receipt from a fresh
+run **after** the heal, never from the heal's own report, and `inc_003` proves we keep
+even a wrong diagnosis. They prevent; we verify and record — and unlike them, our cron
+commits the evidence unattended every 30 minutes, and two of our three breaks happened
+on sites nobody controls. They beat us on the elegance of the gate idea and on having a
+video. We beat them on autonomy, on scale of tests (1,022 vs 14 files), on wild
+incidents, and on every pixel of UI.
+
+### Dinesh210805/brightdata-mcp-studio — npm-published breadth
+
+A fork of Bright Data's official MCP server adding the Scraper Studio lifecycle it
+lacks: 92 tools, 13 test files, three CI workflows, a real collector. Beats us on MCP
+breadth and on the "we fixed Bright Data's own gap" pitch. It is a tool, not a product:
+no UI, no recorded incident history, no fleet. Our six tools are zero-dependency and
+sit inside a product a judge can watch.
+
+### aThoughtfulSoul/patchwright — the demo-interaction threat
+
+A live break room: press a button, watch a repair land in 10-25 seconds. That gesture
+out-demos any replay. But the healing is **Gemini, not Bright Data heal** — a miss on
+the heaviest criterion — a human approves every patch, and the README names a different
+hackathon. Watch it, do not fear it.
+
+### instax-dutta/scrapeverse-hakathon — the breadth product
+
+Three collectors, heal-on-null-rate keeping the collector id, 7 tests including
+`heal.test.ts`, a live fixture, arbitrage + alerts on top. More features than us;
+every break staged on their own fixture, a standard Next dashboard, and two orders of
+magnitude fewer tests.
+
+## Real but narrower
+
+- **allenasat044-prog/sentinel-scrape-verse** — the only other entry with bot commits
+  (actions-user, ~6h) and a 25-entry healing log including an honest 409 recovery.
+  Volume optics beat our three incidents; everything else — cadence (30min vs 6h),
+  per-field receipts, tests (1,022 vs 0), UI — is ours.
+- **vikramlingam/driftwatch** — yesterday's Suit-Up favourite, deflated on inspection:
+  real collector and a Studio export, neon HUD — but **no live URL**, one test file, no
+  cron, and the last day was README edits. The threat was concentrated in UI polish and
+  they stopped building.
+- **SmartLemur/visa-watch** — 42 Vitest tests (best after ours) and the sharpest thesis
+  in the field: telling a policy change from a scraper break. Dev-only, human-approved
+  healing, three commits.
+- **sreecharan-desu/sentinel** — four collectors, a 6-hourly cron uploading artifacts,
+  a live but generic Vercel page.
+- **harisawan27/scrape_verse** — 15 test files + CI, weak story.
+- **inusha-thathsara/ScrapeVerse-Pulse** — three collectors, in-place heal, 11 tests,
+  no deploy.
+- **siiddhantt/baahar** — still the best product story, still manual healing, and no
+  commits in the last day.
+- **Kanakpaswan27/ChaosVerse-Suite** — live, polished, real DCA trigger; the REPAIR
+  stage is UI simulation and there are no tests.
+- **0xConsole/scrape-verse-agent** — best static README presentation; data-quality
+  analysis, no healing, no collector.
+
+The rest: honest partials (heal works only on localhost; "healing" that is fallback
+selectors; a live worker stuck on loading), 61 empty shells, 20 unreadable.
+
+## Category verdicts, updated
+
+- **Best Use of Bright Data** — the contested one. Gatekeeper and MCP-Studio are real.
+  Nobody else combines wild-site breaks, an autonomous overnight incident with its
+  false diagnosis preserved, and per-field before/after receipts.
+- **Best UI** — the field has six live deployments and **zero design directions**. Ours
+  is the strongest claim we hold.
+- **Best Clean Code** — 1,022 tests, zero dependencies including dev. The nearest
+  competitor has 15 test files. Not catchable in a day.
+- **Best LinkedIn Post** — invisible on GitHub; effectively uncontested from here.
+
+**The one visible gap on our side is the demo video.** Gatekeeper and DriftWatch have
+one; the submission form requires one; ours is scripted but not recorded.
+
+---
+
+## First reconnaissance (2026-08-21), kept as the record
+
+
 Reconnaissance run 2026-08-21. Every claim below was checked against the actual
 repositories, not inferred from titles.
 
