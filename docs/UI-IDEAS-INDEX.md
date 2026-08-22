@@ -70,7 +70,7 @@ Written against the one test wave two passed. Twenty ideas.
 | UI-56 | The slab — fleet Integrity as a collector's grade | KILLED — a collector joke for an audience of collectors |
 | UI-57 | The paper ages with the data | KILLED — right idea, wrong deadline; it changes a shipped state and re-opens a contrast check |
 | UI-58 | Variant covers | KILLED |
-| UI-59 | The page comes off the press on load | **MOVE 4** — folded into the scroll version |
+| UI-59 | The page comes off the press on load | **SHIPPED · MOVE 4** — folded into the scroll version |
 | UI-60 | Hold a key and the CMYK plates come apart | **DEFER** — free once MOVE 4 exists, worthless before it |
 | **UI-61** | **Scratch the symbiote off — the headline** | **SHIPPED** · MOVE 2 |
 | **UI-62** | **It does not like being watched — the flinch** | **KILLED** — the optional rider on MOVE 2; cut because it fights the turbulence filter, as the play allowed |
@@ -90,20 +90,20 @@ is what the table never covered. Fourteen ideas.
 
 | Id | Idea | Status |
 |---|---|---|
-| **UI-69** | **The sweep hand — one real lap between crons, duration computed not chosen** | **MOVE 5** |
+| **UI-69** | **SHIPPED · The sweep hand — one real lap between crons, duration computed not chosen** | **MOVE 5** |
 | UI-70 | The substance creeps at the speed it actually crept | KILLED |
-| UI-71 | Drift between scans — the page changes while you sit still | **MOVE 5** in part; its yellowing half dies with UI-57 |
-| **UI-72** | **The page prints as you read it — scroll-driven CMYK passes** | **MOVE 4** |
+| UI-71 | SHIPPED IN PART · Drift between scans — the page changes while you sit still | **MOVE 5** in part; its yellowing half dies with UI-57 |
+| **UI-72** | **SHIPPED · The page prints as you read it — scroll-driven CMYK passes** | **MOVE 4** |
 | UI-73 | The sparkline is drawn, not displayed | **DEFER** — trivial once MOVE 4's timeline exists |
-| **UI-74** | **The impact frame — 60ms full-page inversion on a real break** | **MOVE 5** |
+| **UI-74** | **SHIPPED · The impact frame — 60ms full-page inversion on a real break** | **MOVE 5** |
 | UI-75 | Speed lines from the integrity delta | KILLED |
 | UI-76 | Ben-Day bloom — halftone dots carry the value | KILLED |
 | UI-77 | The purge takes the whole page | KILLED — it can only fire on a heal, which will not happen during judging |
-| UI-78 | The odometer — numbers roll digit by digit | **MOVE 5**, same commit or not at all |
-| UI-79 | The stamp — the landing scan presses into the panel | **MOVE 5**, same commit or not at all |
-| **UI-80** | **Stillness is the health signal — motion reserved for damage** | **MOVE 5** |
+| UI-78 | SHIPPED · The odometer — numbers roll digit by digit | **MOVE 5**, same commit or not at all |
+| UI-79 | SHIPPED · The stamp — the landing scan presses into the panel | **MOVE 5**, same commit or not at all |
+| **UI-80** | **SHIPPED · Stillness is the health signal — motion reserved for damage** | **MOVE 5** |
 | UI-81 | Weight and lag — one spring in the rig | KILLED |
-| **UI-82** | **The whole grid re-enters on every landing scan** | **MOVE 5 — fix first.** A defect, not an idea |
+| **UI-82** | **FIXED · The whole grid re-enters on every landing scan** | **MOVE 5 — fix first.** A defect, not an idea |
 
 ---
 
