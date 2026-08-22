@@ -111,186 +111,65 @@ to a plain uptime check; THWIP scores the *data*, so silent decay surfaces.
 
 ## A real transcript
 
-Everything below was produced by piping the requests into `node mcp/server.js`
-over stdio and capturing what came back. Only the `tools/list` result is
-abbreviated — it is one line holding all eight schemas — and the elision is
-marked. Reproduce it yourself:
+Piped into `node mcp/server.js` over stdio, captured verbatim. Reproduce it with the two
+lines under [Connect](#connect), or with your own request file:
 
 ```bash
 node mcp/server.js < your-requests.jsonl
 ```
 
+**Handshake** — the version is negotiated, not assumed:
+
 ```text
---> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"transcript","version":"1.0.0"}}}
-<-- {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-06-18","capabilities":{"tools":{"listChanged":false}},"serverInfo":{"name":"thwip","version":"1.0.0"}}}
-
---> {"jsonrpc":"2.0","method":"notifications/initialized"}
-(no response: notifications are one-way, per spec)
-
---> {"jsonrpc":"2.0","id":2,"method":"tools/list"}
-<-- {"jsonrpc":"2.0","id":2,"result":{"tools":[
-      {"name":"fleet_status","description":"Current health of every scraper in the THWIP fleet. ...","inputSchema":{"type":"object","properties":{},"additionalProperties":false}},
-      {"name":"spider_history", ...},
-      {"name":"incident_log", ...},
-      {"name":"heal_receipt", ...},
-      {"name":"evidence_report", ...},
-      {"name":"numbers_audit","description":"Every number the THWIP console shows, recomputed from the committed JSON in data/ ...","inputSchema":{"type":"object","properties":{},"additionalProperties":false}},
-      {"name":"scan_fleet","description":"... WARNING: this spends real Bright Data credits and takes minutes to finish. ...", ...},
-      {"name":"heal_spider","description":"... WARNING: this spends real Bright Data credits and takes minutes to finish. ...", ...}
-    ]}}
-    (eight schemas, returned on one line; descriptions elided here for width)
+--> {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18",...}}
+<-- {"jsonrpc":"2.0","id":1,"result":{"protocolVersion":"2025-06-18",
+    "capabilities":{"tools":{"listChanged":false}},
+    "serverInfo":{"name":"thwip","version":"1.0.0"}}}
 ```
 
-`fleet_status` — the whole fleet, from recorded history, costing nothing:
+**`heal_receipt` on the incident no human touched** — this is the whole product in one
+call, and the text below is exactly what the tool returned:
 
 ```text
---> {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"fleet_status","arguments":{}}}
-<-- {"jsonrpc":"2.0","id":3,"result":{"content":[{"type":"text","text": ... }]}}
-
-THWIP fleet — 3 spiders, 0 degraded, 0 critical
-
-BODEGA (mikhailkhorokhorin.github.io)
-  integrity 100%  HEALTHY
-  scanned 33m ago at 2026-08-22T05:52:17.115Z
-  rows 12
-  collector_id c_mt2lkwxa1bb5uz223s
-  live: title, price, rating, image
-
-ATLAS (books.toscrape.com)
-  integrity 100%  HEALTHY
-  scanned 25m ago at 2026-08-22T05:59:55.110Z
-  rows 20
-  collector_id c_mt2fnqqngikv29od5
-  live: title, price, rating, image_url, availability
-
-KESTREL (news.ycombinator.com)
-  integrity 100%  HEALTHY
-  scanned 25m ago at 2026-08-22T06:00:00.342Z
-  rows 30
-  collector_id c_mt2fnt3p2k4n644701
-  live: title, points, comments, author
-```
-
-`incident_log` — the fleet is healthy now, but BODEGA has a history:
-
-```text
---> {"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"incident_log","arguments":{"spider":"BODEGA"}}}
-<-- {"jsonrpc":"2.0","id":4,"result":{"content":[{"type":"text","text": ... }]}}
-
-1 incidents recorded, showing last 1
-
-inc_003  BODEGA  strain=THROTTLED
-  integrity 0% -> 100%
-  resolved: yes
-  opened 2026-08-21T07:48:20.779Z
-  closed 2026-08-21T09:13:59.565Z
-  stages: DETECTED -> DIAGNOSED -> REWEAVING -> VERIFIED
-  anomalies: title, price, rating, image
-  recovered: title, price, rating, image
-  The cron detected BODEGA at 0% twice and ran a heal on its own — and the heal did not fix it, because nothing on the target had broken. The scraper was returning one wrapped row holding a products array, and the watcher's own payload parser scored the envelope instead of the rows. The fix landed in rowsOf, the next scan read 12 rows at 100%, and the diagnosis recorded here is the false alarm the system believed at the time. The VERIFIED stage and closure were written from the recovery scan's timestamp after the parser fix landed; the detection, diagnosis and re-weave rows are repair.js's own autonomous writes.
-```
-
-`heal_receipt` — the repair, phase by phase, with the value each field held:
-
-```text
---> {"jsonrpc":"2.0","id":5,"method":"tools/call","params":{"name":"heal_receipt","arguments":{"incident_id":"inc_003"}}}
-<-- {"jsonrpc":"2.0","id":5,"result":{"content":[{"type":"text","text": ... }]}}
-
-HEAL RECEIPT inc_003
+HEAL RECEIPT inc_004
 spider        BODEGA
 collector_id  c_mt2lkwxa1bb5uz223s
-strain        THROTTLED
-integrity     0% -> 100%
+strain        RENAMED
+integrity     50% -> 100%
 resolved      yes
 
 phases:
-  DETECTED   2026-08-21T07:39:39.524Z  --
-  DIAGNOSED  2026-08-21T07:48:20.779Z  +521s
-  REWEAVING  2026-08-21T07:48:20.782Z  +0s
-  VERIFIED   2026-08-21T09:13:59.565Z  +5139s
+  DETECTED   2026-08-22T07:56:22.427Z  --
+  DIAGNOSED  2026-08-22T08:06:16.400Z  +594s
+  REWEAVING  2026-08-22T08:06:16.402Z  +0s
+  VERIFIED   2026-08-22T08:08:18.114Z  +122s
 
-total 5660s from detection to verification
+total 716s from detection to verification
 
-The collector_id never changed: c_mt2lkwxa1bb5uz223s was re-woven in place, not replaced. Downstream consumers kept the same endpoint throughout.
+The collector_id never changed: c_mt2lkwxa1bb5uz223s was re-woven in place, not
+replaced. Downstream consumers kept the same endpoint throughout.
 
-verification: 4/4 fields re-checked against the run after the heal (every field back)
-  ok   title: dead -> live | was null | now Ceramic pour-over dripper
+verification: 2/2 fields re-checked against the run after the heal (every field back)
   ok   price: dead -> live | was null | now £18.00
-  ok   rating: dead -> live | was null | now 4.4 out of 5
-  ok   image: dead -> live | was null | now https://mikhailkhorokhorin.github.io/scrape-v...
+  ok   rating: dead -> live | was null | now 4.4
 
 heal prompt sent:
-  On mikhailkhorokhorin.github.io: 'title' and 'price' and 'rating' and 'image' return null after a layout change. Likely THROTTLED: every field came back empty, so the request itself is likely being blocked or served a different page. Fix the extraction for those fields.
+  On mikhailkhorokhorin.github.io: 'price' and 'rating' return null after a layout
+  change. Likely RENAMED: the other fields still extract correctly, so a selector
+  moved rather than the page changing wholesale. Fix the extraction for those fields.
 ```
 
-`evidence_report` — the same incident with computed durations and digests an
-auditor can recompute:
+Three things an agent can act on are in that one response: the Collector ID is identical
+on both sides, the verification came from a **run after the heal** rather than from the
+heal's own report, and the prompt that was sent is quoted so the diagnosis can be
+challenged rather than trusted.
 
-```text
---> {"jsonrpc":"2.0","id":6,"method":"tools/call","params":{"name":"evidence_report","arguments":{"incident_id":"inc_003"}}}
-<-- {"jsonrpc":"2.0","id":6,"result":{"content":[{"type":"text","text": ... }]}}
-
-EVIDENCE TRAIL — 1 incident, every digest recomputed from the committed files at call time
-
-EVIDENCE inc_003 — BODEGA (THROTTLED)
-
-  collector_id  c_mt2lkwxa1bb5uz223s -> c_mt2lkwxa1bb5uz223s  (identical: re-woven in place, not replaced)
-  integrity     0% -> 100%
-  verdict       EVERY_FIELD_BACK  (4/4 fields back)
-  resolved      yes
-
-TIMELINE
-  DETECTED   2026-08-21T07:39:39.524Z  --
-  DIAGNOSED  2026-08-21T07:48:20.779Z  +8m 41s
-  REWEAVING  2026-08-21T07:48:20.782Z  +0s
-  VERIFIED   2026-08-21T09:13:59.565Z  +85m 39s
-  TOTAL      94m 20s from detection to verification
-
-FIELDS
-  FIELD   STATE         VALUE BEFORE  VALUE AFTER
-  title   dead -> live  null         Ceramic pour-over dripper
-  price   dead -> live  null         £18.00
-  rating  dead -> live  null         4.4 out of 5
-  image   dead -> live  null         https://mikhailkhorokhorin.gith...
-
-DIGESTS (sha256, recompute with: node tools/evidence-report.js --json)
-  incident record                   sha256 ebb1f63da705a389eeef6ee342b2888861b67a7c94661bca0d470cfc824a46dd
-  evidence/create-bodega.json  sha256 15370ee2eb4dc58f9b9e25867998006dda6220281a796e5f997738f916ece823  (379 bytes)
-
-  note: this record was reconstructed after the fact from the scan log.
-```
-
-`numbers_audit` — every headline figure, recomputed rather than repeated:
-
-```text
---> {"jsonrpc":"2.0","id":7,"method":"tools/call","params":{"name":"numbers_audit","arguments":{}}}
-<-- {"jsonrpc":"2.0","id":7,"result":{"content":[{"type":"text","text": ... }]}}
-
-NUMBERS AUDIT — every number the THWIP console shows, recomputed here from the
-committed JSON in data/. Nothing is cached and nothing is hand-written.
-
-            90  scans recorded in history.json
-          1876  rows extracted across every scan
-             3  distinct collector_ids scanned
-             3  incidents recorded in incidents.json
-             3  distinct spiders that have broken
-             3  incidents whose verification resolved them
-          true  every incident kept its collector_id
-            73  mean minutes from detection to verification
-          4.01  hours between the first break and the last close
-    2026-08-21  day of the first recorded break
-            25  scans that ran before 06:00 UTC, unattended
-           542  rows extracted before 06:00 UTC, unattended
-          1165  tests recorded in meta.json
-          true  meta.json records the last human touch
-             3  incidents carrying a per-field verification
-
-Recompute the same table yourself with: node tools/numbers-audit.js
-```
-
-Those numbers move — the cron scans every 30 minutes and appends. The point is
-not the figures in this file; it is that the tool derives them from `data/` on
-every call, so an agent reading them is reading the ledger rather than a claim.
+**Every other tool** answers in the same shape — plain text an agent can read aloud, with
+the numbers derived from `data/` at call time. `evidence_report` adds SHA-256 digests
+recomputed from disk; `numbers_audit` recomputes every headline figure from the committed
+JSON by an implementation that shares no code with the console, so an agent can check a
+claim instead of repeating it. Those numbers move — the cron appends every 30 minutes —
+which is the point: the tool reads the ledger, not a cached answer.
 
 ## Notes
 
@@ -298,5 +177,5 @@ every call, so an agent reading them is reading the ledger rather than a claim.
 - Bright Data credentials come from the environment, same as the CLI scripts.
 - Every error is a valid JSON-RPC error or a tool result flagged `isError` —
   bad input never takes the process down.
-- Tests: `npm test` (see `test/mcp*.test.js`). The credit-spending paths are
+- Tests: `npm test` (see `test/mcp/`). The credit-spending paths are
   covered against a mocked `lib.bdata`, so the suite never spends anything.

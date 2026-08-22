@@ -13,3 +13,4 @@ public/
 web/data
 .impeccable/
 .playwright-mcp/
+.claude/
