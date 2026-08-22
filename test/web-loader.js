@@ -5,6 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const WEB_DIR = path.join(__dirname, '..', 'web', 'js');
+const CSS_DIR = path.join(__dirname, '..', 'web', 'css');
 const DATA_DIR = path.join(__dirname, '..', 'data');
 
 const BASE_GLOBALS = {
@@ -65,13 +66,20 @@ function findModule(dir, wanted) {
   return null;
 }
 
-function modulePath(name) {
-  const wanted = name.endsWith('.js') ? name : name + '.js';
-  const direct = path.join(WEB_DIR, wanted);
+function resolveIn(root, wanted, kind) {
+  const direct = path.join(root, wanted);
   if (fs.existsSync(direct)) return direct;
-  const found = findModule(WEB_DIR, path.basename(wanted));
-  if (!found) throw new Error('no web module named ' + wanted);
+  const found = findModule(root, path.basename(wanted));
+  if (!found) throw new Error('no web ' + kind + ' named ' + wanted);
   return found;
+}
+
+function modulePath(name) {
+  return resolveIn(WEB_DIR, name.endsWith('.js') ? name : name + '.js', 'module');
+}
+
+function cssPath(name) {
+  return resolveIn(CSS_DIR, name.endsWith('.css') ? name : name + '.css', 'stylesheet');
 }
 
 function loadWebModule(names, extra) {
@@ -99,5 +107,6 @@ function readFixture(name) {
 }
 
 module.exports = {
-  loadWebModule, readFixture, setGlobal, plain, modulePath, WEB_DIR, DATA_DIR,
+  loadWebModule, readFixture, setGlobal, plain, modulePath, cssPath,
+  WEB_DIR, CSS_DIR, DATA_DIR,
 };
