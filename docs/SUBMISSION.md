@@ -43,7 +43,7 @@ The things a submission is rejected or discounted for missing.
 | # | Requirement | Status | Where it lives |
 |---|---|---|---|
 | 1 | Public repository, anonymously cloneable | **done** | https://github.com/mikhailkhorokhorin/scrape-verse-hack — public, MIT |
-| 2 | Bright Data Scraper Studio used for real — real `create` / `run` / `heal`, never mocked | **done** | `scripts/health-check.js`, `scripts/repair.js`; 81 real scans recorded in `data/history.json` |
+| 2 | Bright Data Scraper Studio used for real — real `create` / `run` / `heal`, never mocked | **done** | `scripts/health-check.js`, `scripts/repair.js`; every scan recorded in `data/history.json`, which the cron appends to every 30 minutes — count it with `node tools/numbers-audit.js` rather than trusting a number written here |
 | 3 | Collector IDs listed openly in the submission | **done** | `collectors.json`, `docs/COLLECTORS.md` — `c_mt2lkwxa1bb5uz223s` (BODEGA), `c_mt2fnqqngikv29od5` (ATLAS), `c_mt2fnt3p2k4n644701` (KESTREL) |
 | 4 | **Collector ID unchanged across a heal** | **done and evidenced ×3** | All three healed on their own unchanged ID; see below |
 | 5 | Public data only, no login or paywall, not in Bright Data's pre-built library | **done** | books.toscrape.com and news.ycombinator.com, both robots-checked Aug 21; see `docs/COLLECTORS.md` |
