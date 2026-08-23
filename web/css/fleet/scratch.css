@@ -1,6 +1,11 @@
-.panel.has-scratch{touch-action:pan-y;cursor:grab;}
+.panel.has-scratch{
+  touch-action:pan-y;
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><g fill='none' stroke='%23f4efe4' stroke-width='5.5' stroke-linecap='round'><path d='M14 14 5 3M14 14 23 3'/></g><g fill='none' stroke='%230b0a10' stroke-width='2.4' stroke-linecap='round'><path d='M14 14 5 3M14 14 23 3'/><path d='M12 17l2-3M16 17l-2-3'/><circle cx='9' cy='20' r='3.4'/><circle cx='19' cy='20' r='3.4'/></g></svg>") 14 6,grab;
+}
 .panel.has-scratch > .symbiote{opacity:0;}
-.panel.is-scratching{cursor:grabbing;}
+.panel.is-scratching{
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><g fill='none' stroke='%23f4efe4' stroke-width='5.5' stroke-linecap='round'><path d='M14 14 9 3M14 14 19 3'/></g><g fill='none' stroke='%230b0a10' stroke-width='2.4' stroke-linecap='round'><path d='M14 14 9 3M14 14 19 3'/><path d='M12 17l2-3M16 17l-2-3'/><circle cx='9' cy='20' r='3.4'/><circle cx='19' cy='20' r='3.4'/></g></svg>") 14 4,grabbing;
+}
 .panel.is-scratching,.panel.is-scratching *{user-select:none;-webkit-user-select:none;}
 
 .panel > .scratch__web{
@@ -35,12 +40,13 @@
 .scratch__strand--cross{stroke-opacity:.5;}
 
 .scratch__strand.is-torn{
-  will-change:transform,opacity;
   animation-name:scratch-snap;
   animation-duration:var(--tear);
   animation-timing-function:cubic-bezier(.4,0,.9,.4);
   animation-fill-mode:both;
 }
+
+.scratch__strand.is-gone{display:none;}
 
 @keyframes scratch-snap{
   from{transform:scale(1) rotate(0);opacity:1;}

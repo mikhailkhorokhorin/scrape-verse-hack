@@ -2,7 +2,7 @@
 
 const SCRATCH_HINT_KEY = "thwip.scratch.found";
 const SCRATCH_NS = "http://www.w3.org/2000/svg";
-const SCRATCH_IDS = { n: 0, frame: 0 };
+const SCRATCH_IDS = { n: 0, frame: 0, tick: 0, move: null };
 
 function scratchReduced() {
   return typeof matchMedia === "function" &&
@@ -83,6 +83,7 @@ function scratchDrawWeb(state) {
   const box = state.box;
   const top = scratchTopOf(state);
   state.top = top;
+  state.rect = null;
   state.layer.setAttribute("viewBox", "0 0 " + box.w + " " + box.h);
   scratchBandRect(state.veil, box, top);
   scratchBandRect(state.band, box, top);
@@ -141,6 +142,7 @@ function scratchTouch(panel, e, dragging) {
 function scratchOnDown(e) {
   const panel = e.target.closest && e.target.closest(".panel.has-scratch");
   if (!panel) return;
+  if (panel.__scratch) panel.__scratch.rect = null;
   panel.classList.add("is-scratching");
   scratchTouch(panel, e, false);
 }
@@ -148,7 +150,9 @@ function scratchOnDown(e) {
 function scratchOnMove(e) {
   const panel = e.target.closest && e.target.closest(".panel.has-scratch");
   if (!panel || !panel.classList.contains("is-scratching")) return;
-  scratchTouch(panel, e, true);
+  SCRATCH_IDS.move = { panel: panel, clientX: e.clientX, clientY: e.clientY };
+  if (SCRATCH_IDS.tick) return;
+  SCRATCH_IDS.tick = requestAnimationFrame(scratchFlushMove);
 }
 
 function scratchOnUp() {
@@ -226,5 +230,7 @@ function scratchBind() {
   document.addEventListener("pointermove", scratchOnMove);
   document.addEventListener("pointerup", scratchOnUp);
   document.addEventListener("pointercancel", scratchOnUp);
+  document.addEventListener("animationend", scratchOnSnapEnd);
   window.addEventListener("resize", scratchOnResize);
+  window.addEventListener("scroll", scratchRectDrop, { passive: true });
 }

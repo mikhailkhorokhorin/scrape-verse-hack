@@ -33,11 +33,36 @@ function scratchSize(state) {
   return true;
 }
 
+function scratchRectOf(state) {
+  if (!state.rect) state.rect = state.layer.getBoundingClientRect();
+  return state.rect;
+}
+
+function scratchRectDrop() {
+  document.querySelectorAll(".panel.has-scratch").forEach((panel) => {
+    if (panel.__scratch) panel.__scratch.rect = null;
+  });
+}
+
 function scratchPointIn(state, clientX, clientY) {
-  const box = state.layer.getBoundingClientRect();
+  const box = scratchRectOf(state);
   if (box.width === 0 || box.height === 0) return null;
   return {
     x: ((clientX - box.left) / box.width) * state.box.w,
     y: ((clientY - box.top) / box.height) * state.box.h,
   };
+}
+
+function scratchFlushMove() {
+  SCRATCH_IDS.tick = 0;
+  const move = SCRATCH_IDS.move;
+  SCRATCH_IDS.move = null;
+  if (move) scratchTouch(move.panel, move, true);
+}
+
+function scratchOnSnapEnd(e) {
+  const el = e.target;
+  if (el && el.classList && el.classList.contains("is-torn")) {
+    el.classList.add("is-gone");
+  }
 }

@@ -4,7 +4,7 @@ const SCRATCH_RADIUS = 22;
 const SCRATCH_ROW_H = 26;
 const SCRATCH_COVER = 0.82;
 const SCRATCH_SAMPLES = 14;
-const SCRATCH_CELL = 74;
+const SCRATCH_CELL = 104;
 const SCRATCH_AIMS = [30, 78, 126, 174, -138, -84, -30, 12];
 
 function scratchRng(seed) {
@@ -43,20 +43,37 @@ function scratchQuadPoints(d) {
   return out;
 }
 
+function scratchBoundsOf(points) {
+  let x0 = Infinity;
+  let y0 = Infinity;
+  let x1 = -Infinity;
+  let y1 = -Infinity;
+  for (let i = 0; i < points.length; i += 1) {
+    const p = points[i];
+    if (p[0] < x0) x0 = p[0];
+    if (p[1] < y0) y0 = p[1];
+    if (p[0] > x1) x1 = p[0];
+    if (p[1] > y1) y1 = p[1];
+  }
+  return [x0, y0, x1, y1];
+}
+
 function scratchStrand(seg, hub, kind, weight) {
+  const points = scratchQuadPoints(seg.d);
   return {
     d: seg.d,
     kind: kind,
     weight: weight,
     anchor: [webRound(hub.x), webRound(hub.y)],
-    points: scratchQuadPoints(seg.d),
+    points: points,
+    bounds: scratchBoundsOf(points),
   };
 }
 
 function scratchPlanFor(rng, hub) {
   const plan = webPlan(rng, hub, {
-    minSpokes: 10, maxSpokes: 13,
-    minRings: 8, maxRings: 10,
+    minSpokes: 8, maxSpokes: 11,
+    minRings: 6, maxRings: 8,
     minSpread: 82, maxSpread: 118,
   });
   const out = plan.spokes.map((seg) => scratchStrand(seg, hub, "spoke", 1.4));
@@ -111,6 +128,8 @@ function scratchSegHit(a, b, px, py, r) {
 }
 
 function scratchStrandHit(strand, px, py, r) {
+  const b = strand.bounds;
+  if (b && (px < b[0] - r || px > b[2] + r || py < b[1] - r || py > b[3] + r)) return false;
   const pts = strand.points;
   if (pts.length === 0) return false;
   if (pts.length === 1) return Math.hypot(px - pts[0][0], py - pts[0][1]) <= r;
