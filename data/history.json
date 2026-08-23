@@ -4622,5 +4622,135 @@
       "comments": null,
       "author": null
     }
+  },
+  {
+    "collector_id": "c_mt5ib5a32sn4jpgag",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-23T09:19:05.628Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt5ic7tl1qsevijk2t",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-23T09:26:41.194Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "price"
+    ],
+    "integrity": 80,
+    "status": "DEGRADED",
+    "rows": 984,
+    "rows_expected": 19,
+    "sample": {
+      "title": "Night Sky with Exit Wounds",
+      "price": null,
+      "rating": 1,
+      "image_url": "https://books.toscrape.com/media/cache/ff/48/ff48b0696fb97b7f7b5c6d15e372cb70.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt5iael213a1rr8g8v",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-23T09:29:36.573Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 57,
+    "rows_expected": 30,
+    "sample": {
+      "title": null,
+      "points": null,
+      "comments": null,
+      "author": null
+    }
+  },
+  {
+    "collector_id": "c_mt5iael213a1rr8g8v",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-23T09:42:38.455Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "points",
+      "comments"
+    ],
+    "integrity": 50,
+    "status": "CRITICAL",
+    "rows": 5,
+    "rows_expected": 30,
+    "sample": {
+      "title": "The End of an Athlon",
+      "points": null,
+      "comments": 6,
+      "author": "Michal Necasek"
+    },
+    "after_heal": true
   }
 ]

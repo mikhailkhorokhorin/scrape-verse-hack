@@ -287,5 +287,87 @@
       }
     ],
     "id": "inc_004"
+  },
+  {
+    "spider": "KESTREL",
+    "collector_id": "c_mt5iael213a1rr8g8v",
+    "opened_at": "2026-08-23T09:29:36.623Z",
+    "closed_at": "2026-08-23T09:42:38.458Z",
+    "integrity_before": 0,
+    "integrity_after": 50,
+    "anomalies": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "recovered_fields": [
+      "title",
+      "author"
+    ],
+    "verification": {
+      "ran": true,
+      "checked": 4,
+      "passed": 2,
+      "verdict": "PARTIAL",
+      "checks": [
+        {
+          "field": "title",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "The End of an Athlon",
+          "passed": true
+        },
+        {
+          "field": "points",
+          "from": "dead",
+          "to": "dead",
+          "received_before": null,
+          "received_after": null,
+          "passed": false
+        },
+        {
+          "field": "comments",
+          "from": "dead",
+          "to": "dead",
+          "received_before": null,
+          "received_after": 6,
+          "passed": false
+        },
+        {
+          "field": "author",
+          "from": "dead",
+          "to": "live",
+          "received_before": null,
+          "received_after": "Michal Necasek",
+          "passed": true
+        }
+      ]
+    },
+    "summary": "Extraction kept succeeding while title and points and comments and author stopped returning usable values. The re-weave brought back title and author; the rest is still failing at 50%.",
+    "rows_per_run": 30,
+    "strain": "THROTTLED",
+    "heal_prompt": "On news.ycombinator.com: 'title' and 'points' and 'comments' and 'author' return null after a layout change. Likely THROTTLED: every field came back empty, so the request itself is likely being blocked or served a different page. Fix the extraction for those fields.",
+    "resolved": false,
+    "stages": [
+      {
+        "stage": "DETECTED",
+        "ts": "2026-08-23T09:29:36.573Z"
+      },
+      {
+        "stage": "DIAGNOSED",
+        "ts": "2026-08-23T09:29:36.623Z"
+      },
+      {
+        "stage": "REWEAVING",
+        "ts": "2026-08-23T09:29:36.626Z"
+      },
+      {
+        "stage": "VERIFIED",
+        "ts": "2026-08-23T09:42:38.454Z"
+      }
+    ],
+    "id": "inc_005"
   }
 ]
