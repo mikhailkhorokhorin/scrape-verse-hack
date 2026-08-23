@@ -8,8 +8,10 @@ collector in place, and writes down the proof.
 Built for [Into the Scrape-Verse](https://www.wemakedevs.org/hackathons/scrape-verse),
 WeMakeDevs × Bright Data, 17–23 Aug 2026.
 
-**Live console → <https://mikhailkhorokhorin.github.io/scrape-verse-hack/>** ·
-**The manual → [`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html)** ·
+**Live console → <https://mikhailkhorokhorin.github.io/scrape-verse-hack/>**
+
+**The manual → [`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html)**
+
 **Demo video → `<VIDEO>`**
 
 Every scraper is a Spider with an **Integrity** score, 0–100: how much of what it
