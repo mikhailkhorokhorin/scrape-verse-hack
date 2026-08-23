@@ -5046,5 +5046,103 @@
       "comments": 1,
       "author": "shortcrct"
     }
+  },
+  {
+    "collector_id": "c_mt5mo9mkz9u25zefn",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-23T16:28:04.805Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpgolbgqeg9ziv",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-23T16:28:10.377Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "price"
+    ],
+    "integrity": 80,
+    "status": "DEGRADED",
+    "rows": 19,
+    "rows_expected": 19,
+    "sample": {
+      "title": "Slow States of Collapse: Poems",
+      "price": null,
+      "rating": 3,
+      "image_url": "https://books.toscrape.com/media/cache/db/ac/dbac3faca8a799824f5725d66c0fcce3.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-23T16:28:56.111Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 60,
+    "rows_expected": 30,
+    "sample": {
+      "title": "RF Cafe",
+      "points": 231,
+      "comments": 44,
+      "author": "gregsadetsky"
+    }
   }
 ]
