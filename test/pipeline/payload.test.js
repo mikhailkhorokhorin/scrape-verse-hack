@@ -146,3 +146,34 @@ test('parsePayload throws when the output exceeds the size ceiling', () => {
 test('parsePayload parses an empty array payload', () => {
   assert.deepEqual(parsePayload('[]'), []);
 });
+
+test('rowsOf concatenates several wrapper rows that each hold one array', () => {
+  const rows = rowsOf([
+    { products: [{ title: 'a' }, { title: 'b' }], page: 'one' },
+    { products: [{ title: 'c' }], page: 'two' },
+  ]);
+  assert.deepEqual(rows.map((r) => r.title), ['a', 'b', 'c']);
+});
+
+test('rowsOf leaves a mixed array of wrappers and plain rows untouched', () => {
+  const payload = [{ products: [{ title: 'a' }] }, { title: 'plain' }];
+  assert.deepEqual(rowsOf(payload), payload);
+});
+
+test('rowsOf keeps only the wrappers for the page that was asked for', () => {
+  const rows = rowsOf([
+    { products: [{ title: 'real' }], page: 'https://site.test/shop/index.html?v=a' },
+    { products: [{ title: 'stray' }], page: 'https://site.test/shop/other.html' },
+  ], 'https://site.test/shop/');
+  assert.deepEqual(rows.map((r) => r.title), ['real']);
+});
+
+test('rowsOf drops empty padding rows but keeps a fully empty payload visible', () => {
+  const padded = rowsOf([
+    { stories: [{ title: 'a' }, {}, {}] },
+    { stories: [{ title: 'b' }, {}] },
+  ]);
+  assert.deepEqual(padded.map((r) => r.title), ['a', 'b']);
+  const empty = rowsOf([{ stories: [{}, {}] }, { stories: [{}] }]);
+  assert.equal(empty.length, 3);
+});

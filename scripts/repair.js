@@ -108,7 +108,7 @@ function heal(collector, run, stages, strain) {
 
   try {
     const rows = lib.rowsOf(lib.parsePayload(
-      lib.bdata(['scraper', 'run', collector.collector_id, collector.url, '--pretty'])));
+      lib.bdata(['scraper', 'run', collector.collector_id, collector.url, '--pretty'])), collector.url);
     if (!rows.length) {
       console.error(`${collector.codename}: verification run returned no rows`);
       return null;

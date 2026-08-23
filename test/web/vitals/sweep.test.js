@@ -15,8 +15,8 @@ const {
 const NOW = Date.parse('2026-08-22T12:00:00Z');
 const HALF = SWEEP_PERIOD_MS / 2;
 
-test('the lap is the cron cadence, thirty minutes, not a chosen number', () => {
-  assert.equal(SWEEP_PERIOD_MS, 30 * 60 * 1000);
+test('the lap is the cron cadence, eight hours, not a chosen number', () => {
+  assert.equal(SWEEP_PERIOD_MS, 8 * 60 * 60 * 1000);
 });
 
 test('a scan that just landed leaves the hand at zero', () => {
@@ -74,9 +74,10 @@ test('an unknown timestamp has no countdown at all', () => {
   assert.equal(sweepRemainingMs(NaN, NOW), null);
 });
 
-test('the title names the real interval in minutes', () => {
+test('the title names the real interval, in hours once it is long', () => {
   const state = sweepStateOf(NOW - HALF, NOW);
-  assert.match(sweepTitleOf(state, HALF), /15 minutes/);
+  assert.match(sweepTitleOf(state, HALF), /4 hours/);
+  assert.match(sweepTitleOf(state, 20 * 60 * 1000), /20 minutes/);
 });
 
 test('one minute left is said in the singular', () => {

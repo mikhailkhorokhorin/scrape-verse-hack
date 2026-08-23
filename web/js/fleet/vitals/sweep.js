@@ -1,6 +1,6 @@
 "use strict";
 
-const SWEEP_PERIOD_MS = 30 * 60 * 1000;
+const SWEEP_PERIOD_MS = 8 * 60 * 60 * 1000;
 const SWEEP_TICK_MS = 1000;
 
 let SWEEP_TIMER = null;
@@ -32,7 +32,12 @@ function sweepTitleOf(state, remainingMs) {
   if (!state.known) return "no scan on record for this Spider yet";
   if (state.overdue) return "this run is overdue — the cron should have landed by now";
   const mins = Math.ceil(remainingMs / 60000);
-  return "next scan due in about " + mins + " minute" + (mins === 1 ? "" : "s") +
+  if (mins < 60) {
+    return "next scan due in about " + mins + " minute" + (mins === 1 ? "" : "s") +
+      " — the arc is that interval, not a chosen duration";
+  }
+  const hours = Math.round(mins / 60);
+  return "next scan due in about " + hours + " hour" + (hours === 1 ? "" : "s") +
     " — the arc is that interval, not a chosen duration";
 }
 

@@ -28,14 +28,42 @@ function nestedRows(row) {
   return arrays.length === 1 ? arrays[0] : null;
 }
 
-function rowsOf(payload) {
+function pageOf(row) {
+  for (const v of Object.values(row)) {
+    if (typeof v === 'string' && /^https?:\/\//.test(v)) return v;
+  }
+  return null;
+}
+
+function samePage(a, b) {
+  const norm = (u) => u.split(/[?#]/)[0].replace(/index\.html$/, '').replace(/\/+$/, '');
+  return norm(a) === norm(b);
+}
+
+function rowsOf(payload, url) {
   const cap = (a) => a.slice(0, MAX_ROWS);
   if (Array.isArray(payload)) {
-    if (payload.length === 1) {
-      const inner = nestedRows(payload[0]);
+    let batch = payload;
+    if (url && batch.length > 1 && batch.every(nestedRows)) {
+      const own = batch.filter((row) => {
+        const page = pageOf(row);
+        return page !== null && samePage(page, url);
+      });
+      if (own.length) batch = own;
+    }
+    if (batch.length === 1) {
+      const inner = nestedRows(batch[0]);
       if (inner) return cap(inner);
     }
-    return cap(payload);
+    if (batch.length > 1) {
+      const unwrapped = batch.map(nestedRows);
+      if (unwrapped.every(Boolean)) {
+        const joined = [].concat(...unwrapped);
+        const solid = joined.filter((r) => r && typeof r === 'object' && Object.keys(r).length);
+        return cap(solid.length && solid.length < joined.length ? solid : joined);
+      }
+    }
+    return cap(batch);
   }
   if (payload && typeof payload === 'object') {
     for (const key of ['data', 'records', 'results', 'items', 'rows', 'output']) {

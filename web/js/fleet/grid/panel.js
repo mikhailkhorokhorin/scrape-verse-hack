@@ -103,7 +103,7 @@ function restHTML(sp, st) {
   const runs = typeof sp.runs === "number" ? sp.runs : (sp.series || []).length;
   const label = st === "unwatched" ? "Unwatched" : "Holding";
   const line = st === "unwatched"
-    ? "The Bright Data credits ran out, so the fleet stopped scanning. " +
+    ? "No scan in over three hours, so nothing here is current. " +
       'See <a class="rest__demo" href="?mock=1">the demo</a> for a live fleet on mock data.'
     : "Every expected field returned and passed its validator. Nothing to diagnose.";
   const fields = (sp.fieldOrder || FIELDS).length;

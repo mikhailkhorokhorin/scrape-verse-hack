@@ -28,7 +28,7 @@ function scan(collector) {
     return TRANSPORT_ERROR;
   }
 
-  const rows = lib.rowsOf(payload);
+  const rows = lib.rowsOf(payload, collector.url);
   if (!rows.length) {
     console.error(`${collector.codename}: run returned no rows`);
     return TRANSPORT_ERROR;
