@@ -17,7 +17,7 @@ promised came back real. When Integrity drops, a web spins over its panel coveri
 exactly the share that was lost — and you drag the threads away, one whole strand at a
 time, to read the values that actually arrived.
 
-![Two Spider panels side by side: a healthy KESTREL at 100% Integrity, and the same collector on the day it broke, its readings buried under a dense spider web marked SOMETHING IS UNDER THERE](assets/scratch-web.png)
+![THE WATCH: the console at rest — fleet Integrity 80%, the last scan time, a stale-watch clock reading 1d 2h, the fleet pulse, and the archive diptych below](assets/the-watch.png)
 
 ---
 
@@ -33,8 +33,6 @@ Nothing below needs an API key, touches the network, or spends a credit.
 | 4 | `git clone` this repo, then `npm test` | 1,453 tests, `node:test`, zero dependencies, offline |
 | 5 | `node tools/evidence-report.js inc_004` | The full trail of the incident **no human touched**, with SHA-256 digests |
 | 6 | `git log --author="thwip watch" --oneline \| wc -l` | Commits authored by the workflow, not by a person |
-
-![THE WATCH: the console at rest — fleet Integrity 80%, the last scan time, a stale-watch clock reading 1d 2h, the fleet pulse, and the archive diptych below](assets/the-watch.png)
 
 ---
 
@@ -84,6 +82,11 @@ exists at all.
 The console shows those rows as themselves under **THE HAUL**, each stamped with the
 collector that fetched it, when it was scanned, and the Integrity that Spider was at when
 the row was captured. Provenance travels with the data.
+
+![One Spider on the day it broke: KESTREL at 0% Integrity, its whole panel spun over with web so the readings underneath cannot be read, stamped SOMETHING IS UNDER THERE](assets/scratch-web.png)
+
+*A Spider that lost everything. The web covers exactly the share of the contract that
+did not come back — drag the threads away and the nulls underneath are readable.*
 
 ---
 
@@ -169,6 +172,11 @@ believed it at the time. A monitoring tool that quietly rewrites its own history
 smarter is precisely the thing this project exists to catch; it does not get an exemption
 for being ours.
 
+![The re-weave receipt: 2 of 2 broken fields re-checked against the run after the heal — price went from null to $38.00, rating from the literal text undefined to 4.6](assets/chaos-lab-receipt-1440.png)
+
+*The proof a re-weave writes: every broken field re-checked against a fresh scrape after
+the heal, with the value before and after, on an unchanged collector id.*
+
 ---
 
 ## The Collector ID as a production endpoint
@@ -200,6 +208,11 @@ step, no dependencies. Six read the committed record and are instant, free, and 
 touch the network. Two spend Bright Data credit and say so in their own descriptions, so
 a well-behaved agent asks before it bills you.
 
+![The manual: the newspaper advertisement with eight tools, a 1,453-tests seal, and a cut-out coupon carrying the three install commands](assets/manual-1440.png)
+
+*[`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html) —
+the console's back page. The test count on it is read from `data/meta.json` at page load.*
+
 ```bash
 claude mcp add thwip -- node mcp/server.js
 ```
@@ -229,9 +242,7 @@ python3 -m http.server 8000               # any static server
 ![The CHAOS LAB: BREAK BODEGA, RE-WEAVE, TOGGLE UNWATCHED and RESET, above a synthetic fleet of three Spiders — BODEGA has just been broken and sits at 38% Integrity under a web, beside a healthy ATLAS at 100%](assets/chaos-lab-break-1440.png)
 
 *`?mock=1` — the CHAOS LAB. Press BREAK BODEGA and the web spins over the panel;
-RE-WEAVE prints the receipt below.*
-
-![The re-weave receipt: 2 of 2 broken fields re-checked against the run after the heal — price went from null to $38.00, rating from the literal text undefined to 4.6](assets/chaos-lab-receipt-1440.png)
+RE-WEAVE heals it and prints the receipt shown further up.*
 
 Then open <http://localhost:8000/web/> — the console reads two committed JSON files and
 needs no backend. Add `?mock=1` for the CHAOS LAB, where the fleet is synthetic and says
@@ -240,11 +251,6 @@ so, but the break, the spread and the receipt are the same code the live page ru
 To scan for real you need a Bright Data account and `bdata login`; `npm run health` and
 `npm run repair` are the two entry points the cron itself uses. **Everything above this
 line works without a key.**
-
-![The manual: the newspaper advertisement with eight tools, a 1,453-tests seal, and a cut-out coupon carrying the three install commands](assets/manual-1440.png)
-
-*[`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html) —
-the console's back page. The test count on it is read from `data/meta.json` at page load.*
 
 ---
 
