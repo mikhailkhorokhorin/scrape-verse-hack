@@ -52,14 +52,22 @@
     opacity:1;
     transform:perspective(1100px)
       translate3d(var(--portal-from-x,0px),var(--portal-from-y,0px),0)
-      scale(var(--sc-fit)) rotate(0);
+      scale(calc(var(--sc-fit) * var(--portal-from-fit,1))) rotate(0);
   }
   16%{
     opacity:1;
     transform:perspective(1100px)
       translate3d(calc(var(--portal-from-x,0px) * .94),
         calc(var(--portal-from-y,0px) * .94 + 8px),0)
-      scale(calc(var(--sc-fit) * 1.03)) rotate(0);
+      scale(calc(var(--sc-fit) * var(--portal-from-fit,1) * .99)) rotate(0);
+  }
+  34%{
+    opacity:.98;
+    transform:perspective(1100px)
+      translate3d(calc(var(--portal-from-x,0px) * .7),
+        calc(var(--portal-from-y,0px) * .7),-110px)
+      scale(calc(var(--sc-fit) * (var(--portal-from-fit,1) + 1) * .38))
+      rotate(calc(var(--portal-spin,24deg) * .2));
   }
   52%{
     opacity:.94;

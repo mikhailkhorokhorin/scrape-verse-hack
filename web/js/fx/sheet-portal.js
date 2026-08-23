@@ -25,8 +25,11 @@ function portalMouth() {
 
 function portalAim(skin, frame) {
   const box = frame.box;
-  skin.style.setProperty("--portal-from-x", Math.round(box.left - frame.left) + "px");
-  skin.style.setProperty("--portal-from-y", Math.round(box.top + frame.crop - frame.top) + "px");
+  const fromX = box.left + box.width / 2 - (frame.left + frame.w / 2);
+  const fromY = box.top + frame.crop - frame.top;
+  skin.style.setProperty("--portal-from-x", Math.round(fromX) + "px");
+  skin.style.setProperty("--portal-from-y", Math.round(fromY) + "px");
+  skin.style.setProperty("--portal-from-fit", String(1 / frame.scale));
 }
 
 function sheetPortalClose(modal, sheet) {
