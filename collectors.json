@@ -30,10 +30,10 @@
     {
       "codename": "ATLAS",
       "universe": "books.toscrape.com",
-      "url": "https://books.toscrape.com/",
+      "url": "https://books.toscrape.com/catalogue/category/books/poetry_23/index.html",
       "collector_id": "c_mt5ic7tl1qsevijk2t",
-      "rows_per_run": 20,
-      "note": "sandbox built for scraping, no robots.txt, server-rendered. rating lives in a CSS class, not text",
+      "rows_per_run": 19,
+      "note": "sandbox built for scraping, no robots.txt, server-rendered. rating lives in a CSS class, not text. this category has no next link, so a scan cannot walk into the rest of the catalogue",
       "fields": {
         "title": {
           "type": "string",
