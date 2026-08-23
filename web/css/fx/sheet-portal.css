@@ -50,28 +50,37 @@
 @keyframes portal-suck{
   0%{
     opacity:1;
-    transform:perspective(1100px) scale(var(--sc-fit)) translate3d(0,0,0) rotate(0);
+    transform:perspective(1100px)
+      translate3d(var(--portal-from-x,0px),var(--portal-from-y,0px),0)
+      scale(var(--sc-fit)) rotate(0);
   }
   16%{
     opacity:1;
-    transform:perspective(1100px) scale(calc(var(--sc-fit) * 1.03)) translate3d(0,1%,0) rotate(0);
+    transform:perspective(1100px)
+      translate3d(calc(var(--portal-from-x,0px) * .94),
+        calc(var(--portal-from-y,0px) * .94 + 8px),0)
+      scale(calc(var(--sc-fit) * 1.03)) rotate(0);
   }
   52%{
     opacity:.94;
-    transform:perspective(1100px) scale(calc(var(--sc-fit) * .46))
-      translate3d(0,0,-300px)
+    transform:perspective(1100px)
+      translate3d(calc(var(--portal-from-x,0px) * .42),
+        calc(var(--portal-from-y,0px) * .42),-300px)
+      scale(calc(var(--sc-fit) * .46))
       rotate(calc(var(--portal-spin,24deg) * .5));
   }
   78%{
     opacity:.7;
-    transform:perspective(1100px) scale(calc(var(--sc-fit) * .12))
-      translate3d(0,0,-760px)
+    transform:perspective(1100px)
+      translate3d(calc(var(--portal-from-x,0px) * .12),
+        calc(var(--portal-from-y,0px) * .12),-760px)
+      scale(calc(var(--sc-fit) * .12))
       rotate(var(--portal-spin,24deg));
   }
   88%,100%{
     opacity:0;
-    transform:perspective(1100px) scale(calc(var(--sc-fit) * .01))
-      translate3d(0,0,-980px)
+    transform:perspective(1100px) translate3d(0,0,-980px)
+      scale(calc(var(--sc-fit) * .01))
       rotate(calc(var(--portal-spin,24deg) * 1.4));
   }
 }

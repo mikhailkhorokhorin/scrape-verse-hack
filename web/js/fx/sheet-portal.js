@@ -23,12 +23,19 @@ function portalMouth() {
   return mouth;
 }
 
+function portalAim(skin, frame) {
+  const box = frame.box;
+  skin.style.setProperty("--portal-from-x", Math.round(box.left - frame.left) + "px");
+  skin.style.setProperty("--portal-from-y", Math.round(box.top + frame.crop - frame.top) + "px");
+}
+
 function sheetPortalClose(modal, sheet) {
   const built = sheetCloseStage(modal, sheet, "portal");
   const stage = built.stage;
   const skin = sheetCloseSkin(sheet, "portal__skin");
   const spin = sheetCloseRand(PORTAL_SPIN_LO, PORTAL_SPIN_HI).toFixed(2);
   skin.style.setProperty("--portal-spin", spin + "deg");
+  portalAim(skin, built.frame);
   stage.appendChild(portalMouth());
   stage.appendChild(skin);
   sheetCloseSilence(sheet);

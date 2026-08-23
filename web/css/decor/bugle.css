@@ -35,7 +35,7 @@
   transform:scale(var(--scale,1)) rotate(var(--turn,0deg));
 }
 
-.gutter__slot--right .gutter__bugle{transform-origin:0 0;}
+.gutter__slot--right .gutter__bugle{transform-origin:0 100%;}
 .gutter__slot--left .gutter__webhead{transform-origin:100% 0;}
 
 .gutter__bugle{width:100%;height:auto;overflow:visible;}
