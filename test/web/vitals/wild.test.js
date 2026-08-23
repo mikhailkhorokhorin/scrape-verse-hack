@@ -23,11 +23,6 @@ test('a collector on our own page is not wild', () => {
   assert.equal(ctx.collectorIsOurs('mikhailkhorokhorin.github.io'), true);
 });
 
-test('the GitLab mirror counts as ours too', () => {
-  const ctx = load(FLEET);
-  assert.equal(ctx.collectorIsOurs('hackathons6943133.gitlab.io'), true);
-});
-
 test('a third-party site is not ours', () => {
   const ctx = load(FLEET);
   assert.equal(ctx.collectorIsOurs('books.toscrape.com'), false);

@@ -32,7 +32,7 @@ Nothing below needs an API key, touches the network, or spends a credit.
 | 1 | Open the [live console](https://mikhailkhorokhorin.github.io/scrape-verse-hack/) | Three real collectors, four recorded incidents, the data they returned |
 | 2 | Drag the web off the broken half of the **diptych** near the top | The reveal is the same data the field chips read, not a caption |
 | 3 | Open [`?mock=1`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/?mock=1), press **BREAK BODEGA**, then **RE-WEAVE** | The break→heal→receipt loop, in your browser, in ten seconds |
-| 4 | `git clone` this repo, then `npm test` | 1,458 tests, `node:test`, zero dependencies, offline |
+| 4 | `git clone` this repo, then `npm test` | 1,457 tests, `node:test`, zero dependencies, offline |
 | 5 | `node tools/evidence-report.js inc_004` | The full trail of the incident **no human touched**, with SHA-256 digests |
 | 6 | `git log --author="thwip watch" --oneline \| wc -l` | Commits authored by the workflow, not by a person |
 
@@ -210,7 +210,7 @@ step, no dependencies. Six read the committed record and are instant, free, and 
 touch the network. Two spend Bright Data credit and say so in their own descriptions, so
 a well-behaved agent asks before it bills you.
 
-![The manual: the newspaper advertisement with eight tools, a 1,458-tests seal, and a cut-out coupon carrying the three install commands](assets/manual-1440.png)
+![The manual: the newspaper advertisement with eight tools, a 1,457-tests seal, and a cut-out coupon carrying the three install commands](assets/manual-1440.png)
 
 *[`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html) —
 the console's back page. The test count on it is read from `data/meta.json` at page load.*
@@ -237,7 +237,7 @@ verbatim transcript of the receipt for the incident no human touched.
 ```bash
 git clone https://github.com/mikhailkhorokhorin/scrape-verse-hack.git
 cd scrape-verse-hack
-npm test                                  # 1,458 tests, zero dependencies, offline
+npm test                                  # 1,457 tests, zero dependencies, offline
 python3 -m http.server 8000               # any static server
 ```
 
@@ -269,7 +269,7 @@ web/           the console — no build step, no framework, no dependencies
   manual.html                    the back page: the pitch, the tools, the judge path
 mcp/           MCP server — eight tools, stdio JSON-RPC, no SDK
 tools/         evidence-report.js and numbers-audit.js — proof, computed twice
-test/          1,458 tests in {pipeline,web,mcp,tools}/, mirroring the source tree
+test/          1,457 tests in {pipeline,web,mcp,tools}/, mirroring the source tree
 data/          history.json and incidents.json, committed by CI on every scan
 evidence/      raw Bright Data payloads; the digests are recomputed from these
 collectors.json   targets, Collector IDs, per-field validators

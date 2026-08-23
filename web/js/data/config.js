@@ -19,7 +19,7 @@ const MIN_STREAK = 5;
 const ABSOLUTE_SCALE_SPAN = 25;
 const RECOVERY_MIN_GAIN = 25;
 const LANDED_MS = 2400;
-const OUR_UNIVERSES = ["mikhailkhorokhorin.github.io", "hackathons6943133.gitlab.io"];
+const OUR_UNIVERSES = ["mikhailkhorokhorin.github.io"];
 
 const HEALTHY_MIN = 90;
 const DEGRADED_MIN = 60;

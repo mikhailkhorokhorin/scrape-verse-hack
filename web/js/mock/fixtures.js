@@ -10,7 +10,7 @@ const MOCK_SPIDERS = [
     fields:{title:"live",price:"live",rating:"live",image:"live",availability:"live"},
     sample:{title:"A Light in the Attic",price:"£51.77",rating:"star-rating Three",image:"https://books.toscrape.com/media/cache/2c/da/x.jpg",availability:"In stock"},
     seed:11 },
-  { code:"BODEGA", universe:"hackathons6943133.gitlab.io", cid:"c_mock_bodega",
+  { code:"BODEGA", universe:"mikhailkhorokhorin.github.io", cid:"c_mock_bodega",
     order:["title","price","rating","image"],
     fields:{title:"live",price:"dead",rating:"infected",image:"live"},
     sample:{title:"Ceramic pour-over dripper",price:null,rating:"undefined",image:"img/01.svg"},

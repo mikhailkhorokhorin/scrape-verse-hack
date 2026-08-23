@@ -60,7 +60,7 @@ function mockIncidentRuns() {
   const clean = {
     collector_id: "c_mock_bodega",
     spider: "BODEGA",
-    universe: "hackathons6943133.gitlab.io",
+    universe: "mikhailkhorokhorin.github.io",
     ts: mockStamp(-1800000),
     fields_expected: MOCK_INC_FIELDS,
     fields_live: MOCK_INC_FIELDS,
@@ -79,7 +79,7 @@ function mockIncidentRuns() {
   const dirty = {
     collector_id: "c_mock_bodega",
     spider: "BODEGA",
-    universe: "hackathons6943133.gitlab.io",
+    universe: "mikhailkhorokhorin.github.io",
     ts: mockStamp(0),
     fields_expected: MOCK_INC_FIELDS,
     fields_live: ["title", "image"],
