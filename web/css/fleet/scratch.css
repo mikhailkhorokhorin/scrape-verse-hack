@@ -6,6 +6,9 @@
 .panel.is-scratching{
   cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><g fill='none' stroke='%23f4efe4' stroke-width='5.5' stroke-linecap='round'><path d='M14 14 9 3M14 14 19 3'/></g><g fill='none' stroke='%230b0a10' stroke-width='2.4' stroke-linecap='round'><path d='M14 14 9 3M14 14 19 3'/><path d='M12 17l2-3M16 17l-2-3'/><circle cx='9' cy='20' r='3.4'/><circle cx='19' cy='20' r='3.4'/></g></svg>") 14 4,grabbing;
 }
+.panel.is-scratching.is-snip{
+  cursor:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'><g fill='none' stroke='%23f4efe4' stroke-width='5.5' stroke-linecap='round'><path d='M14 14 3 5M14 14 25 5'/></g><g fill='none' stroke='%230b0a10' stroke-width='2.4' stroke-linecap='round'><path d='M14 14 3 5M14 14 25 5'/><path d='M12 17l2-3M16 17l-2-3'/><circle cx='9' cy='20' r='3.4'/><circle cx='19' cy='20' r='3.4'/></g></svg>") 14 4,grabbing;
+}
 .panel.is-scratching,.panel.is-scratching *{user-select:none;-webkit-user-select:none;}
 
 .panel > .scratch__web{

@@ -220,3 +220,14 @@ test('the strand weight and hint stay readable on a narrow screen', () => {
   assert.match(css, /@media\(max-width:767px\)/, 'the web answers the 767px breakpoint');
   assert.match(css, /@media\(max-width:600px\)/, 'the hint answers the 600px breakpoint');
 });
+
+test('the scissors snip while a drag is held, and rest when it ends', () => {
+  const veil = fs.readFileSync(modulePath('scratch-veil.js'), 'utf8');
+  const css = fs.readFileSync(cssPath('scratch.css'), 'utf8');
+  assert.match(veil, /setInterval\([\s\S]*is-snip/, 'the frames alternate on a timer');
+  assert.match(veil, /clearInterval/, 'and the timer dies with the drag');
+  assert.match(veil, /scratchReduced[\s\S]*return;/, 'reduced motion holds one still frame');
+  assert.match(css, /\.panel\.is-scratching\.is-snip\{/, 'the open frame is its own cursor');
+  const frames = css.match(/cursor:url\("data:image\/svg\+xml/g) || [];
+  assert.ok(frames.length >= 3, 'hover, held and snip each need a drawn cursor');
+});

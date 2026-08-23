@@ -60,6 +60,22 @@ function scratchFlushMove() {
   if (move) scratchTouch(move.panel, move, true);
 }
 
+function scratchSnipStop() {
+  if (SCRATCH_IDS.snip) {
+    clearInterval(SCRATCH_IDS.snip);
+    SCRATCH_IDS.snip = 0;
+  }
+  document.querySelectorAll(".panel.is-snip").forEach((panel) => {
+    panel.classList.remove("is-snip");
+  });
+}
+
+function scratchSnipStart(panel) {
+  scratchSnipStop();
+  if (typeof scratchReduced === "function" && scratchReduced()) return;
+  SCRATCH_IDS.snip = setInterval(() => panel.classList.toggle("is-snip"), 130);
+}
+
 function scratchOnSnapEnd(e) {
   const el = e.target;
   if (el && el.classList && el.classList.contains("is-torn")) {

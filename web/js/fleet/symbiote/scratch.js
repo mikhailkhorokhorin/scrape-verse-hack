@@ -2,7 +2,7 @@
 
 const SCRATCH_HINT_KEY = "thwip.scratch.found";
 const SCRATCH_NS = "http://www.w3.org/2000/svg";
-const SCRATCH_IDS = { n: 0, frame: 0, tick: 0, move: null };
+const SCRATCH_IDS = { n: 0, frame: 0, tick: 0, move: null, snip: 0 };
 
 function scratchReduced() {
   return typeof matchMedia === "function" &&
@@ -144,6 +144,7 @@ function scratchOnDown(e) {
   if (!panel) return;
   if (panel.__scratch) panel.__scratch.rect = null;
   panel.classList.add("is-scratching");
+  scratchSnipStart(panel);
   scratchTouch(panel, e, false);
 }
 
@@ -156,6 +157,7 @@ function scratchOnMove(e) {
 }
 
 function scratchOnUp() {
+  scratchSnipStop();
   document.querySelectorAll(".panel.is-scratching")
     .forEach((panel) => panel.classList.remove("is-scratching"));
 }
