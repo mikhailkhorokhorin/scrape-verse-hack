@@ -4494,5 +4494,39 @@
       "comments": 931,
       "author": "Anon84 mmooss mmooss jltsiren thaumasiotes AlotOfReading applicative foxglacier ompogUe macintux contingencies bibimsz sokoloff jsbisviewtiful trollbridge ThrowawayTestr guywithahat ryoshoe binaryturtle guywithahat tsimionescu mono442 guywithahat OtomotO archonis m3047 BigTTYGothGF trollbridge lolokbro gradus_ad messe ljsprague applicative thaumasiotes"
     }
+  },
+  {
+    "collector_id": "c_mt4pkrma2b8beq8jv5",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-23T06:48:46.600Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
   }
 ]
