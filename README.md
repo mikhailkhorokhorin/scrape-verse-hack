@@ -270,7 +270,7 @@ web/           the console — no build step, no framework, no dependencies
 mcp/           MCP server — eight tools, stdio JSON-RPC, no SDK
 tools/         evidence-report.js and numbers-audit.js — proof, computed twice
 test/          1,453 tests in {pipeline,web,mcp,tools}/, mirroring the source tree
-data/          history.json and incidents.json, committed by CI every 30 minutes
+data/          history.json and incidents.json, committed by CI on every scan
 evidence/      raw Bright Data payloads; the digests are recomputed from these
 collectors.json   targets, Collector IDs, per-field validators
 demo-target/   the shop page BODEGA watches — three variants of the same page
