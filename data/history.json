@@ -4530,7 +4530,7 @@
     }
   },
   {
-    "collector_id": "c_mt5ib5a32sn4jpgag",
+    "collector_id": "c_mt5mo9mkz9u25zefn",
     "spider": "BODEGA",
     "universe": "mikhailkhorokhorin.github.io",
     "ts": "2026-08-23T08:44:55.676Z",
@@ -4560,7 +4560,7 @@
     }
   },
   {
-    "collector_id": "c_mt5ic7tl1qsevijk2t",
+    "collector_id": "c_mt5mpgolbgqeg9ziv",
     "spider": "ATLAS",
     "universe": "books.toscrape.com",
     "ts": "2026-08-23T08:53:55.764Z",
@@ -4594,7 +4594,7 @@
     }
   },
   {
-    "collector_id": "c_mt5iael213a1rr8g8v",
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
     "spider": "KESTREL",
     "universe": "news.ycombinator.com",
     "ts": "2026-08-23T08:57:15.327Z",
@@ -4624,7 +4624,7 @@
     }
   },
   {
-    "collector_id": "c_mt5ib5a32sn4jpgag",
+    "collector_id": "c_mt5mo9mkz9u25zefn",
     "spider": "BODEGA",
     "universe": "mikhailkhorokhorin.github.io",
     "ts": "2026-08-23T09:19:05.628Z",
@@ -4658,7 +4658,7 @@
     }
   },
   {
-    "collector_id": "c_mt5ic7tl1qsevijk2t",
+    "collector_id": "c_mt5mpgolbgqeg9ziv",
     "spider": "ATLAS",
     "universe": "books.toscrape.com",
     "ts": "2026-08-23T09:26:41.194Z",
@@ -4692,7 +4692,7 @@
     }
   },
   {
-    "collector_id": "c_mt5iael213a1rr8g8v",
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
     "spider": "KESTREL",
     "universe": "news.ycombinator.com",
     "ts": "2026-08-23T09:29:36.573Z",
@@ -4722,7 +4722,7 @@
     }
   },
   {
-    "collector_id": "c_mt5iael213a1rr8g8v",
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
     "spider": "KESTREL",
     "universe": "news.ycombinator.com",
     "ts": "2026-08-23T09:42:38.455Z",
