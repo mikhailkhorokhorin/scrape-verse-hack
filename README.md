@@ -12,7 +12,7 @@ WeMakeDevs × Bright Data, 17–23 Aug 2026.
 
 **The manual → [`/manual.html`](https://mikhailkhorokhorin.github.io/scrape-verse-hack/manual.html)**
 
-**Demo video → `<VIDEO>`**
+**Demo video → <https://www.youtube.com/watch?v=SDYDTIPP7Zg>**
 
 Every scraper is a Spider with an **Integrity** score, 0–100: how much of what it
 promised came back real. When Integrity drops, a web spins over its panel covering
