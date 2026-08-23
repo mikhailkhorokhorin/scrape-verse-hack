@@ -4850,5 +4850,103 @@
       "comments": 84,
       "author": "taubek"
     }
+  },
+  {
+    "collector_id": "c_mt5mo9mkz9u25zefn",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-23T14:01:49.654Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpgolbgqeg9ziv",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-23T14:01:53.701Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "price"
+    ],
+    "integrity": 80,
+    "status": "DEGRADED",
+    "rows": 19,
+    "rows_expected": 19,
+    "sample": {
+      "title": "The Black Maria",
+      "price": null,
+      "rating": 1,
+      "image_url": "https://books.toscrape.com/media/cache/d1/7a/d17a3e313e52e1be5651719e4fba1d16.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-23T14:02:39.469Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 60,
+    "rows_expected": 30,
+    "sample": {
+      "title": "ATProto spaces: A new extension to ATProto that enables non-public data",
+      "points": 156,
+      "comments": 24,
+      "author": "grappler"
+    }
   }
 ]
