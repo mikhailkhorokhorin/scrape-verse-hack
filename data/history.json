@@ -4528,5 +4528,99 @@
       "rating": 4.4,
       "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
     }
+  },
+  {
+    "collector_id": "c_mt5ib5a32sn4jpgag",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-23T08:44:55.676Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 1,
+    "rows_expected": 12,
+    "sample": {
+      "title": null,
+      "price": null,
+      "rating": null,
+      "image": null
+    }
+  },
+  {
+    "collector_id": "c_mt5ic7tl1qsevijk2t",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-23T08:53:55.764Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "price"
+    ],
+    "integrity": 80,
+    "status": "DEGRADED",
+    "rows": 984,
+    "rows_expected": 19,
+    "sample": {
+      "title": "Howl and Other Poems",
+      "price": null,
+      "rating": 2,
+      "image_url": "https://books.toscrape.com/media/cache/09/8e/098e81fcea9f6b4c15f6d207301c0085.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt5iael213a1rr8g8v",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-23T08:57:15.327Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [],
+    "fields_infected": [],
+    "fields_dead": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "integrity": 0,
+    "status": "CRITICAL",
+    "rows": 57,
+    "rows_expected": 30,
+    "sample": {
+      "title": null,
+      "points": null,
+      "comments": null,
+      "author": null
+    }
   }
 ]
