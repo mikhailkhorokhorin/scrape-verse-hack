@@ -52,7 +52,13 @@ jobs:
             echo "no change this scan"
           else
             git commit -m "data: scan $(date -u +%FT%TZ)"
-            git push
+            for attempt in 1 2 3; do
+              if git push; then
+                break
+              fi
+              echo "push rejected, rebasing onto the branch tip (attempt $attempt)"
+              git pull --rebase origin main
+            done
           fi
 
   build:
