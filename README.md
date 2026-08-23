@@ -46,13 +46,13 @@ project.
 
 | Codename | Target | Collector ID | Fields under contract | Why this site |
 |---|---|---|---|---|
-| **ATLAS** | books.toscrape.com | `c_mt4watrl16nf8i3in7` | title, price, rating, image_url, availability | A sandbox built for scraping; no robots.txt, server-rendered. Rating lives in a **CSS class**, not in text — the natural infected-field candidate |
-| **KESTREL** | news.ycombinator.com | `c_mt4wke4p10o50u8bzp` | title, points, comments, author | A real site with real churn. `robots.txt` allows the front page; `Crawl-delay: 30` is respected |
-| **BODEGA** | our own demo page | `c_mt4pkrma2b8beq8jv5` | title, price, rating, image | Breakable on purpose, so a judge can reproduce a break without waiting for the web to move |
+| **ATLAS** | books.toscrape.com | `c_mt5ic7tl1qsevijk2t` | title, price, rating, image_url, availability | A sandbox built for scraping; no robots.txt, server-rendered. Rating lives in a **CSS class**, not in text — the natural infected-field candidate |
+| **KESTREL** | news.ycombinator.com | `c_mt5iael213a1rr8g8v` | title, points, comments, author | A real site with real churn. `robots.txt` allows the front page; `Crawl-delay: 30` is respected |
+| **BODEGA** | our own demo page | `c_mt5ib5a32sn4jpgag` | title, price, rating, image | Breakable on purpose, so a judge can reproduce a break without waiting for the web to move |
 
-Every ID is pinned in [`collectors.json`](collectors.json) with its per-field validators
-and has never been recreated. The creation envelopes Bright Data returned are committed
-verbatim in [`evidence/`](evidence/).
+Every ID is pinned in [`collectors.json`](collectors.json) with its per-field validators.
+The creation envelopes Bright Data returned are committed verbatim in
+[`evidence/`](evidence/).
 
 **All three targets are public.** No login wall, no paywall, no personal data, no
 government site. `robots.txt` was read for each before a single request; the reasoning

@@ -133,7 +133,7 @@ call, and the text below is exactly what the tool returned:
 ```text
 HEAL RECEIPT inc_004
 spider        BODEGA
-collector_id  c_mt2lkwxa1bb5uz223s
+collector_id  c_mt5ib5a32sn4jpgag
 strain        RENAMED
 integrity     50% -> 100%
 resolved      yes
@@ -146,7 +146,7 @@ phases:
 
 total 716s from detection to verification
 
-The collector_id never changed: c_mt2lkwxa1bb5uz223s was re-woven in place, not
+The collector_id never changed: c_mt5ib5a32sn4jpgag was re-woven in place, not
 replaced. Downstream consumers kept the same endpoint throughout.
 
 verification: 2/2 fields re-checked against the run after the heal (every field back)

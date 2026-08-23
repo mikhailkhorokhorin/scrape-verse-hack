@@ -134,4 +134,7 @@
   text-transform:uppercase;color:var(--ink);line-height:1;
 }
 .rest__line{font-size:.8125rem;line-height:1.4;color:var(--ink-2);}
+.rest__demo{color:var(--cyan);text-underline-offset:2px;}
+.rest__demo:hover,
+.rest__demo:focus-visible{color:var(--pink);}
 .rest__runs{font-size:var(--t-micro);color:var(--ink-3);letter-spacing:.04em;}
