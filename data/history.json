@@ -6614,5 +6614,103 @@
       "comments": 8,
       "author": "leephillips"
     }
+  },
+  {
+    "collector_id": "c_mt5mo9mkz9u25zefn",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-08-29T06:08:25.035Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpgolbgqeg9ziv",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-08-29T06:08:40.925Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "price"
+    ],
+    "integrity": 80,
+    "status": "DEGRADED",
+    "rows": 19,
+    "rows_expected": 19,
+    "sample": {
+      "title": "Les Fleurs du Mal",
+      "price": null,
+      "rating": 5,
+      "image_url": "https://books.toscrape.com/media/cache/3d/32/3d324c0b55c221e9b701d4e772b42ad6.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-08-29T06:09:56.259Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 60,
+    "rows_expected": 30,
+    "sample": {
+      "title": "Queen Caroline turned King Arthur into an 18C royal PR strategy",
+      "points": 4,
+      "comments": null,
+      "author": "samizdis"
+    }
   }
 ]
