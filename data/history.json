@@ -7692,5 +7692,103 @@
       "comments": 81,
       "author": "Anon84"
     }
+  },
+  {
+    "collector_id": "c_mt5mo9mkz9u25zefn",
+    "spider": "BODEGA",
+    "universe": "mikhailkhorokhorin.github.io",
+    "ts": "2026-09-01T19:15:45.001Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_live": [
+      "title",
+      "price",
+      "rating",
+      "image"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 12,
+    "rows_expected": 12,
+    "sample": {
+      "title": "Ceramic pour-over dripper",
+      "price": {
+        "value": 18,
+        "currency": "GBP",
+        "symbol": "£"
+      },
+      "rating": 4.4,
+      "image": "https://mikhailkhorokhorin.github.io/scrape-verse-hack/demo-target/img/01.svg"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpgolbgqeg9ziv",
+    "spider": "ATLAS",
+    "universe": "books.toscrape.com",
+    "ts": "2026-09-01T19:15:59.549Z",
+    "fields_expected": [
+      "title",
+      "price",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_live": [
+      "title",
+      "rating",
+      "image_url",
+      "availability"
+    ],
+    "fields_infected": [],
+    "fields_dead": [
+      "price"
+    ],
+    "integrity": 80,
+    "status": "DEGRADED",
+    "rows": 19,
+    "rows_expected": 19,
+    "sample": {
+      "title": "Night Sky with Exit Wounds",
+      "price": null,
+      "rating": 1,
+      "image_url": "https://books.toscrape.com/media/cache/ff/48/ff48b0696fb97b7f7b5c6d15e372cb70.jpg",
+      "availability": "In stock"
+    }
+  },
+  {
+    "collector_id": "c_mt5mpiem10zvo4kkwj",
+    "spider": "KESTREL",
+    "universe": "news.ycombinator.com",
+    "ts": "2026-09-01T19:16:59.370Z",
+    "fields_expected": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_live": [
+      "title",
+      "points",
+      "comments",
+      "author"
+    ],
+    "fields_infected": [],
+    "fields_dead": [],
+    "integrity": 100,
+    "status": "HEALTHY",
+    "rows": 59,
+    "rows_expected": 30,
+    "sample": {
+      "title": "Show HN: Running 104GB Qwen3.8-Flash-Next on 48GB Mac with at ~12 tok/s",
+      "points": 62,
+      "comments": 50,
+      "author": "carloslfu"
+    }
   }
 ]
